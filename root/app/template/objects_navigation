@@ -1,0 +1,82 @@
+<div _flex="h">
+	<module variables-instances="objects.pages">
+		<condition>
+			<if>[index]==0</if>
+			<then>
+				<condition>
+					<if>[index]!=[last_index];[navigation_index]!=[index]</if>
+					<then>
+						<button icon_="to_first"></button>
+					</then>
+					<else>
+						<button icon_="to_first" disabled_></button>
+					</else>
+				</condition>
+			</then>
+		</condition>
+		<condition>
+			<if>[navigation_index]==[index]</if>
+			<then>
+				<condition>
+					<if>[index]!=0</if>
+					<then>
+						<div fallback_>← Ctrl</div>
+						<button icon_="to_back"></button>
+					</then>
+					<else>
+						<button icon_="to_back" disabled_></button>
+					</else>
+				</condition>
+				<b fallback_>[range.0]..[range.1]</b>
+				<condition>
+					<if>[index]!=[last_index]</if>
+					<then>
+						<button icon_="to_forward"></button>
+						<div fallback_>Ctrl →</div>
+					</then>
+					<else>
+						<button icon_="to_forward" disabled_></button>
+					</else>
+				</condition>
+			</then>
+			<else>
+				<a href="?index=[index]">[range.0]..[range.1]</a>
+			</else>
+		</condition>
+		<condition>
+			<if>[index]==[last_index]</if>
+			<then>
+				<condition>
+					<if>[index]!=0;[navigation_index]!=[index]</if>
+					<then>
+						<button icon_="to_last"></button>
+					</then>
+					<else>
+						<button icon_="to_last" disabled_></button>
+					</else>
+				</condition>
+			</then>
+		</condition>
+	</module>
+	<select fallback_ title="Элементов на страницу">
+		<option attributes="([navigation_per]==4?selected:)">4</option>
+		<option attributes="([navigation_per]==6?selected:)">6</option>
+		<option attributes="([navigation_per]==8?selected:)">8</option>
+		<option attributes="([navigation_per]==12?selected:)">12</option>
+		<option attributes="([navigation_per]==16?selected:)">16</option>
+		<option attributes="([navigation_per]==24?selected:)">24</option>
+		<option attributes="([navigation_per]==32?selected:)">32</option>
+		<option attributes="([navigation_per]==48?selected:)">48</option>
+		<option attributes="([navigation_per]==64?selected:)">64</option>
+		<option attributes="([navigation_per]==96?selected:)">96</option>
+		<option attributes="([navigation_per]==128?selected:)">128</option>
+		<option attributes="([navigation_per]==192?selected:)">192</option>
+		<option attributes="([navigation_per]==256?selected:)">256</option>
+	</select>
+	<condition>
+		<if>[object.id]!=</if>
+		<then>
+			<a fallback_ href="#rss/[object.id]">RSS</a>
+		</then>
+	</condition>
+</div>

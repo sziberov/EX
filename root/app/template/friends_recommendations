@@ -1,0 +1,16 @@
+<title>[title_friends_recommendations] [user_login]</title>
+<div _grid="h spaced">
+	<div _grid="h">
+		<condition>
+			<if>[avatar_url]!=</if>
+			<then>
+				<div _avatar onclick="Hash.set('user/[user_login]')" title="[user_login]: [avatar_title]">
+					<img src="[avatar_url]">
+				</div>
+			</then>
+		</condition>
+		<div _title>[title_friends_recommendations] <b>[user_login]</b></div>
+	</div>
+	<button onclick="Hash.set('user/[user_login]')">[button_user_page]</button>
+</div>
+<module title="objects" variables="filters=parent_id\=[user_id]&type\=inclusions;navigation=true;mode=list"></module>

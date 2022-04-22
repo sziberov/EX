@@ -1,0 +1,49 @@
+<title>[title_registration]</title>
+<div _table style="--columns: repeat(2, minmax(0, max-content));">
+	<div>
+		<div></div>
+		<div _title centered_>[title_registration]</div>
+	</div>
+	<div>
+		<div>[string_login]</div>
+		<div>
+			<input name="login" type="text">
+			<button>[button_check]</button>
+		</div>
+	</div>
+	<div>
+		<div>[string_password]</div>
+		<div>
+			<input name="password" type="password">
+		</div>
+	</div>
+	<div>
+		<div>[string_password_repeat]</div>
+		<div>
+			<input name="passwordRepeat" type="password">
+		</div>
+	</div>
+	<div>
+		<div>[string_email]</div>
+		<div>
+			<input size_="big" name="email" type="text">
+		</div>
+	</div>
+	<div>
+		<div>[string_captcha]</div>
+		<div _flex="v left">
+			<div _captcha="ABCdef123"></div>
+			<input size_="big" name="captcha" type="text">
+		</div>
+	</div>
+	<div>
+		<div>[string_agreement]</div>
+		<div style="max-width: 256px;">[string_agreement_description]</div>
+	</div>
+	<div>
+		<div></div>
+		<div>
+			<button primary_>[button_register]</button>
+		</div>
+	</div>
+</div>

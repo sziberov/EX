@@ -1,0 +1,80 @@
+<condition>
+	<if>[object_id]!=</if>
+	<then>
+		<title>[title] - [title_template]</title>
+		<div _title="small">
+			<a href="#view/[object_id]">[title]</a>
+		</div>
+	</then>
+	<else>
+		<title>[title_template]</title>
+	</else>
+</condition>
+<div _table style="--columns: repeat(2, minmax(0, max-content));">
+	<div>
+		<div></div>
+		<div _title centered_>[title_template]</div>
+	</div>
+	<condition>
+		<if>[object_id]!=</if>
+		<then>
+			<div>
+				<div>[string_i_see_as]</div>
+				<div>
+					<select name="1">
+						<option selected>Обычно</option>
+						<option>InfoStore</option>
+						<option>Modern</option>
+					</select>
+				</div>
+			</div>
+			<div>
+				<div>[string_everyone_see_as]</div>
+				<div>
+					<select name="2">
+						<option selected>Обычно</option>
+						<option>InfoStore</option>
+						<option>Modern</option>
+					</select>
+				</div>
+			</div>
+		</then>
+		<else>
+			<div>
+				<div>[string_i_see_everything_as]</div>
+				<div>
+					<select name="3">
+						<option selected>Обычно</option>
+						<option>InfoStore</option>
+						<option>Modern</option>
+					</select>
+				</div>
+			</div>
+			<div>
+				<div>[string_everyone_see_everything_my_as]</div>
+				<div>
+					<select name="4">
+						<option selected>Обычно</option>
+						<option>InfoStore</option>
+						<option>Modern</option>
+					</select>
+				</div>
+			</div>
+		</else>
+	</condition>
+	<div>
+		<div></div>
+		<div>
+			<button onclick="Hash.set('view/[object_id]')">[button_save]</button>
+			<condition>
+				<if>[object_id]!=</if>
+				<then>
+					<button onclick="Hash.set('view/[object_id]')">[button_cancel]</button>
+				</then>
+				<else>
+					<button onclick="Hash.set('settings')">[button_cancel]</button>
+				</else>
+			</condition>
+		</div>
+	</div>
+</div>

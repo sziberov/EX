@@ -1,0 +1,118 @@
+<title>[title_groups]</title>
+<div _title>[title_groups]</div>
+<div _table="list" wide_ style="--columns: repeat(5, minmax(96px, auto));">
+	<div header_>
+		<div>[string_group]</div>
+		<div>[string_access]</div>
+		<div>[string_given]</div>
+		<div>[string_when]</div>
+		<div>[string_actions]</div>
+	</div>
+	<!--
+	<div data-group-id="[group_id]">
+		<div>
+			<div _description="short straight">Все</div>
+		</div>
+		<div>
+			<div>Полный</div>
+			<div _flex="v stacked left">
+				<div _check disabled_>
+					<div></div>
+					<div>Предпочтение высшего доступа</div>
+				</div>
+				<div _check disabled_>
+					<div></div>
+					<div>Возможность приглашать участников</div>
+				</div>
+			</div>
+		</div>
+		<div>
+			<a _description="short straight" href="#user/[user_title]">system</a>
+		</div>
+		<div>00:00, 01 января 2019</div>
+		<div></div>
+	</div>
+	-->
+	<div data-group-id="[group_id]">
+		<div>
+			<a _description="short straight" href="#group/[group_id]">Group_DIES</a>
+		</div>
+		<div>
+			<div>Полный, основная группа</div>
+			<div _flex="v stacked left">
+				<div _check="active" disabled_>
+					<div></div>
+					<div>Предпочтение высшего доступа</div>
+				</div>
+				<div _check="active" disabled_>
+					<div></div>
+					<div>Возможность приглашать участников</div>
+				</div>
+			</div>
+		</div>
+		<div>
+			<a _description="short straight" href="#user/[user_title]">system</a>
+		</div>
+		<div>00:00, 01 января 2019</div>
+		<div>
+			<button>[button_invite]</button>
+		</div>
+	</div>
+	<div data-group-id="[group_id]">
+		<div>
+			<a _description="short straight" href="#group/[group_id]">Group_user</a>
+		</div>
+		<div>
+			<div>Чтение + Комментирование</div>
+			<div _flex="v stacked left">
+				<div _check disabled_>
+					<div></div>
+					<div>Предпочтение высшего доступа</div>
+				</div>
+				<div _check="active" disabled_>
+					<div></div>
+					<div>Возможность приглашать участников</div>
+				</div>
+			</div>
+		</div>
+		<div>
+			<a _description="short straight" href="#user/[user_title]">user</a>
+		</div>
+		<div>12:00, 01 января 2019</div>
+		<div>
+			<button>[button_invite]</button>
+			<button>[button_remove]</button>
+		</div>
+	</div>
+	<div data-group-id="[group_id]">
+		<div>
+			<a _description="short straight" href="#group/[group_id]">Без названия</a>
+		</div>
+		<div>
+			<div>Полный</div>
+			<div _flex="v stacked left">
+				<div _check="active" disabled_>
+					<div></div>
+					<div>Предпочтение высшего доступа</div>
+				</div>
+				<div _check="active" disabled_>
+					<div></div>
+					<div>Возможность приглашать участников</div>
+				</div>
+			</div>
+		</div>
+		<div>
+			<a _description="short straight" href="#user/[user_title]">DIES</a>
+		</div>
+		<div>12:00, 02 января 2019</div>
+		<div>
+			<button>[button_invite]</button>
+			<button>[button_edit]</button>
+			<button>[button_delete]</button>
+		</div>
+	</div>
+</div>
+<div fallback_>[string_groups_description]</div>
+<div _grid="h">
+	<button>[button_create]</button>
+</div>

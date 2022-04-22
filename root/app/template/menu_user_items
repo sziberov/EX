@@ -1,0 +1,12 @@
+<condition>
+	<if>[session_user_login]!=</if>
+	<then>
+		<div __user badge_="[session_user_notifications_count]">[session_user_login]</div>
+		<a href="#user/[session_user_login]">[link_page]</a>
+		<a href="#settings">[link_settings]</a>
+		<a href="#login">[link_logout]</a>
+	</then>
+	<else>
+		<a href="#login">[link_login]</a>
+	</else>
+</condition>

@@ -1,0 +1,126 @@
+<title>[title_settings]</title>
+<div _grid="h">
+	<div _table style="--columns: repeat(2, minmax(0, max-content));">
+		<div>
+			<div></div>
+			<div _title centered_>[title_settings]</div>
+		</div>
+		<div>
+			<div>[string_login]</div>
+			<div>
+				<input name="login" type="text" value="[session_user_login]">
+				<button>[button_check]</button>
+			</div>
+		</div>
+		<div>
+			<div>[string_password]</div>
+			<div>
+				<input name="password" type="password">
+			</div>
+		</div>
+		<div>
+			<div>[string_password_repeat]</div>
+			<div>
+				<input name="passwordRepeat" type="password">
+			</div>
+		</div>
+		<div>
+			<div>[string_email]</div>
+			<div>
+				<input size_="big" name="email" type="text">
+			</div>
+		</div>
+		<div>
+			<div>[string_search]</div>
+			<div>
+				<div _check>
+					<div></div>
+					<div>[string_hide_from_search] [string_hide_from_search_inherition]</div>
+				</div>
+			</div>
+		</div>
+		<div>
+			<div>[string_menu]</div>
+			<div>
+				<div _check>
+					<div></div>
+					<div>[string_use] <a href="#menu_items">[link_personal_menu]</a></div>
+				</div>
+			</div>
+		</div>
+		<div>
+			<div>[string_editor]</div>
+			<div>
+				<input name="editor" type="text" placeholder="[string_file_number]">
+			</div>
+		</div>
+		<div>
+			<div>[string_default_avatar]</div>
+			<div>
+				<select name="avatar">
+					<option>Нет</option>
+					<option selected>DIES</option>
+				</select>
+			</div>
+		</div>
+		<div>
+			<div>[string_templates]</div>
+			<div _flex="v left">
+				<button onclick="Hash.set('template')">[button_select_template]</button>
+				<div _check>
+					<div></div>
+					<div>[string_execute_alien_js]</div>
+				</div>
+			</div>
+		</div>
+		<div>
+			<div>[string_notifications]</div>
+			<div _flex="v stacked left">
+				<div _check="active">
+					<div></div>
+					<div>[string_friendship]</div>
+				</div>
+				<div _check="active">
+					<div></div>
+					<div>[string_recommendations]</div>
+				</div>
+				<div _check="active">
+					<div></div>
+					<div>[string_comments]</div>
+				</div>
+				<div _check="active">
+					<div></div>
+					<div>[string_private_messages]</div>
+				</div>
+			</div>
+		</div>
+		<div>
+			<div>[string_privileges]</div>
+			<div _flex="v stacked left">
+				<div _check="active">
+					<div></div>
+					<div>[string_allow_any_upload_size]</div>
+				</div>
+				<div _check="active">
+					<div></div>
+					<div>[string_allow_advanced_control]</div>
+				</div>
+				<div _check="active">
+					<div></div>
+					<div>[string_allow_max_access_ignoring_groups]</div>
+				</div>
+			</div>
+		</div>
+		<div>
+			<div></div>
+			<div>
+				<button onclick="Hash.set('view/[id]')">[button_save]</button>
+			</div>
+		</div>
+	</div>
+	<div _flex="v center">
+		<div _title>&nbsp;</div>
+		<div>[string_account_deletion]</div>
+		<button onclick="confirm('[string_account_deletion_confirmation]')">[button_delete]</button>
+	</div>
+</div>

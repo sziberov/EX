@@ -1,0 +1,77 @@
+/app/service/object.php?_=1
+
+{
+	"_": 1,
+	"type": "section",
+	"title": "Видео",
+	"description": "",
+	"settings": [
+		"video",	// Быстрая ссылка
+		1,			// Скрыть пользователя и дату
+		0,			// Отображать разделы списком по умолчанию
+		0			// Отображать поиск
+	],
+	"login": "Admin",
+	"date": 1546300800,
+	"date_2": 1546300800,
+	"access": 3,
+	"holder": "",
+	"avatar": "",
+	"poster": ""
+}
+
+/app/service/object.php?_=5
+
+data: {
+	request: 'edit' 'edit_draft',
+	title: '',
+	description: '',
+	access: '',
+	holder: '',
+	avatar: '',
+	poster: ''
+
+	request: 'delete'
+}
+
+{
+	"status": 1
+}
+
+/app/service/file.php?_=1
+
+{
+	"_": 1,
+	"title": "background.png",
+	"size": 2558625,
+	"date": 1546300800,
+	"md5": "c43f10467775456d14013d25fe708b1e",
+	"length": 2696,
+	"resolution": "2560|1440",
+	"holder": 5
+}
+
+/app/service/user.php?login=DIES
+
+{
+	"login": "DIES",
+	"password": "",
+	"my": "1|5",
+	"buffer": "101",
+	"date": 1546300800,
+	"access": 3
+}
+
+/app/service/user.php?login=DIES
+
+data: {
+	request: 'page_attach' 'page_detach',
+	value: 2
+
+	request: 'access',
+	value: 2
+}
+
+{
+	"status": 1
+}

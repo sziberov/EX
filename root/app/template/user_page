@@ -1,0 +1,86 @@
+<title>[title_user_page] [user_login]</title>
+<div _grid="h spaced">
+	<div _grid="h">
+		<condition>
+			<if>[avatar_url]!=</if>
+			<then>
+				<div _avatar onclick="Hash.set('user/[user_login]')" title="[user_login]: [avatar_title]">
+					<img src="[avatar_url]">
+				</div>
+			</then>
+		</condition>
+		<div _title>[title_user_page] <b>[user_login]</b></div>
+		<input size_="medium" name="search" type="text">
+		<button onclick="Hash.set('search?query='+document.querySelector('[name=&quot;search&quot;]')?.value+'?user_id=[user_id]')">[button_search]</button>
+	</div>
+	<div _flex="h right wrap">
+		<button onclick="Hash.set('friends_comments/[user_login]')">[button_friends_comments]</button>
+		<button onclick="Hash.set('friends_recommendations/[user_login]')">[button_friends_recommendations]</button>
+		<button onclick="Hash.set('user_comments/[user_login]')">[button_user_comments]</button>
+		<button onclick="Hash.set('user_recommendations/[user_login]')">[button_user_recommendations]</button>
+	</div>
+</div>
+<div _grid="v stacked">
+	<b><a href="#friends">[link_friends]</a></b>
+	<div _flex="h wrap">
+		<module title="user" variables-instances="@/app/api/user_friends.php?user_id=[user_id]"></module>
+	</div>
+</div>
+<div _grid="v stacked">
+	<b><a href="#notifications">[link_notifications]</a></b>
+	<div _flex="h wrap">
+		<div _properties>
+			<div>
+				<div>[string_group_invites_count]</div>
+				<div>1</div>
+			</div>
+			<div>
+				<div>[string_friends_count]</div>
+				<div>1</div>
+			</div>
+			<div>
+				<div>[string_recommendations_count]</div>
+				<div>1</div>
+			</div>
+			<div>
+				<div>[string_comments_count]</div>
+				<div>1</div>
+			</div>
+			<div>
+				<div>[string_private_messages_count]</div>
+				<div>1</div>
+			</div>
+		</div>
+	</div>
+</div>
+<module title="objects" variables="filters=parent_id\=[user_id]&type\=inclusions;mode=list"></module>
+<div _grid="h">
+	<button onclick="Hash.set('edit/[user_id]?type=plain')">[button_create]</button>
+	<button onclick="Hash.set('archive')" badge_="1">[button_archive]</button>
+	<button onclick="Hash.set('comments')">[button_comments]</button>
+	<button onclick="Hash.set('recommendations')">[button_recommendations]</button>
+	<button onclick="Hash.set('avatars')" badge_="1">[button_avatars]</button>
+	<button onclick="Hash.set('templates')">[button_templates]</button>
+	<button onclick="Hash.set('drafts')">[button_drafts]</button>
+	<button onclick="Hash.set('bookmarks')">[button_bookmarks]</button>
+	<button onclick="Hash.set('groups')" badge_="2 / 1" title="[button_groups_tooltip]">[button_groups]</button>
+</div>
+<div _grid="h">
+	<button onclick="Hash.set('edit/[user_id]?type=comment')">[button_comment]</button>
+	<button onclick="Button.toggle(this, Request.recommend('[user_id]'))">[button_recommend]</button>
+	<!--<button onclick="Hash.set('edit/[user_id]?type=pm')">[button_private_message]</button>-->
+	<button onclick="Hash.set('pm/in')">[button_inbox]</button>
+	<button onclick="Hash.set('pm/out')">[button_outbox]</button>
+</div>
+<div _grid="h">
+	<button onclick="Hash.set('objects_stats')">[button_objects_stats]</button>
+	<!--<button onclick="Button.toggle(this, Request.friend('[user_login]'))">[button_to_friends]</button>-->
+</div>
+<div>&nbsp;</div>
+<div _grid="h">
+	<!--<button onclick="Claim.toggle()">[button_claim]</button>-->
+	<button onclick="Hash.set('template/[user_id]')">[button_template]</button>
+</div>
+<div>&nbsp;</div>
+<div>[string_content_rating_first]<b>1</b>[string_content_rating_second]</div>
+<div>&nbsp;</div>

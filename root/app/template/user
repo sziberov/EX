@@ -1,0 +1,28 @@
+<div attributes="_user=([online]==true?online:) ([mutual]==false?non-mutual-friend:)">
+	<condition>
+		<if>[avatar_url]!=</if>
+		<then>
+			<div _avatar="small" onclick="Hash.set('user/[user_login]')" title="[user_login]: [avatar_title]">
+				<img src="[avatar_url]">
+			</div>
+		</then>
+	</condition>
+	<condition>
+		<if>[user_login]!=</if>
+		<then>
+			<a href="#user/[user_login]">[user_login]</a>
+			<condition>
+				<if>[creation_time]!=</if>
+				<then>
+					<div>[creation_time]</div>
+					<condition>
+						<if>[edit_time]!=</if>
+						<then>
+							<div>[edit_time]</div>
+						</then>
+					</condition>
+				</then>
+			</condition>
+		</then>
+	</condition>
+</div>

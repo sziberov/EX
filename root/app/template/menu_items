@@ -1,0 +1,3 @@
+<module variables-instances="@/app/api/menu_items.php">
+	<a href="#[url]">[title]</a>
+</module>

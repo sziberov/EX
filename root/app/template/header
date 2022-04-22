@@ -1,0 +1,26 @@
+<div __section>
+	<div __menu>
+		<div __logo></div>
+		<module title="menu_items"></module>
+	</div>
+	<div __menu>
+		<module title="menu_user_items"></module>
+	</div>
+</div>
+<div __section>
+	<div _grid="padded">
+		<div>[string_shared_objects]</div>
+		<div _flex="h" __get>
+			<button primary_ onclick="Hash.set('edit?type=shared')">[button_create]</button>
+			<div _flex="stacked">
+				<input size_="max" type="text" placeholder="[string_object_number]" oninput="Header.getInput(this)">
+				<button primary_ onclick="Header.get(this)">[button_get]</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div __section>
+	<div __image>
+		<img src="/app/image/header_image.png">
+	</div>
+</div>

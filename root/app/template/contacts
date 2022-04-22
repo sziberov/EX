@@ -1,0 +1,5 @@
+<title>[title_contacts]</title>
+<div _title>[title_contacts]</div>
+<div>[string_contact_abuse] - <a>abuse@ex.ua</a></div>
+<div>[string_contact_info] - <a>info@ex.ua</a></div>
+<div>[string_contact_support] - <a>support@ex.ua</a></div>

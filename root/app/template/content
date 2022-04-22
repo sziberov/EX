@@ -1,0 +1,172 @@
+<condition>
+	<if>[page]==</if>
+	<then>
+		<title>[title_files]</title>
+		<div _grid="padded">
+			<div _grid="v">
+				<div _title="small">Новости</div>
+				<div _grid="h spaced">
+					<div _grid="h">
+						<input size_="medium" name="search" type="text">
+						<button onclick="Hash.set('search?query='+document.querySelector('[name=&quot;search&quot;]')?.value+'?user_id=[user_id]')">[button_search]</button>
+					</div>
+					<button>Добавить</button>
+				</div>
+				<module title="objects" variables="filters=type\=last;mode=cells"></module>
+			</div>
+			<div _grid="v">
+				<module title="most_items" variables="title=[title_most_popular];link_id=0"></module>
+				<module title="most_items" variables="title=[title_most_visited];link_id=1"></module>
+				<module title="most_items" variables="title=[title_most_discussed];link_id=2"></module>
+				<module title="most_items" variables="title=[title_most_recommended];link_id=3"></module>
+			</div>
+		</div>
+	</then>
+	<elseif>[page]==login</elseif>
+	<then>
+		<module title="login"></module>
+	</then>
+	<elseif>[page]==registration</elseif>
+	<then>
+		<module title="registration"></module>
+	</then>
+	<elseif>[page]==password</elseif>
+	<then>
+		<module title="password"></module>
+	</then>
+	<elseif>[page]==user</elseif>
+	<then>
+		<module title="user_page"></module>
+	</then>
+	<elseif>[page]==user_comments</elseif>
+	<then>
+		<module title="user_comments"></module>
+	</then>
+	<elseif>[page]==user_recommendations</elseif>
+	<then>
+		<module title="user_recommendations"></module>
+	</then>
+	<elseif>[page]==friends_comments</elseif>
+	<then>
+		<module title="friends_comments"></module>
+	</then>
+	<elseif>[page]==friends_recommendations</elseif>
+	<then>
+		<module title="friends_recommendations"></module>
+	</then>
+	<elseif>[page]==archive</elseif>
+	<then>
+		<module title="archive"></module>
+	</then>
+	<elseif>[page]==comments</elseif>
+	<then>
+		<module title="comments"></module>
+	</then>
+	<elseif>[page]==recommendations</elseif>
+	<then>
+		<module title="recommendations"></module>
+	</then>
+	<elseif>[page]==avatars</elseif>
+	<then>
+		<module title="avatars"></module>
+	</then>
+	<elseif>[page]==templates</elseif>
+	<then>
+		<module title="templates"></module>
+	</then>
+	<elseif>[page]==drafts</elseif>
+	<then>
+		<module title="drafts"></module>
+	</then>
+	<elseif>[page]==bookmarks</elseif>
+	<then>
+		<module title="bookmarks"></module>
+	</then>
+	<elseif>[page]==groups</elseif>
+	<then>
+		<module title="groups"></module>
+	</then>
+	<elseif>[page]==friends</elseif>
+	<then>
+		<module title="friends"></module>
+	</then>
+	<elseif>[page]==notifications</elseif>
+	<then>
+		<module title="notifications"></module>
+	</then>
+	<elseif>[page]==settings</elseif>
+	<then>
+		<module title="settings"></module>
+	</then>
+	<elseif>[page]==menu_items</elseif>
+	<then>
+		<module title="menu_items"></module>
+	</then>
+	<elseif>[page]==edit</elseif>
+	<then>
+		<module title="edit"></module>
+	</then>
+	<elseif>[page]==edit_settings</elseif>
+	<then>
+		<module title="edit_settings"></module>
+	</then>
+	<elseif>[page]==edit_access</elseif>
+	<then>
+		<module title="edit_access"></module>
+	</then>
+	<elseif>[page]==view</elseif>
+	<then>
+		<module title="view"></module>
+	</then>
+	<elseif>[page]==view_comments</elseif>
+	<then>
+		<module title="view_comments"></module>
+	</then>
+	<elseif>[page]==copy</elseif>
+	<then>
+		<module title="copy"></module>
+	</then>
+	<elseif>[page]==upload</elseif>
+	<then>
+		<module title="upload"></module>
+	</then>
+	<elseif>[page]==include</elseif>
+	<then>
+		<module title="include"></module>
+	</then>
+	<elseif>[page]==include_my</elseif>
+	<then>
+		<module title="include_my"></module>
+	</then>
+	<elseif>[page]==template</elseif>
+	<then>
+		<module title="template"></module>
+	</then>
+	<elseif>[page]==search</elseif>
+	<then>
+		<module title="search"></module>
+	</then>
+	<elseif>[page]==objects_stats</elseif>
+	<then>
+		<module title="objects_stats"></module>
+	</then>
+	<elseif>[page]==users_stats</elseif>
+	<then>
+		<module title="users_stats"></module>
+	</then>
+	<elseif>[page]==fs_stats</elseif>
+	<then>
+		<module title="fs_stats"></module>
+	</then>
+	<elseif>[page]==contacts</elseif>
+	<then>
+		<module title="contacts"></module>
+	</then>
+	<elseif>[page]==copyright</elseif>
+	<then>
+		<module title="copyright"></module>
+	</then>
+	<else>
+		<module title="error_404"></module>
+	</else>
+</condition>

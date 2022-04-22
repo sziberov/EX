@@ -1,0 +1,9 @@
+<div _flex="v left">
+	<div>&nbsp;</div>
+	<div _flex="h">
+		<div _icon="error"></div>
+		<div _title="small">[title_page_not_found]</div>
+	</div>
+	<div>&nbsp;</div>
+	<button primary_ onclick="Hash.set('')">[button_to_main]</button>
+</div>

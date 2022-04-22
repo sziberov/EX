@@ -1,0 +1,11 @@
+<div _wrapper>
+	<header>
+		<module title="header"></module>
+	</header>
+	<content>
+		<module title="content"></module>
+	</content>
+	<footer>
+		<module title="footer"></module>
+	</footer>
+</div>
