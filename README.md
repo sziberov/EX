@@ -1,2 +1,3 @@
-# EX
- Создание CMS, аналогичной сервисам EX.ua и Infostore.org, по архивным данным о них
+<p align="center">
+  <img src="./etc/EX%20CMS.svg">
+</p>
