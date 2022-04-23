@@ -13,7 +13,7 @@ $(() => {
 			for(let hashParameter of hashParameters?.split('&') ?? []) {
 				let entry = hashParameter.split('=');
 
-				parameters[entry[0]] =  decodeURI(entry[1] ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+				parameters[entry[0]] = entry[1]
 			}
 
 			this.current = {
@@ -168,7 +168,10 @@ $(() => {
 					session_user_login: 'DIES',
 					session_user_notifications_count: 5,
 					avatar_url: '/storage/ex.svg',
-					avatar_title: 'EX'
+					avatar_title: 'EX',
+					decodeURI: this.decodeURI,
+					parseBB: this.parseBB,
+					parseTimestamp: this.parseTimestamp
 				}
 			},
 			copy: (h) => {
@@ -252,6 +255,34 @@ $(() => {
 			}
 
 			return namespace;
+		}
+
+		static decodeURI(URI) {
+			return decodeURI(URI ?? '');
+		}
+
+		static parseBB(string) {
+			return string?.replaceAll('[br]', '<br>');
+		}
+
+		static parseTimestamp(timestamp) {
+			let date = new Date(Date.parse(timestamp ?? '0')),
+				months = [
+					Dictionary.getString('string_january'),
+					Dictionary.getString('string_february'),
+					Dictionary.getString('string_march'),
+					Dictionary.getString('string_april'),
+					Dictionary.getString('string_may'),
+					Dictionary.getString('string_june'),
+					Dictionary.getString('string_july'),
+					Dictionary.getString('string_august'),
+					Dictionary.getString('string_september'),
+					Dictionary.getString('string_october'),
+					Dictionary.getString('string_november'),
+					Dictionary.getString('string_december')
+				]
+
+			return ('0'+date.getHours()).slice(-2)+':'+('0'+date.getMinutes()).slice(-2)+', '+('0'+date.getDay()).slice(-2)+' '+months[date.getMonth()]+' '+date.getFullYear();
 		}
 
 		static async switch() {
@@ -366,7 +397,7 @@ $(() => {
 				link_settings: 'Настройки',
 				link_users_stats: 'пользователям',
 				string_access: 'Доступ',
-				string_account_deletion: 'Вы можете удалить свою учётную запись<br>После удаления вы потеряете доступ ко всем своим объектам',
+				string_account_deletion: 'Вы можете удалить свою учётную запись[br]После удаления вы потеряете доступ ко всем своим объектам',
 				string_account_deletion_confirmation: 'Удалить учётную запись?',
 				string_actions: 'Действия',
 				string_agreement: 'Соглашение',
@@ -377,8 +408,10 @@ $(() => {
 				string_allow_max_access_ignoring_groups: 'Разрешить максимальный доступ, игнорируя группы',
 				string_app_description: 'Хранение и обмен файлов.',
 				string_app_title: 'EX',
+				string_april: 'апреля',
 				string_as_cells: 'Ячейками',
 				string_as_list: 'Списком',
+				string_august: 'августа',
 				string_by_creation_time: 'По времени создания',
 				string_by_edit_time: 'По времени редактирования',
 				string_by_inclusion_time: 'По времени включения',
@@ -392,6 +425,7 @@ $(() => {
 				string_content_rating_first: 'Вы на ',
 				string_content_rating_second: '\'ом месте по размеру оригинального контента',
 				string_count: 'Количество',
+				string_december: 'декабря',
 				string_default_avatar: 'Аватар по умолчанию',
 				string_deny_claims: 'Запретить обжалование',
 				string_deny_nonbookmark_inclusion: 'Запретить включение извне закладок',
@@ -403,6 +437,7 @@ $(() => {
 				string_everyone_see_as: 'Все видят как',
 				string_everyone_see_everything_my_as: 'Все видят всё моё как',
 				string_execute_alien_js: 'Исполнять чужой JavaScript',
+				string_february: 'февраля',
 				string_file_number: 'Номер файла',
 				string_files: 'Файлы',
 				string_files_count: 'Файлов',
@@ -424,14 +459,21 @@ $(() => {
 				string_i_see_everything_as: 'Я вижу всё как',
 				string_inclusions_count: 'Включений',
 				string_ip_independent: 'Независимый от IP',
+				string_january: 'января',
+				string_july: 'июля',
+				string_june: 'июня',
 				string_login: 'Логин',
+				string_march: 'марта',
+				string_may: 'мая',
 				string_menu: 'Меню',
 				string_navigation: 'Навигация',
 				string_nizkagorian: 'Низкагорский',
 				string_notifications: 'Уведомления',
+				string_november: 'ноября',
 				string_object_number: 'Номер объекта',
 				string_objects_count: 'Объектов',
 				string_objects_stats: 'Статистика по объектам',
+				string_october: 'октября',
 				string_online: 'В сети',
 				string_origin: 'Происхождение',
 				string_originals_count: 'Оригиналов',
@@ -449,7 +491,8 @@ $(() => {
 				string_russian: 'Русский',
 				string_search: 'Поиск',
 				string_section: 'Раздел',
-				string_shared_objects: 'Вы можете анонимно воспользоваться сервисом хранения и обмена файлов.<br>В этом случае доступ к объекту будет возможен только по его номеру.',
+				string_september: 'сентября',
+				string_shared_objects: 'Вы можете анонимно воспользоваться сервисом хранения и обмена файлов.[br]В этом случае доступ к объекту будет возможен только по его номеру.',
 				string_stats_of: 'Статистика по',
 				string_summary_size: 'Суммарный размер',
 				string_templates: 'Шаблоны',
@@ -488,7 +531,7 @@ $(() => {
 				title_most_visited: 'Самае пасешяемае',
 				title_most_discussed: 'Самае абсуждаемае',
 				title_most_recommended: 'Самае рекамендуемае',
-				string_shared_objects: 'Вы можэте ананимна васпользавац\'а сэрвисам хранения и абмена файлаў.<br>В этам случяе доступ к абъекту будет вазможэн тока па ево номеру.',
+				string_shared_objects: 'Вы можэте ананимна васпользавац\'а сэрвисам хранения и абмена файлаў.[br]В этам случяе доступ к абъекту будет вазможэн тока па ево номеру.',
 				string_object_number: 'Номер абъекта',
 				string_page_not_found: 'Страница не найдена',
 				string_stats_of: 'Статистика па',
@@ -575,7 +618,7 @@ $(() => {
 				link_settings: 'Settings',
 				link_users_stats: 'users',
 				string_access: 'Access',
-				string_account_deletion: 'You can delete your account<br>After deletion you will lose access to all your objects',
+				string_account_deletion: 'You can delete your account[br]After deletion you will lose access to all your objects',
 				string_account_deletion_confirmation: 'Delete account?',
 				string_actions: 'Actions',
 				string_agreement: 'Agreement',
@@ -586,8 +629,10 @@ $(() => {
 				string_allow_max_access_ignoring_groups: 'Allow max access ignoring groups',
 				string_app_description: 'File storage and exchange.',
 				string_app_title: 'EX',
+				string_april: 'april',
 				string_as_cells: 'As cells',
 				string_as_list: 'As list',
+				string_august: 'august',
 				string_by_creation_time: 'By creation time',
 				string_by_edit_time: 'By edit time',
 				string_by_inclusion_time: 'By inclusion time',
@@ -601,6 +646,7 @@ $(() => {
 				string_content_rating_first: 'You are at ',
 				string_content_rating_second: ' place by rating of original content',
 				string_count: 'Count',
+				string_december: 'december',
 				string_default_avatar: 'Default avatar',
 				string_deny_claims: 'Deny claims',
 				string_deny_nonbookmark_inclusion: 'Deny non-bookmark inclusion',
@@ -612,6 +658,7 @@ $(() => {
 				string_everyone_see_as: 'Everyone see as',
 				string_everyone_see_everything_my_as: 'Everyone see everything my as',
 				string_execute_alien_js: 'Execute alien JavaScript',
+				string_february: 'february',
 				string_file_number: 'File number',
 				string_files: 'Files',
 				string_files_count: 'Files',
@@ -633,14 +680,21 @@ $(() => {
 				string_i_see_everything_as: 'I see everything as',
 				string_inclusions_count: 'Inclusions',
 				string_ip_independent: 'IP independent',
+				string_january: 'january',
+				string_july: 'july',
+				string_june: 'june',
 				string_login: 'Login',
+				string_march: 'march',
+				string_may: 'may',
 				string_menu: 'Menu',
 				string_navigation: 'Navigation',
 				string_nizkagorian: 'Низкагорский',
 				string_notifications: 'Notifications',
+				string_november: 'november',
 				string_object_number: 'Object number',
 				string_objects_count: 'Objects',
 				string_objects_stats: 'Stats of objects',
+				string_october: 'october',
 				string_online: 'Online',
 				string_origin: 'Origin',
 				string_originals_count: 'Originals',
@@ -658,7 +712,8 @@ $(() => {
 				string_russian: 'Русский',
 				string_search: 'Search',
 				string_section: 'Section',
-				string_shared_objects: 'You can anonymously use the file storage and EXchange service.<br>In this case, access to an object will be possible only by its number.',
+				string_september: 'september',
+				string_shared_objects: 'You can anonymously use the file storage and EXchange service.[br]In this case, access to an object will be possible only by its number.',
 				string_stats_of: 'Stats of',
 				string_summary_size: 'Summary size',
 				string_templates: 'Templates',
@@ -841,29 +896,35 @@ $(() => {
 			return model.querySelectorAll(selector+':not(module '+selector+')');
 		}
 
-		static parseVariables(model, namespace) {
+		static getReplacementBlackzones(model) {
 			let modelInner = model.documentElement.innerHTML,
 				childModules = this.getTopLevelElements(model, 'module'),
-				variables = new Set(Array.from(modelInner.matchAll(/\[[\w.]+\]/g), v => v[0]).sort((a, b) => b.length-a.length)),
-				blackzones = []
+				result = []
 
 			for(let cm of childModules) {
 				let cmOuter = cm.outerHTML,
 					cmInner = cmOuter.match(/(?<=<[\s\S]*?>)[\s\S]*(?=<\/[\s\S]*>)/),
-					cmIndex = modelInner.indexOf(cmOuter, blackzones.at(-1)?.[1] ?? 0)+cmInner.index-1,
+					cmIndex = modelInner.indexOf(cmOuter, result.at(-1)?.[1] ?? 0)+cmInner.index-1,
 					cmLastIndex = cmIndex+cmInner[0].length+1;
 
-				blackzones.push([
+				result.push([
 					cmIndex,
 					cmLastIndex
 				]);
 			}
-			for(let variable of variables) {
-				let variable_normalized = variable.substring(1, variable.length-1);
 
-				modelInner = modelInner.replaceAll(variable, (match, offset) => {
-					let value = this.getVariable(namespace, variable_normalized) ?? '',
-						difference = variable.length-value.toString().length;
+			return result;
+		}
+
+		static replaceWithBlackzones(model, blackzones, entries) {
+			let modelInner = model.documentElement.innerHTML;
+
+			for(let entry of entries) {
+				let key = entry[0],
+					value = entry[1]
+
+				modelInner = modelInner.replaceAll(key, (match, offset) => {
+					let difference = key.length-value.length;
 
 					for(let blackzone of blackzones) {
 						if(offset >= blackzone[0] && offset+match.length <= blackzone[1]) {
@@ -881,6 +942,26 @@ $(() => {
 				});
 			}
 			model.documentElement.innerHTML = modelInner;
+		}
+
+		static escapeVariable(variable) {
+			return variable?.replaceAll(/&(?!(amp|lt|gt|quot|#039);)/g, '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
+		}
+
+		static parseVariables(model, blackzones, namespace) {
+			let modelInner = model.documentElement.innerHTML,
+				variables = new Set(Array.from(modelInner.matchAll(/\[[\w.]+\]/g), v => v[0]).sort((a, b) => b.length-a.length)),
+				entries = []
+
+			for(let variable of variables) {
+				let variable_normalized = variable.substring(1, variable.length-1),
+					value = this.escapeVariable(this.getVariable(namespace, variable_normalized)?.toString()) ?? '';
+
+				entries.push([variable, value]);
+			}
+			this.replaceWithBlackzones(model, blackzones, entries);
+			if(entries.length > 0)
+				console.log(model.documentElement.innerHTML);
 		}
 
 		static getComparisonsResult(comparisons) {
@@ -1005,6 +1086,36 @@ $(() => {
 			}
 		}
 
+		static parseFunctions(model, blackzones, namespace) {
+			let modelInner = model.documentElement.innerHTML,
+				functions = modelInner.match(/{.+}/g) ?? [],
+				entries = []
+
+			for(let function_ of functions) {
+				let identifiers = function_.substring(1, function_.length-1).split(' '),
+					unescaped;
+
+				for(let k in identifiers) {
+					if(k == 0 && identifiers[k].startsWith('!')) {
+						identifiers[k] = identifiers[k].substring(1);
+						unescaped = true;
+					}
+
+					identifiers[k] = this.getVariable(namespace, identifiers[k]);
+				}
+				if(identifiers[0] != null) {
+					let key = identifiers.shift(),
+						value = key(...identifiers)?.toString() ?? '';
+
+					if(!unescaped) {
+						value = this.escapeVariable(value);
+					}
+					entries.push([function_, value]);
+				}
+			}
+			this.replaceWithBlackzones(model, blackzones, entries);
+		}
+
 		static parseAttributes(model) {
 			let elements = this.getTopLevelElements(model, '[attributes]');
 
@@ -1059,6 +1170,8 @@ $(() => {
 							} else
 							if(key === '...') {
 								value = this.getVariable(namespace, value);
+							} else {
+								value = this.escapeVariable(value);
 							}
 
 							if(key === '...') {
@@ -1131,9 +1244,12 @@ $(() => {
 			try {
 				model = new DOMParser().parseFromString(model, 'text/html');
 
-				this.parseVariables(model, namespace);
+				let blackzones = this.getReplacementBlackzones(model);
+
+				this.parseVariables(model, blackzones, namespace);
 				this.parseConditions(model);
 				this.parseAttributionaryConditions(model);
+				this.parseFunctions(model, blackzones, namespace);
 				this.parseAttributes(model);
 				await this.parseChildModules(objectId, model, namespace);
 

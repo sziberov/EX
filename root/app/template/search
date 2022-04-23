@@ -1,57 +1,59 @@
-<condition>
-	<if>[hash.parameters.query]!=</if>
-	<then>
-		<title>[title_search] "[hash.parameters.query]"</title>
-	</then>
-	<else>
-		<title>[title_search]</title>
-	</else>
-</condition>
-<div _title>[title_search]</div>
-<div _grid="h">
-	<input size_="large" name="search" type="text" value="[hash.parameters.query]">
-	<button primary_ onclick="Hash.set('search?query='+document.querySelector('[name=&quot;search&quot;]')?.value+'&user_id=[user_id]&section_id=[section_id]')">[button_search]</button>
-</div>
-<condition>
-	<if>[user_login]!=</if>
-	<elseif>[section_title]!=</elseif>
-	<elseif>[search_results_count]==0</elseif>
-	<then>
-		<div _properties>
-			<condition>
-				<if>[user_login]!=</if>
-				<then>
-					<div>
-						<div>[string_user]</div>
-						<a href="#user/[user_login]">[user_login]</a>
-					</div>
-				</then>
-			</condition>
-			<condition>
-				<if>[section_title]!=</if>
-				<then>
-					<div>
-						<div>[string_section]</div>
-						<a href="#view/[section_id]">[section_title]</a>
-					</div>
-				</then>
-			</condition>
-			<condition>
-				<if>[search_results_count]==0</if>
-				<then>
-					<div>Ничего не найдено</div>
-				</then>
-			</condition>
-		</div>
-	</then>
-</condition>
-<module title="objects" variables="filters=query\=[hash.parameters.query]&type\=search;mode=list"></module>
-<condition>
-	<if>[user_login]!=</if>
-	<elseif>[section_id]!=</elseif>
-	<then>
-		<div _grid="h">
-			<button onclick="Hash.set('search?query=[hash.parameters.query]')">[button_search_everywhere]</button>
-		</div>
-	</then>
-</condition>
+<module variables="query={decodeURI hash.parameters.query}">
+	<condition>
+		<if>[query]!=</if>
+		<then>
+			<title>[title_search] "[query]"</title>
+		</then>
+		<else>
+			<title>[title_search]</title>
+		</else>
+	</condition>
+	<div _title>[title_search]</div>
+	<div _grid="h">
+		<input size_="large" name="search" type="text" value="[query]">
+		<button primary_ onclick="Hash.set('search?query='+document.querySelector('[name=&quot;search&quot;]')?.value+'&user_id=[user_id]&section_id=[section_id]')">[button_search]</button>
+	</div>
+	<condition>
+		<if>[user_login]!=</if>
+		<elseif>[section_title]!=</elseif>
+		<elseif>[search_results_count]==0</elseif>
+		<then>
+			<div _properties>
+				<condition>
+					<if>[user_login]!=</if>
+					<then>
+						<div>
+							<div>[string_user]</div>
+							<a href="#user/[user_login]">[user_login]</a>
+						</div>
+					</then>
+				</condition>
+				<condition>
+					<if>[section_title]!=</if>
+					<then>
+						<div>
+							<div>[string_section]</div>
+							<a href="#view/[section_id]">[section_title]</a>
+						</div>
+					</then>
+				</condition>
+				<condition>
+					<if>[search_results_count]==0</if>
+					<then>
+						<div>Ничего не найдено</div>
+					</then>
+				</condition>
+			</div>
+		</then>
+	</condition>
+	<module title="objects" variables="filters=query\=[query]&type\=search;mode=list"></module>
+	<condition>
+		<if>[user_login]!=</if>
+		<elseif>[section_id]!=</elseif>
+		<then>
+			<div _grid="h">
+				<button onclick="Hash.set('search?query=[query]')">[button_search_everywhere]</button>
+			</div>
+		</then>
+	</condition>
+</module>

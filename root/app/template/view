@@ -27,7 +27,7 @@
 			<condition>
 				<if>[description]!=</if>
 				<then>
-					<div _description>[description]</div>
+					<div _description>{!parseBB description}</div>
 				</then>
 			</condition>
 		</div>
