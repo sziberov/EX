@@ -1,4 +1,4 @@
-<div attributes="_user=([online]==true?online:) ([mutual]==false?non-mutual-friend:)">
+<div attributes="_user={{if;[online]==true;online}} {{if;[mutual]==false;non-mutual-friend}}">
 	<condition>
 		<if>[avatar_url]!=</if>
 		<then>
@@ -14,11 +14,11 @@
 			<condition>
 				<if>[creation_time]!=</if>
 				<then>
-					<div>[creation_time]</div>
+					<div>{formatTime &creation_time}</div>
 					<condition>
 						<if>[edit_time]!=</if>
 						<then>
-							<div>[edit_time]</div>
+							<div>{formatTime &edit_time}</div>
 						</then>
 					</condition>
 				</then>

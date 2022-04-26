@@ -120,7 +120,7 @@
 	</div>
 	<div _flex="v center">
 		<div _title>&nbsp;</div>
-		<div>{!parseBB string_account_deletion}</div>
+		<div>{!parseBB &string_account_deletion}</div>
 		<button onclick="confirm('[string_account_deletion_confirmation]')">[button_delete]</button>
 	</div>
 </div>

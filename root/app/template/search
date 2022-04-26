@@ -1,4 +1,4 @@
-<module variables="query={decodeURI hash.parameters.query}">
+<module variables="query={decodeURI &hash.parameters.query}">
 	<condition>
 		<if>[query]!=</if>
 		<then>

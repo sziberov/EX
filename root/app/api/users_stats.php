@@ -9,8 +9,8 @@
 		"originals_size": "3,953,353,350,665",
 		"duplicates_count": "1,093",
 		"duplicates_size": "367,941,329,053",
-		"registration_time": "00:00, 01 января 2019",
-		"online_time": "12:00, 01 января 2019",
+		"registration_time": "2022-03-05 00:05:32",
+		"online_time": "2022-03-05 00:07:16",
 		"hits_count": 64,
 		"hosts_count": 48,
 		"guests_count": 24
@@ -25,8 +25,8 @@
 		"originals_size": "353,350,665",
 		"duplicates_count": "0",
 		"duplicates_size": "0",
-		"registration_time": "00:00, 01 января 2019",
-		"online_time": "12:00, 01 января 2019",
+		"registration_time": "2022-03-05 06:05:32",
+		"online_time": "2022-03-05 06:07:16",
 		"hits_count": 32,
 		"hosts_count": 16,
 		"guests_count": 8

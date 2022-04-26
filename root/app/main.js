@@ -171,7 +171,12 @@ $(() => {
 					avatar_title: 'EX',
 					decodeURI: this.decodeURI,
 					parseBB: this.parseBB,
-					parseTimestamp: this.parseTimestamp
+					formatTime: this.formatTime,
+					formatSize: this.formatSize,
+					stringify: JSON.stringify,
+					plus: (a, b) => a*1+b*1,
+					minus: (a, b) => a*1-b*1,
+					if: (a, b, c) => Template.getComparisonsResult(a) ? b : c
 				}
 			},
 			copy: (h) => {
@@ -265,8 +270,8 @@ $(() => {
 			return string?.replaceAll('[br]', '<br>');
 		}
 
-		static parseTimestamp(timestamp) {
-			let date = new Date(Date.parse(timestamp ?? '0')),
+		static formatTime(time) {
+			let date = new Date(Date.parse(time ?? '0')),
 				months = [
 					Dictionary.getString('string_january'),
 					Dictionary.getString('string_february'),
@@ -282,7 +287,11 @@ $(() => {
 					Dictionary.getString('string_december')
 				]
 
-			return ('0'+date.getHours()).slice(-2)+':'+('0'+date.getMinutes()).slice(-2)+', '+('0'+date.getDay()).slice(-2)+' '+months[date.getMonth()]+' '+date.getFullYear();
+			return date.getHours()+':'+('0'+date.getMinutes()).slice(-2)+', '+date.getDay()+' '+months[date.getMonth()]+' '+date.getFullYear();
+		}
+
+		static formatSize(size) {
+			return size?.toLocaleString('en-US') ?? '';
 		}
 
 		static async switch() {
@@ -957,11 +966,13 @@ $(() => {
 				let variable_normalized = variable.substring(1, variable.length-1),
 					value = this.escapeVariable(this.getVariable(namespace, variable_normalized)?.toString()) ?? '';
 
-				entries.push([variable, value]);
+				entries.push([
+					variable,
+					value
+				]);
 			}
+
 			this.replaceWithBlackzones(model, blackzones, entries);
-			if(entries.length > 0)
-				console.log(model.documentElement.innerHTML);
 		}
 
 		static getComparisonsResult(comparisons) {
@@ -1088,22 +1099,29 @@ $(() => {
 
 		static parseFunctions(model, blackzones, namespace) {
 			let modelInner = model.documentElement.innerHTML,
-				functions = modelInner.match(/{.+}/g) ?? [],
+				functions = modelInner.match(/{.+?}/g) ?? [],
 				entries = []
 
 			for(let function_ of functions) {
 				let identifiers = function_.substring(1, function_.length-1).split(' '),
-					unescaped;
+					unescaped,
+					linked;
 
 				for(let k in identifiers) {
 					if(k == 0 && identifiers[k].startsWith('!')) {
-						identifiers[k] = identifiers[k].substring(1);
 						unescaped = true;
+						identifiers[k] = identifiers[k].substring(1);
 					}
-
-					identifiers[k] = this.getVariable(namespace, identifiers[k]);
+					if(k != 0 && identifiers[k].startsWith('&amp;')) {
+						linked = true;
+						identifiers[k] = identifiers[k].substring(5);
+					}
+					if(k == 0 || linked) {
+						linked = false;
+						identifiers[k] = this.getVariable(namespace, identifiers[k]);
+					}
 				}
-				if(identifiers[0] != null) {
+				if(typeof identifiers[0] === 'function') {
 					let key = identifiers.shift(),
 						value = key(...identifiers)?.toString() ?? '';
 
@@ -1113,6 +1131,109 @@ $(() => {
 					entries.push([function_, value]);
 				}
 			}
+
+			this.replaceWithBlackzones(model, blackzones, entries);
+		}
+
+		static parseFunction(string, namespace) {
+			let identifiers = string.split(';'),
+				unescaped,
+				linked;
+
+			for(let k in identifiers) {
+				if(k == 0 && identifiers[k].startsWith('!')) {
+					unescaped = true;
+					identifiers[k] = identifiers[k].substring(1);
+				}
+				if(k != 0 && identifiers[k].startsWith('&amp;')) {
+					linked = true;
+					identifiers[k] = identifiers[k].substring(5);
+				}
+				if(k == 0 || linked) {
+					linked = false;
+					identifiers[k] = this.getVariable(namespace, identifiers[k]);
+				}
+			}
+			if(typeof identifiers[0] === 'function') {
+				let key = identifiers.shift(),
+					value = key(...identifiers)?.toString() ?? '';
+
+				if(!unescaped) {
+					value = this.escapeVariable(value);
+				}
+
+				return value;
+			}
+		}
+
+		static parseExpression(expression, namespace) {
+			let result = expression,
+				match,
+				expectedSeparators = /{{/,
+				parts = {}
+
+			while((match = result.match(expectedSeparators)) != null) {
+				let i = match.index,
+					separator = match[0]
+
+				if(separator === '{{') {
+					parts.before = result.substring(0, i);
+					if(parts.before.indexOf('}}') > -1) {
+						break;
+					}
+					result = this.parseExpression(result.substring(i+separator.length), namespace);
+
+					expectedSeparators = /{{|}}/;
+				}
+				if(separator === '}}') {
+					parts.content = this.parseFunction(result.substring(0, i), namespace) ?? '';
+					result = result.substring(i+separator.length);
+
+					parts.after = result;
+					result = parts.before+parts.content+parts.after;
+
+					parts = {}
+					expectedSeparators = /{{/;
+				}
+			}
+
+			return result;
+		}
+
+		static parseExpressions(model, blackzones, namespace) {
+			let modelInner = model.documentElement.innerHTML,
+				match,
+				expectedSeparators = /{{|}}/g,
+				expressions = [],
+				level = 0,
+				entries = []
+
+			while((match = expectedSeparators.exec(modelInner)) != null) {
+				let i = match.index,
+					separator = match[0]
+
+				if(separator === '{{' && ++level === 1) {
+					expressions.push({
+						index: i
+					});
+				}
+				if(separator === '}}' && level > 0 && --level === 0) {
+					let expression = expressions.at(-1);
+
+					expression.string = modelInner.substring(expression.index, i+separator.length);
+				}
+
+				expectedSeparators.lastIndex = i+separator.length;
+			}
+			expressions = expressions.sort((a, b) => b.string.length-a.string.length);
+
+			for(let expression of expressions) {
+				entries.push([
+					expression.string,
+					this.parseExpression(expression.string, namespace)
+				]);
+			}
+
 			this.replaceWithBlackzones(model, blackzones, entries);
 		}
 
@@ -1199,10 +1320,10 @@ $(() => {
 					for(let k in cmVariablesInstances) {
 						let cmVariablesInstance = cmVariablesInstances[k],
 							cmNamespaceInstance = {
+								...cmNamespace,
 								...cmVariablesInstance,
 								index: k,
-								last_index: cmVariablesInstances.length-1,
-								_parent_: cmNamespace
+								last_index: cmVariablesInstances.length-1
 							},
 							cmModelInstanceBody;
 
@@ -1247,6 +1368,7 @@ $(() => {
 				let blackzones = this.getReplacementBlackzones(model);
 
 				this.parseVariables(model, blackzones, namespace);
+				this.parseExpressions(model, blackzones, namespace);
 				this.parseConditions(model);
 				this.parseAttributionaryConditions(model);
 				this.parseFunctions(model, blackzones, namespace);

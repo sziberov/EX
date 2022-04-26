@@ -27,7 +27,7 @@
 			<condition>
 				<if>[description]!=</if>
 				<then>
-					<div _description>{!parseBB description}</div>
+					<div _description>{!parseBB &description}</div>
 				</then>
 			</condition>
 		</div>
@@ -59,88 +59,7 @@
 	<condition>
 		<if>[files_count]>0</if>
 		<then>
-			<div _table="list" wide_ style="--columns: minmax(192px, auto) repeat(2, minmax(96px, max-content));">
-				<div header_>
-					<div>
-						<div _grid="v stacked">
-							<b>[string_files]</b>
-							<div _properties>
-								<div>
-									<div>[string_count]</div>
-									<div>2</div>
-								</div>
-								<div>
-									<div>[string_summary_size]</div>
-									<div>2,558,625</div>
-								</div>
-								<a>[link_file_list]</a>
-								<a>[link_play_list]</a>
-							</div>
-						</div>
-					</div>
-					<div></div>
-					<div>
-						<button onclick="Viewer.toggleClose()">[button_display_viewer]</button>
-					</div>
-				</div>
-				<div>
-					<div>
-						<div _icon="floppy"></div>
-						<div _grid="v stacked">
-							<div fallback_>1</div>
-							<a href="#get/[file_id]">background.png</a>
-						</div>
-					</div>
-					<div>
-						<img _image src="/storage/example.jpg" onclick="Viewer.toggleClose('image', '1');" title="background.png - Без названия - Видео">
-					</div>
-					<div _flex="v right" fallback_>
-						<b>2,558,625</b>
-						<div _flex="v right stacked">
-							<div>00:00, 01 января 2019</div>
-							<a href="#search?query=md5:c43f10467775456d14013d25fe708b1e">c43f10467775456d14013d25fe708b1e</a>
-							<div>PNG: 2560x1440</div>
-						</div>
-						<div _grid="h">
-							<button>[button_download]</button>
-							<button onclick="Hash.set('copy/[id]/[file_id]')">[button_copy]</button>
-						</div>
-						<!--
-						<div _grid="h">
-							<button>Смотреть на карте</button>
-						</div>
-						-->
-						<div>FS1</div>
-					</div>
-				</div>
-				<div>
-					<div>
-						<div _icon="floppy"></div>
-						<div _grid="v stacked">
-							<div fallback_>2</div>
-							<a href="#get/2">video.mp4</a>
-						</div>
-					</div>
-					<div>
-						<button onclick="Viewer.toggleClose('video', '2')" badge_="22:24">Играть</button>
-					</div>
-					<div _flex="v right" fallback_>
-						<b>386,537,472</b>
-						<div _flex="v right stacked">
-							<div>12:00, 01 января 2019</div>
-							<a href="#search?query=md5:d98035045cd7aa0fc1def68dd19c33e6">d98035045cd7aa0fc1def68dd19c33e6</a>
-							<div>44:56, MPEG4: 640x480</div>
-						</div>
-						<!--<div important_>Файл недоступен</div>-->
-						<div _grid="h">
-							<button>[button_download]</button>
-							<button>[button_torrent]</button>
-							<button onclick="Hash.set('copy/[id]/[file_id]')">[button_copy]</button>
-						</div>
-						<div>FS1</div>
-					</div>
-				</div>
-			</div>
+			<module title="files" variables="...=@/app/api/files.php?object_id=[id]"></module>
 		</then>
 	</condition>
 	<div _grid="h">
