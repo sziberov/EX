@@ -27,12 +27,12 @@
 			<condition>
 				<if>[description]!=</if>
 				<then>
-					<div _description>{!parseBB &description}</div>
+					<div _description>{{!parseBB ; &description}}</div>
 				</then>
 			</condition>
 		</div>
 		<div _flex="v right">
-			<img attributes="_image=([inclusions_count]>0?big:dynamic)" src="[poster_url]" title="[title]">
+			<img attributes="_image={{if ; [inclusions_count]>0 ; big ; dynamic}}" src="[poster_url]" title="[title]">
 			<div fallback_>PNG: 2560x1440</div>
 		</div>
 	</div>
@@ -41,8 +41,8 @@
 		<then>
 			<div _grid="h">
 				<select oninput="Hash.set('#view/[id]?mode='+this.value)">
-					<option value="cells" attributes="([navigation_mode]!=list?selected:)">[string_as_cells]</option>
-					<option value="list" attributes="([navigation_mode]==list?selected:)">[string_as_list]</option>
+					<option value="cells" attributes="{{if ; [navigation_mode]!=list ; selected}}">[string_as_cells]</option>
+					<option value="list" attributes="{{if ; [navigation_mode]==list ; selected}}">[string_as_list]</option>
 				</select>
 				<select>
 					<option selected>[string_by_inclusion_time]</option>
@@ -53,7 +53,7 @@
 				<input size_="medium" name="search" type="text">
 				<button>[button_search]</button>
 			</div>
-			<module title="objects" variables="filters=parent_id\\=[id]&type\\=inclusions;navigation=true;mode=([navigation_mode]==list?list:cells)"></module>
+			<module title="objects" variables="filters=parent_id\\=[id]&type\\=inclusions;navigation=true;mode={{if ; [navigation_mode]==list ; list ; cells}}"></module>
 		</then>
 	</condition>
 	<condition>

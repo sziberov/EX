@@ -10,7 +10,7 @@
 					</div>
 					<div>
 						<div>[string_summary_size]</div>
-						<div>{formatSize &summary_size}</div>
+						<div>{{formatSize ; &summary_size}}</div>
 					</div>
 					<a>[link_file_list]</a>
 					<a>[link_play_list]</a>
@@ -27,7 +27,7 @@
 			<div>
 				<div _icon="floppy"></div>
 				<div _grid="v stacked">
-					<div fallback_>{plus &index 1}</div>
+					<div fallback_>{{plus ; &index ; 1}}</div>
 					<a href="#get/[id]">[title]</a>
 				</div>
 			</div>
@@ -44,9 +44,9 @@
 				</condition>
 			</div>
 			<div _flex="v right" fallback_>
-				<b>{formatSize &size}</b>
+				<b>{{formatSize ; &size}}</b>
 				<div _flex="v right stacked">
-					<div>{formatTime &edit_time}</div>
+					<div>{{formatTime ; &edit_time}}</div>
 					<a href="#search?query=md5:[md5]">[md5]</a>
 					<condition>
 						<if>[settings.format]==image/jpeg</if>

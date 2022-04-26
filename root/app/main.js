@@ -1034,109 +1034,8 @@ $(() => {
 			}
 		}
 
-		static parseTernaryConditions(string) {
-			let result = string,
-				blocks = {},
-				expectedSeparator = '(',
-				i = -1;
-
-			while((i = result.indexOf(expectedSeparator)) !== -1) {
-				if(expectedSeparator === '(') {
-					blocks.before = result.substring(0, i);
-					result = result.substring(i+1);
-					expectedSeparator = '?';
-				} else
-				if(expectedSeparator === '?') {
-					blocks.if = this.getComparisonsResult(result.substring(0, i));
-					result = result.substring(i+1);
-					expectedSeparator = ':';
-				} else
-				if(expectedSeparator === ':') {
-					let parseChild = this.parseTernaryConditions(result);
-
-					if(result !== parseChild) {
-						result = parseChild;
-
-						continue;
-					}
-
-					blocks.then = result.substring(0, i);
-					result = result.substring(i+1);
-					expectedSeparator = ')';
-				} else
-				if(expectedSeparator === ')') {
-					let parseChild = this.parseTernaryConditions(result);
-
-					if(result !== parseChild) {
-						result = parseChild;
-
-						continue;
-					}
-
-					blocks.else = result.substring(0, i);
-					blocks.after = result.substring(i+1, result.length);
-					result = blocks.before+(blocks.if ? blocks.then : blocks.else)+blocks.after;
-					expectedSeparator = '(';
-				}
-			}
-
-			return result;
-		}
-
-		static parseAttributionaryConditions(model) {
-			let attributes = ['variables', 'variables-instances', 'attributes']
-
-			for(let attribute of attributes) {
-				for(let element of this.getTopLevelElements(model, '['+attribute+']')) {
-					let attributeValue = element.getAttribute(attribute);
-
-					if(attributeValue != null) {
-						element.setAttribute(attribute, this.parseTernaryConditions(attributeValue));
-					}
-				}
-			}
-		}
-
-		static parseFunctions(model, blackzones, namespace) {
-			let modelInner = model.documentElement.innerHTML,
-				functions = modelInner.match(/{.+?}/g) ?? [],
-				entries = []
-
-			for(let function_ of functions) {
-				let identifiers = function_.substring(1, function_.length-1).split(' '),
-					unescaped,
-					linked;
-
-				for(let k in identifiers) {
-					if(k == 0 && identifiers[k].startsWith('!')) {
-						unescaped = true;
-						identifiers[k] = identifiers[k].substring(1);
-					}
-					if(k != 0 && identifiers[k].startsWith('&amp;')) {
-						linked = true;
-						identifiers[k] = identifiers[k].substring(5);
-					}
-					if(k == 0 || linked) {
-						linked = false;
-						identifiers[k] = this.getVariable(namespace, identifiers[k]);
-					}
-				}
-				if(typeof identifiers[0] === 'function') {
-					let key = identifiers.shift(),
-						value = key(...identifiers)?.toString() ?? '';
-
-					if(!unescaped) {
-						value = this.escapeVariable(value);
-					}
-					entries.push([function_, value]);
-				}
-			}
-
-			this.replaceWithBlackzones(model, blackzones, entries);
-		}
-
 		static parseFunction(string, namespace) {
-			let identifiers = string.split(';'),
+			let identifiers = string?.split(' ; ') ?? [],
 				unescaped,
 				linked;
 
@@ -1145,9 +1044,14 @@ $(() => {
 					unescaped = true;
 					identifiers[k] = identifiers[k].substring(1);
 				}
-				if(k != 0 && identifiers[k].startsWith('&amp;')) {
-					linked = true;
-					identifiers[k] = identifiers[k].substring(5);
+				if(k != 0) {
+					if(identifiers[k].startsWith('&amp;')) {
+						linked = true;
+						identifiers[k] = identifiers[k].substring(5);
+					}
+					if(identifiers[k].startsWith('\\&amp;')) {
+						identifiers[k] = identifiers[k].substring(1);
+					}
 				}
 				if(k == 0 || linked) {
 					linked = false;
@@ -1225,7 +1129,7 @@ $(() => {
 
 				expectedSeparators.lastIndex = i+separator.length;
 			}
-			expressions = expressions.sort((a, b) => b.string.length-a.string.length);
+			expressions = expressions.filter(v => v.string != null).sort((a, b) => b.string.length-a.string.length);
 
 			for(let expression of expressions) {
 				entries.push([
@@ -1370,8 +1274,6 @@ $(() => {
 				this.parseVariables(model, blackzones, namespace);
 				this.parseExpressions(model, blackzones, namespace);
 				this.parseConditions(model);
-				this.parseAttributionaryConditions(model);
-				this.parseFunctions(model, blackzones, namespace);
 				this.parseAttributes(model);
 				await this.parseChildModules(objectId, model, namespace);
 

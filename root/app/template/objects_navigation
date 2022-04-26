@@ -59,19 +59,19 @@
 		</condition>
 	</module>
 	<select fallback_ title="Элементов на страницу">
-		<option attributes="([navigation_per]==4?selected:)">4</option>
-		<option attributes="([navigation_per]==6?selected:)">6</option>
-		<option attributes="([navigation_per]==8?selected:)">8</option>
-		<option attributes="([navigation_per]==12?selected:)">12</option>
-		<option attributes="([navigation_per]==16?selected:)">16</option>
-		<option attributes="([navigation_per]==24?selected:)">24</option>
-		<option attributes="([navigation_per]==32?selected:)">32</option>
-		<option attributes="([navigation_per]==48?selected:)">48</option>
-		<option attributes="([navigation_per]==64?selected:)">64</option>
-		<option attributes="([navigation_per]==96?selected:)">96</option>
-		<option attributes="([navigation_per]==128?selected:)">128</option>
-		<option attributes="([navigation_per]==192?selected:)">192</option>
-		<option attributes="([navigation_per]==256?selected:)">256</option>
+		<option attributes="{{if ; [navigation_per]==4 ; selected}}">4</option>
+		<option attributes="{{if ; [navigation_per]==6 ; selected}}">6</option>
+		<option attributes="{{if ; [navigation_per]==8 ; selected}}">8</option>
+		<option attributes="{{if ; [navigation_per]==12 ; selected}}">12</option>
+		<option attributes="{{if ; [navigation_per]==16 ; selected}}">16</option>
+		<option attributes="{{if ; [navigation_per]==24 ; selected}}">24</option>
+		<option attributes="{{if ; [navigation_per]==32 ; selected}}">32</option>
+		<option attributes="{{if ; [navigation_per]==48 ; selected}}">48</option>
+		<option attributes="{{if ; [navigation_per]==64 ; selected}}">64</option>
+		<option attributes="{{if ; [navigation_per]==96 ; selected}}">96</option>
+		<option attributes="{{if ; [navigation_per]==128 ; selected}}">128</option>
+		<option attributes="{{if ; [navigation_per]==192 ; selected}}">192</option>
+		<option attributes="{{if ; [navigation_per]==256 ; selected}}">256</option>
 	</select>
 	<condition>
 		<if>[object.id]!=</if>

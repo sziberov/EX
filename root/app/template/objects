@@ -1,4 +1,4 @@
-<module variables="objects=@/app/api/objects.php?[filters]([navigation]==true?&index\=[navigation_index]&per\=[navigation_per]:)">
+<module variables="objects=@/app/api/objects.php?[filters]{{if ; [navigation]==true ; \&index\=[navigation_index]&per\=[navigation_per]}}">
 	<condition>
 		<if>[navigation]==true</if>
 		<then>
@@ -19,7 +19,7 @@
 							<condition>
 								<if>[description]!=</if>
 								<then>
-									<div _description="short">{!parseBB &description}</div>
+									<div _description="short">{{!parseBB ; &description}}</div>
 								</then>
 							</condition>
 							<div _properties>
