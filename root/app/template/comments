@@ -1,0 +1,6 @@
+<title>[title_comments]</title>
+<div _title>[title_comments]</div>
+<module title="objects" variables="filters=user_id\\=[user_id]&type\\=comments;navigation=true;mode=list"></module>
+<div _grid="h">
+	<button>[button_delete_all]</button>
+</div>

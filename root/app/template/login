@@ -6,7 +6,7 @@
 		<div></div>
 	</div>
 	<condition>
-		<if>[session_required]==true</if>
+		<if>[back]!=</if>
 		<then>
 			<div>
 				<div></div>
@@ -53,7 +53,7 @@
 	<div>
 		<div></div>
 		<div>
-			<button primary_>[button_login]</button>
+			<button primary_ onclick="Request.login('[back]')">[button_login]</button>
 		</div>
 		<div></div>
 	</div>

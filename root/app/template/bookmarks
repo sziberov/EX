@@ -1,0 +1,6 @@
+<title>[title_bookmarks]</title>
+<div _title>[title_bookmarks]</div>
+<module title="objects" variables="filters=user_id\\=[user_id]&type=\\bookmarks;navigation=true;mode=list"></module>
+<div _grid="h">
+	<button>[button_remove_all]</button>
+</div>

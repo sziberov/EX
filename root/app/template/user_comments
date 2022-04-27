@@ -13,4 +13,4 @@
 	</div>
 	<button onclick="Hash.set('user/[user_login]')">[button_user_page]</button>
 </div>
-<module title="objects" variables="filters=parent_id\\=[user_id]&type\\=inclusions;navigation=true;mode=list"></module>
+<module title="objects" variables="filters=user_id\\=[user_id]&type\\=comments;navigation=true;mode=list"></module>

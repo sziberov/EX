@@ -3,5 +3,5 @@
 	<module variables-instances="@/app/api/most_items.php?amount=6&link_id=[link_id]">
 		<a href="#[object_id]">[title]</a>
 	</module>
-	<b><a href="#most">[link_complete_list]</a></b>
+	<b><a href="#most{{ if ; [link_id]>0 ; /[link_id] }}">[link_complete_list]</a></b>
 </div>

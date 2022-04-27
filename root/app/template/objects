@@ -1,130 +1,135 @@
-<module variables="objects=@/app/api/objects.php?[filters]{{if ; [navigation]==true ; \&index\=[navigation_index]&per\=[navigation_per]}}">
+<module variables="...=@/app/api/objects.php?[filters]{{if ; [navigation]==true ; \&index\=[navigation_index]&per\=[navigation_per]}}">
 	<condition>
-		<if>[navigation]==true</if>
+		<if>[items.length]>0</if>
 		<then>
-			<module title="objects_navigation"></module>
-		</then>
-	</condition>
-	<condition>
-		<if>[mode]==list</if>
-		<then>
-			<ul _list>
-				<module variables-instances="objects.items">
-					<li>
-						<div _grid="v">
-							<div _grid="v stacked">
-								<b><a href="#[id]">[title]</a></b>
-								<module title="user"></module>
-							</div>
-							<condition>
-								<if>[description]!=</if>
-								<then>
-									<div _description="short">{{!parseBB ; &description}}</div>
-								</then>
-							</condition>
-							<div _properties>
+			<condition>
+				<if>[navigation]==true</if>
+				<then>
+					<module title="objects_navigation"></module>
+				</then>
+			</condition>
+			<condition>
+				<if>[mode]==list</if>
+				<then>
+					<ul _list>
+						<module variables-instances="items">
+							<li>
+								<div _grid="v">
+									<div _grid="v stacked">
+										<b><a href="#[id]">[title]</a></b>
+										<module title="user"></module>
+									</div>
+									<condition>
+										<if>[description]!=</if>
+										<then>
+											<div _description="short">{{!parseBB ; &description}}</div>
+										</then>
+									</condition>
+									<div _properties>
+										<condition>
+											<if>[inclusions_count]&#62;0</if>
+											<then>
+												<div>
+													<div>[string_inclusions_count]</div>
+													<div>[inclusions_count]</div>
+												</div>
+											</then>
+										</condition>
+										<condition>
+											<if>[files_count]&#62;0</if>
+											<then>
+												<div>
+													<div>[string_files_count]</div>
+													<div>[files_count]</div>
+												</div>
+											</then>
+										</condition>
+										<condition>
+											<if>[comments_count]&#62;0</if>
+											<then>
+												<div>
+													<div>[string_comments_count]</div>
+													<div>[comments_count]</div>
+												</div>
+											</then>
+										</condition>
+									</div>
+									<condition>
+										<if>[session.settings.login]!=;[user_login]==[session.settings.login]</if>
+										<then>
+											<div _grid="h">
+												<button onclick="Hash.set('edit/[object_id]')">[button_edit]</button>
+												<button>[button_delete]</button>
+												<button>[button_remove]</button>
+											</div>
+										</then>
+									</condition>
+								</div>
 								<condition>
-									<if>[inclusions_count]&#62;0</if>
+									<if>[poster_url]!=</if>
 									<then>
-										<div>
-											<div>[string_inclusions_count]</div>
-											<div>[inclusions_count]</div>
-										</div>
+										<img _image src="[poster_url]" onclick="Hash.set('view/[id]')" title="[title]">
 									</then>
 								</condition>
+							</li>
+						</module>
+					</ul>
+				</then>
+				<elseif>[mode]==cells</elseif>
+				<then>
+					<ul _cells>
+						<module variables-instances="items">
+							<li>
 								<condition>
-									<if>[files_count]&#62;0</if>
+									<if>[poster_url]!=</if>
 									<then>
-										<div>
-											<div>[string_files_count]</div>
-											<div>[files_count]</div>
-										</div>
+										<img _image="big" src="[poster_url]" onclick="Hash.set('view/[id]')" title="[title]">
 									</then>
 								</condition>
-								<condition>
-									<if>[comments_count]&#62;0</if>
-									<then>
-										<div>
-											<div>[string_comments_count]</div>
-											<div>[comments_count]</div>
-										</div>
-									</then>
-								</condition>
-							</div>
-							<condition>
-								<if>[session_user_login]!=;[user_login]==[session_user_login]</if>
-								<then>
-									<div _grid="h">
-										<button onclick="Hash.set('edit/[object_id]')">[button_edit]</button>
-										<button>[button_delete]</button>
-										<button>[button_remove]</button>
-									</div>
-								</then>
-							</condition>
-						</div>
-						<condition>
-							<if>[poster_url]!=</if>
-							<then>
-								<img _image src="[poster_url]" onclick="Hash.set('view/[id]')" title="[title]">
-							</then>
-						</condition>
-					</li>
-				</module>
-			</ul>
-		</then>
-		<elseif>[mode]==cells</elseif>
-		<then>
-			<ul _cells>
-				<module variables-instances="objects.items">
-					<li>
-						<condition>
-							<if>[poster_url]!=</if>
-							<then>
-								<img _image="big" src="[poster_url]" onclick="Hash.set('view/[id]')" title="[title]">
-							</then>
-						</condition>
-						<div _grid="v stacked centered">
-							<b><a href="#[id]">[title]</a></b>
-							<module title="user"></module>
-						</div>
-						<div _properties>
-							<condition>
-								<if>[inclusions_count]&#62;0</if>
-								<then>
-									<div>
-										<div>[string_inclusions_count]</div>
-										<div>[inclusions_count]</div>
-									</div>
-								</then>
-							</condition>
-							<condition>
-								<if>[files_count]&#62;0</if>
-								<then>
-									<div>
-										<div>[string_files_count]</div>
-										<div>[files_count]</div>
-									</div>
-								</then>
-							</condition>
-							<condition>
-								<if>[comments_count]&#62;0</if>
-								<then>
-									<div>
-										<div>[string_comments_count]</div>
-										<div>[comments_count]</div>
-									</div>
-								</then>
-							</condition>
-						</div>
-					</li>
-				</module>
-			</ul>
-		</then>
-	</condition>
-	<condition>
-		<if>[navigation]==true</if>
-		<then>
-			<module title="objects_navigation"></module>
+								<div _grid="v stacked centered">
+									<b><a href="#[id]">[title]</a></b>
+									<module title="user"></module>
+								</div>
+								<div _properties>
+									<condition>
+										<if>[inclusions_count]&#62;0</if>
+										<then>
+											<div>
+												<div>[string_inclusions_count]</div>
+												<div>[inclusions_count]</div>
+											</div>
+										</then>
+									</condition>
+									<condition>
+										<if>[files_count]&#62;0</if>
+										<then>
+											<div>
+												<div>[string_files_count]</div>
+												<div>[files_count]</div>
+											</div>
+										</then>
+									</condition>
+									<condition>
+										<if>[comments_count]&#62;0</if>
+										<then>
+											<div>
+												<div>[string_comments_count]</div>
+												<div>[comments_count]</div>
+											</div>
+										</then>
+									</condition>
+								</div>
+							</li>
+						</module>
+					</ul>
+				</then>
+			</condition>
+			<condition>
+				<if>[navigation]==true</if>
+				<then>
+					<module title="objects_navigation"></module>
+				</then>
+			</condition>
 		</then>
 	</condition>
 </module>

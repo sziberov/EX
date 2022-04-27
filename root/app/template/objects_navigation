@@ -1,5 +1,5 @@
 <div _flex="h">
-	<module variables-instances="objects.pages">
+	<module variables-instances="pages">
 		<condition>
 			<if>[index]==0</if>
 			<then>
@@ -58,7 +58,7 @@
 			</then>
 		</condition>
 	</module>
-	<select fallback_ title="Элементов на страницу">
+	<select fallback_ title="[select_items_per_page_tooltip]">
 		<option attributes="{{if ; [navigation_per]==4 ; selected}}">4</option>
 		<option attributes="{{if ; [navigation_per]==6 ; selected}}">6</option>
 		<option attributes="{{if ; [navigation_per]==8 ; selected}}">8</option>
@@ -74,9 +74,9 @@
 		<option attributes="{{if ; [navigation_per]==256 ; selected}}">256</option>
 	</select>
 	<condition>
-		<if>[object.id]!=</if>
+		<if>[id]!=</if>
 		<then>
-			<a fallback_ href="#rss/[object.id]">RSS</a>
+			<a fallback_ href="#rss/[id]">RSS</a>
 		</then>
 	</condition>
 </div>

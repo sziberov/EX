@@ -59,7 +59,7 @@
 	<condition>
 		<if>[files_count]>0</if>
 		<then>
-			<module title="files" variables="...=@/app/api/files.php?object_id=[id]"></module>
+			<module title="files"></module>
 		</then>
 	</condition>
 	<div _grid="h">

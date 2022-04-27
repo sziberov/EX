@@ -69,8 +69,8 @@
 	<button onclick="Hash.set('edit/[user_id]?type=comment')">[button_comment]</button>
 	<button onclick="Button.toggle(this, Request.recommend('[user_id]'))">[button_recommend]</button>
 	<!--<button onclick="Hash.set('edit/[user_id]?type=pm')">[button_private_message]</button>-->
-	<button onclick="Hash.set('pm/in')">[button_inbox]</button>
-	<button onclick="Hash.set('pm/out')">[button_outbox]</button>
+	<button onclick="Hash.set('inbox')">[button_inbox]</button>
+	<button onclick="Hash.set('outbox')">[button_outbox]</button>
 </div>
 <div _grid="h">
 	<button onclick="Hash.set('objects_stats')">[button_objects_stats]</button>

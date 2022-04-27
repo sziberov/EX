@@ -1,3 +1,21 @@
-<module variables-instances="@/app/api/menu_items.php">
-	<a href="#[url]">[title]</a>
+<module variables="...=session.settings.menu">
+	<condition>
+		<if>[personal_menu_items.length]>0</if>
+		<then>
+			<module variables-instances="personal_menu_items">
+				<a href="#[url]">[title]</a>
+			</module>
+		</then>
+		<else>
+			<a href="#">[link_files]</a>
+			<a href="#video">[link_video]</a>
+			<a href="#audio">[link_audio]</a>
+			<a href="#images">[link_images]</a>
+			<a href="#texts">[link_texts]</a>
+			<a href="#apps">[link_apps]</a>
+			<a href="#games">[link_games]</a>
+			<a href="#about">[link_about]</a>
+			<a href="#search">[link_search]</a>
+		</else>
+	</condition>
 </module>

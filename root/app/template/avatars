@@ -1,0 +1,7 @@
+<title>[title_avatars]</title>
+<div _title>[title_avatars]</div>
+<module title="objects" variables="filters=user_id\\=[user_id]&type=\\avatars;navigation=true;mode=list"></module>
+<div _grid="h">
+	<button>[button_create]</button>
+	<button>[button_remove_all]</button>
+</div>

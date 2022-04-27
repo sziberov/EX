@@ -1,0 +1,6 @@
+<title>[title_drafts]</title>
+<div _title>[title_drafts]</div>
+<module title="objects" variables="filters=user_id\\=[user_id]&type=\\drafts;navigation=true;mode=list"></module>
+<div _grid="h">
+	<button>[button_delete_all]</button>
+</div>

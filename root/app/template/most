@@ -1,0 +1,53 @@
+<module variables="link_id={{if ; [hash.path.1]!=1;[hash.path.1]!=2;[hash.path.1]!=3 ; 0 ; [hash.path.1]}}">
+	<condition>
+		<if>[link_id]==0</if>
+		<then>
+			<title>[title_most_popular]</title>
+			<div _grid="h spaced">
+				<div _title>[title_most_popular]</div>
+				<div _flex="h">
+					<button onclick="Hash.set('most/1')">[button_most_visited]</button>
+					<button onclick="Hash.set('most/2')">[button_most_discussed]</button>
+					<button onclick="Hash.set('most/3')">[button_most_recommended]</button>
+				</div>
+			</div>
+		</then>
+		<elseif>[link_id]==1</elseif>
+		<then>
+			<title>[title_most_visited]</title>
+			<div _grid="h spaced">
+				<div _title>[title_most_visited]</div>
+				<div _flex="h">
+					<button onclick="Hash.set('most')">[button_most_popular]</button>
+					<button onclick="Hash.set('most/2')">[button_most_discussed]</button>
+					<button onclick="Hash.set('most/3')">[button_most_recommended]</button>
+				</div>
+			</div>
+		</then>
+		<elseif>[link_id]==2</elseif>
+		<then>
+			<title>[title_most_discussed]</title>
+			<div _grid="h spaced">
+				<div _title>[title_most_discussed]</div>
+				<div _flex="h">
+					<button onclick="Hash.set('most')">[button_most_popular]</button>
+					<button onclick="Hash.set('most/1')">[button_most_visited]</button>
+					<button onclick="Hash.set('most/3')">[button_most_recommended]</button>
+				</div>
+			</div>
+		</then>
+		<elseif>[link_id]==3</elseif>
+		<then>
+			<title>[title_most_recommended]</title>
+			<div _grid="h spaced">
+				<div _title>[title_most_recommended]</div>
+				<div _flex="h">
+					<button onclick="Hash.set('most')">[button_most_popular]</button>
+					<button onclick="Hash.set('most/1')">[button_most_visited]</button>
+					<button onclick="Hash.set('most/2')">[button_most_discussed]</button>
+				</div>
+			</div>
+		</then>
+	</condition>
+	<module title="objects" variables="filters=type\\=most&link_id\\=[link_id];navigation=true;mode=list"></module>
+</module>

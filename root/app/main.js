@@ -337,7 +337,7 @@ $(() => {
 	}
 
 	window.Dictionary = class {
-		static current = 'en';
+		static current = 'ru';
 
 		static strings = {
 			ru: {
@@ -353,6 +353,7 @@ $(() => {
 				button_create: 'Создать',
 				button_create_article_in_section: 'Создать статью в разделе',
 				button_delete: 'Удалить',
+				button_delete_all: 'Удалить все',
 				button_display_viewer: 'Отобразить просмотрщик',
 				button_download: 'Загрузить',
 				button_drafts: 'Черновики',
@@ -366,6 +367,10 @@ $(() => {
 				button_include_from_bookmarks: 'Включить из закладок',
 				button_invite: 'Пригласить',
 				button_login: 'Войти',
+				button_most_discussed: 'Самое обсуждаемое',
+				button_most_popular: 'Самое популярное',
+				button_most_recommended: 'Самое рекомендуемое',
+				button_most_visited: 'Самое посещаемое',
 				button_objects_stats: 'Статистика по объектам',
 				button_outbox: 'Исходящие',
 				button_password_recovery: 'Восстановление пароля',
@@ -375,6 +380,7 @@ $(() => {
 				button_register: 'Зарегистрироваться',
 				button_registration: 'Регистрация',
 				button_remove: 'Убрать',
+				button_remove_all: 'Убрать все',
 				button_request: 'Запросить',
 				button_save: 'Сохранить',
 				button_search: 'Искать',
@@ -391,20 +397,30 @@ $(() => {
 				button_user_comments: 'Комментарии пользователя',
 				button_user_page: 'Страница пользователя',
 				button_user_recommendations: 'Рекомендации пользователя',
+				link_about: 'О сервисе',
+				link_apps: 'Приложения',
+				link_audio: 'Аудио',
 				link_complete_list: 'Полный список',
 				link_contacts: 'Контакты',
 				link_copyright: 'Правообладателям',
 				link_file_list: 'Файл-лист',
+				link_files: 'Файлы',
 				link_friends: 'Друзья',
 				link_fs_stats: 'файловым серверам',
+				link_games: 'Игры',
+				link_images: 'Изображения',
 				link_login: 'Вход',
 				link_logout: 'Выход',
 				link_notifications: 'Уведомления',
 				link_page: 'Страница',
 				link_personal_menu: 'персональное меню',
 				link_play_list: 'Плей-лист',
+				link_search: 'Поиск',
 				link_settings: 'Настройки',
+				link_texts: 'Тексты',
 				link_users_stats: 'пользователям',
+				link_video: 'Видео',
+				select_items_per_page_tooltip: 'Элементов на страницу',
 				string_access: 'Доступ',
 				string_account_deletion: 'Вы можете удалить свою учётную запись[br]После удаления вы потеряете доступ ко всем своим объектам',
 				string_account_deletion_confirmation: 'Удалить учётную запись?',
@@ -501,7 +517,7 @@ $(() => {
 				string_search: 'Поиск',
 				string_section: 'Раздел',
 				string_september: 'сентября',
-				string_shared_objects: 'Вы можете анонимно воспользоваться сервисом хранения и обмена файлов.[br]В этом случае доступ к объекту будет возможен только по его номеру.',
+				string_shared_objects: 'Вы можете анонимно воспользоваться сервисом хранения и обмена файлов[br]В этом случае доступ к объекту будет возможен только по его номеру',
 				string_stats_of: 'Статистика по',
 				string_summary_size: 'Суммарный размер',
 				string_templates: 'Шаблоны',
@@ -509,26 +525,38 @@ $(() => {
 				string_use: 'Использовать',
 				string_user: 'Пользователь',
 				string_when: 'Когда',
+				title_archive: 'Архив',
+				title_avatars: 'Аватары',
+				title_bookmarks: 'Закладки',
+				title_comments: 'Комментарии',
 				title_contacts: 'Контактная информация',
+				title_drafts: 'Черновики',
 				title_edit_settings: 'Редактирование настроек',
 				title_files: 'Файлы',
+				title_friends: 'Друзья',
 				title_friends_comments: 'Комментарии друзей',
 				title_friends_recommendations: 'Рекомендации друзей',
 				title_fs_stats: 'Статистика по файловым серверам',
 				title_groups: 'Группы',
+				title_groups: 'Группы',
+				title_inbox: 'Входящие личные сообщения',
 				title_last_objects: 'Крайние объекты',
 				title_login: 'Вход',
 				title_most_discussed: 'Самое обсуждаемое',
 				title_most_popular: 'Самое популярное',
 				title_most_recommended: 'Самое рекомендуемое',
 				title_most_visited: 'Самое посещаемое',
+				title_notifications: 'Уведомления',
+				title_outbox: 'Исходящие личные сообщения',
 				title_page_not_found: 'Страница не найдена',
 				title_password: 'Восстановление пароля',
+				title_recommendations: 'Рекомендации',
 				title_registration: 'Регистрация',
 				title_search: 'Поиск',
 				title_session_required: 'Действие невозможно в анонимном режиме',
 				title_settings: 'Настройки',
 				title_template: 'Выбор шаблона',
+				title_templates: 'Шаблоны',
 				title_user_comments: 'Комментарии пользователя',
 				title_user_page: 'Страница пользователя',
 				title_user_recommendations: 'Рекомендации пользователя',
@@ -574,6 +602,7 @@ $(() => {
 				button_create: 'Create',
 				button_create_article_in_section: 'Create article in section',
 				button_delete: 'Delete',
+				button_delete_all: 'Delete all',
 				button_display_viewer: 'Display viewer',
 				button_download: 'Download',
 				button_drafts: 'Drafts',
@@ -587,6 +616,10 @@ $(() => {
 				button_include_from_bookmarks: 'Include from bookmarks',
 				button_invite: 'Invite',
 				button_login: 'Login',
+				button_most_discussed: 'Most discussed',
+				button_most_popular: 'Most popular',
+				button_most_recommended: 'Most recommended',
+				button_most_visited: 'Most visited',
 				button_objects_stats: 'Stats of objects',
 				button_outbox: 'Outbox',
 				button_password_recovery: 'Password recovery',
@@ -596,6 +629,7 @@ $(() => {
 				button_register: 'Register',
 				button_registration: 'Registration',
 				button_remove: 'Remove',
+				button_remove_all: 'Remove all',
 				button_request: 'Request',
 				button_save: 'Save',
 				button_search: 'Search',
@@ -612,20 +646,30 @@ $(() => {
 				button_user_comments: 'User comments',
 				button_user_page: 'User page',
 				button_user_recommendations: 'User recommendations',
+				link_about: 'About',
+				link_apps: 'Apps',
+				link_audio: 'Audio',
 				link_complete_list: 'Complete list',
 				link_contacts: 'Contacts',
 				link_copyright: 'Copyright',
 				link_file_list: 'File-list',
+				link_files: 'Files',
 				link_friends: 'Friends',
 				link_fs_stats: 'file servers',
+				link_games: 'Games',
+				link_images: 'Images',
 				link_login: 'Login',
 				link_logout: 'Logout',
 				link_notifications: 'Notifications',
 				link_page: 'Page',
 				link_personal_menu: 'personal menu',
 				link_play_list: 'Play-list',
+				link_search: 'Search',
 				link_settings: 'Settings',
+				link_texts: 'Texts',
 				link_users_stats: 'users',
+				link_video: 'Video',
+				select_items_per_page_tooltip: 'Items per page',
 				string_access: 'Access',
 				string_account_deletion: 'You can delete your account[br]After deletion you will lose access to all your objects',
 				string_account_deletion_confirmation: 'Delete account?',
@@ -722,7 +766,7 @@ $(() => {
 				string_search: 'Search',
 				string_section: 'Section',
 				string_september: 'september',
-				string_shared_objects: 'You can anonymously use the file storage and EXchange service.[br]In this case, access to an object will be possible only by its number.',
+				string_shared_objects: 'You can anonymously use the file storage and EXchange service[br]In this case access to an object will be possible only by its number',
 				string_stats_of: 'Stats of',
 				string_summary_size: 'Summary size',
 				string_templates: 'Templates',
@@ -730,26 +774,38 @@ $(() => {
 				string_use: 'Use',
 				string_user: 'User',
 				string_when: 'When',
+				title_archive: 'Archive',
+				title_avatars: 'Avatars',
+				title_bookmarks: 'Bookmarks',
+				title_comments: 'Comments',
 				title_contacts: 'Contact information',
+				title_drafts: 'Drafts',
 				title_edit_settings: 'Edit of settings',
 				title_files: 'Files',
+				title_friends: 'Friends',
 				title_friends_comments: 'Friends comments of',
 				title_friends_recommendations: 'Friends recommendations of',
 				title_fs_stats: 'Stats of file servers',
 				title_groups: 'Groups',
+				title_groups: 'Groups',
+				title_inbox: 'Inbox private messages',
 				title_last_objects: 'Last objects',
 				title_login: 'Login',
 				title_most_discussed: 'Most discussed',
 				title_most_popular: 'Most popular',
 				title_most_recommended: 'Most recommended',
 				title_most_visited: 'Most visited',
+				title_notifications: 'Notifications',
+				title_outbox: 'Outbox private messages',
 				title_page_not_found: 'Page not found',
 				title_password: 'Password recovery',
+				title_recommendations: 'Recommendations',
 				title_registration: 'Registration',
 				title_search: 'Search',
 				title_session_required: 'Action isn\'t possible in anonymous mode',
 				title_settings: 'Settings',
 				title_template: 'Template selection',
+				title_templates: 'Templates',
 				title_user_comments: 'Comments of user',
 				title_user_page: 'Page of user',
 				title_user_recommendations: 'Recommendations of user',
@@ -930,26 +986,38 @@ $(() => {
 
 			for(let entry of entries) {
 				let key = entry[0],
-					value = entry[1]
+					value = entry[1],
+					left;
 
-				modelInner = modelInner.replaceAll(key, (match, offset) => {
-					let difference = key.length-value.length;
+				while((left = modelInner.indexOf(key, left+1)) !== -1) {
+					let right = left+key.length,
+						blackzoned;
 
 					for(let blackzone of blackzones) {
-						if(offset >= blackzone[0] && offset+match.length <= blackzone[1]) {
-							return match;
+						if(left >= blackzone[0] && right <= blackzone[1]) {
+							blackzoned = true;
+
+							break;
 						}
 					}
+					if(blackzoned) {
+						continue;
+					}
+
+					let difference = key.length-value.length,
+						before = modelInner.substring(0, left),
+						after = modelInner.substring(right, modelInner.length);
+
+					modelInner = before+value+after;
 					for(let blackzone of blackzones) {
-						if(offset+match.length <= blackzone[0]) {
+						if(right <= blackzone[0]) {
 							blackzone[0] -= difference;
 							blackzone[1] -= difference;
 						}
 					}
-
-					return value;
-				});
+				}
 			}
+
 			model.documentElement.innerHTML = modelInner;
 		}
 

@@ -1,0 +1,7 @@
+<title>[title_archive]</title>
+<div _title>[title_archive]</div>
+<module title="objects" variables="filters=user_id\\=[user_id];navigation=true;mode=list"></module>
+<div _grid="h">
+	<button>[button_create]</button>
+	<button>[button_delete_all]</button>
+</div>
