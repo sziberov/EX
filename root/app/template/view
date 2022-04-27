@@ -1,4 +1,4 @@
-<module variables="...=@/app/api/object.php?id\=[hash.path.1];parent=@/app/api/object.php?id\=[hash.parameters.parent_id];inclusions=@/app/api/objects.php?parent_id\=[hash.path.1]&type\=inclusions">
+<module variables="...=@/app/api/object.php?id\=[hash.path.1];parent=@/app/api/object.php?id\=[hash.parameters.parent_id];inclusions=@/app/api/objects.php?parent_id\=[hash.path.1]&type\=inclusions;navigation_mode=[hash.parameters.mode]">
 	<condition>
 		<if>[parent.id]!=</if>
 		<then>

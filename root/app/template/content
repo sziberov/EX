@@ -1,4 +1,4 @@
-<module variables="page=[hash.path.0];session=@/app/api/session.php">
+<module variables="page=[hash.path.0];session=@/app/api/session.php;navigation_index={{if ; [hash.parameters.index]>0 ; [hash.parameters.index] ; 0}};navigation_per={{if ; [hash.parameters.per]>0 ; [hash.parameters.per] ; 24}}">
 	<condition>
 		<if>[page]==</if>
 		<then>

@@ -156,65 +156,6 @@ $(() => {
 	}
 
 	window.Page = class {
-		static contentModules = ['', 'archive', 'avatars', 'bookmarks', 'comments', 'contacts', 'copy', 'copyright', 'drafts', 'edit', 'edit_access', 'edit_settings', 'friends', 'friends_comments', 'friends_recommendations', 'fs_stats', 'groups', 'include', 'include_my', 'login', 'menu_items', 'notifications', 'objects_stats', 'password', 'recommendations', 'registration', 'search', 'settings', 'template', 'templates', 'upload', 'user', 'user_comments', 'user_recommendations', 'users_stats', 'view', 'view_comments']
-		static pageToNamespaceRules = {
-			'*': (h) => {
-				return {
-					...Dictionary.getString(),
-					hash: h,
-					page: h.path[0],
-					navigation_index: h.parameters.index ?? 0,
-					navigation_per: h.parameters.per ?? 24,
-					session_user_login: 'DIES',
-					session_user_notifications_count: 5,
-					avatar_url: '/storage/ex.svg',
-					avatar_title: 'EX',
-					decodeURI: this.decodeURI,
-					parseBB: this.parseBB,
-					formatTime: this.formatTime,
-					formatSize: this.formatSize,
-					stringify: JSON.stringify,
-					plus: (a, b) => a*1+b*1,
-					minus: (a, b) => a*1-b*1,
-					if: (a, b, c) => Template.getComparisonsResult(a) ? b : c
-				}
-			},
-			copy: (h) => {
-				return {
-					file_id: h.path[2]
-				}
-			},
-			'copy;edit;edit_access;edit_settings;view;view_comments;': (h) => {
-				return {
-					object_id: h.path[1]
-				}
-			},
-			edit: (h) => {
-				return {
-					parent_id: h.parameters.parent_id,
-					type: h.parameters.type
-				}
-			},
-			'friends_comments;friends_recommendations;user;user_comments;user_recommendations': (h) => {
-				return {
-					user_login: h.path[1]
-				}
-			},
-			search: (h) => {
-				return {
-					user_id: h.parameters.user_id,
-					user_login: 'DIES',
-					section_id: h.parameters.section_id,
-					section_title: 'Видео'
-				}
-			},
-			view: (h) => {
-				return {
-					navigation_mode: h.parameters.mode
-				}
-			}
-		}
-
 		static headElements = []
 		static firstLoad = true;
 
@@ -243,23 +184,6 @@ $(() => {
 				},
 				false: () => $('body').removeAttr('loading_')
 			}[state]();
-		}
-
-		static getNamespaceFromURL(hash) {
-			let namespace = {}
-
-			for(let k in this.pageToNamespaceRules) {
-				let pages = k.split(';');
-
-				if(pages.includes('*') || pages.includes(hash.path[0])) {
-					namespace = {
-						...namespace,
-						...this.pageToNamespaceRules[k](hash)
-					}
-				}
-			}
-
-			return namespace;
 		}
 
 		static decodeURI(URI) {
@@ -294,20 +218,32 @@ $(() => {
 			return size?.toLocaleString('en-US') ?? '';
 		}
 
+		static getNamespace(hash) {
+			return {
+				...Dictionary.getString(),
+				hash: hash,
+				decodeURI: this.decodeURI,
+				parseBB: this.parseBB,
+				formatTime: this.formatTime,
+				formatSize: this.formatSize,
+				stringify: JSON.stringify,
+				plus: (a, b) => a*1+b*1,
+				minus: (a, b) => a*1-b*1,
+				if: (a, b, c) => Template.getComparisonsResult(a) ? b : c
+			}
+		}
+
+		static updateEdges(hash) {
+			let hashPath = hash.path.join('/');
+
+			Header.menu(hashPath);
+			Header.expanded((hash.path[0] ?? '').length === 0);
+			Footer.menu(hashPath);
+		}
+
 		static async switch() {
 			let hash = Hash.get(),
-				hashPath = hash.path.join('/'),
-				replaceGeneric = 'view',
-				replaceList = ['_ID_', 'video', 'audio', 'images', 'texts', 'apps', 'games', 'about']
-
-			if(hashPath === '') {
-				hash.path = ['']
-			} else
-			if(hashPath !== '' && Number.isInteger(+hashPath) || replaceList.includes(hashPath)) {
-				hash.path = [replaceGeneric, hashPath]
-			}
-
-			let namespace = this.getNamespaceFromURL(hash);
+				namespace = this.getNamespace(hash);
 
 			this.setLoading(true);
 			if(this.firstLoad) {
@@ -317,15 +253,11 @@ $(() => {
 				this.setTitle(body?.title ?? head?.title ?? '');
 				this.setHead(head?.head.childNodes ?? []);
 				this.setBody(body?.body.childNodes ?? []);
-				Header.menu(hashPath);
-				Header.expanded(hash.path[0]?.length === 0);
-				Footer.menu(hashPath);
+				this.updateEdges(hash);
 
 				this.firstLoad = false;
 			} else {
-				Header.menu(hashPath);
-				Header.expanded(hash.path[0]?.length === 0);
-				Footer.menu(hashPath);
+				this.updateEdges(hash);
 
 				let content = await Template.getModule(undefined, 'content', namespace);
 
@@ -493,6 +425,7 @@ $(() => {
 				string_menu: 'Меню',
 				string_navigation: 'Навигация',
 				string_nizkagorian: 'Низкагорский',
+				string_nothing_found: 'Ничего не найдено',
 				string_notifications: 'Уведомления',
 				string_november: 'ноября',
 				string_object_number: 'Номер объекта',
@@ -742,6 +675,7 @@ $(() => {
 				string_menu: 'Menu',
 				string_navigation: 'Navigation',
 				string_nizkagorian: 'Низкагорский',
+				string_nothing_found: 'Nothing found',
 				string_notifications: 'Notifications',
 				string_november: 'november',
 				string_object_number: 'Object number',
@@ -968,13 +902,13 @@ $(() => {
 
 			for(let cm of childModules) {
 				let cmOuter = cm.outerHTML,
-					cmInner = cmOuter.match(/(?<=<[\s\S]*?>)[\s\S]*(?=<\/[\s\S]*>)/),
-					cmIndex = modelInner.indexOf(cmOuter, result.at(-1)?.[1] ?? 0)+cmInner.index-1,
-					cmLastIndex = cmIndex+cmInner[0].length+1;
+					cmInner = cm.innerHTML,
+					cmLeft = modelInner.indexOf(cmOuter, result.at(-1)?.[1] ?? 0)+cmOuter.lastIndexOf(cmInner)-1,
+					cmRight = cmLeft+cmInner.length+1;
 
 				result.push([
-					cmIndex,
-					cmLastIndex
+					cmLeft,
+					cmRight
 				]);
 			}
 
@@ -1241,6 +1175,7 @@ $(() => {
 					cmVariablesInstances = cm.getAttribute('variables-instances'),
 					cmInner = cm.innerHTML,
 					cmNamespace = {},
+					cmModelTitle,
 					cmModelBody = []
 
 				if(cmTitle == null && cmInner === '') {
@@ -1309,8 +1244,7 @@ $(() => {
 						}
 					}
 				} else {
-					let cmModel,
-						cmModelTitle;
+					let cmModel;
 
 					if(cmTitle != null) {
 						cmModel = await this.getModule(objectId, cmTitle, cmNamespace);
@@ -1320,15 +1254,14 @@ $(() => {
 
 					cmModelTitle = cmModel?.title;
 					cmModelBody = cmModel?.body.childNodes;
-
-					if(cmModelTitle?.length > 0) {
-						model.title = cmModelTitle;
-					}
 				}
 				if(cmModelBody?.length > 0) {
 					cm.replaceWith(...cmModelBody);
 				} else {
 					cm.remove();
+				}
+				if(cmModelTitle?.length > 0) {
+					model.title = cmModelTitle;
 				}
 			}
 		}
@@ -1357,7 +1290,7 @@ $(() => {
 					model = this.getCached(cacheKey) ?? this.setCached(cacheKey, await Link.getContents(await this.getModuleURL(objectId, title)));
 
 				if(model != null) {
-					return this.parseModule(objectId, model, namespace, title);
+					return this.parseModule(objectId, model, namespace);
 				}
 			} catch(error) {
 				console.log(error)

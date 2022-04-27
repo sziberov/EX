@@ -1,16 +1,18 @@
-<title>[title_user_comments] [user_login]</title>
-<div _grid="h spaced">
-	<div _grid="h">
-		<condition>
-			<if>[avatar_url]!=</if>
-			<then>
-				<div _avatar onclick="Hash.set('user/[user_login]')" title="[user_login]: [avatar_title]">
-					<img src="[avatar_url]">
-				</div>
-			</then>
-		</condition>
-		<div _title>[title_user_comments] <b>[user_login]</b></div>
+<module variables="...=@/app/api/user.php?login=[hash.path.1]">
+	<title>[title_user_comments] [login]</title>
+	<div _grid="h spaced">
+		<div _grid="h">
+			<condition>
+				<if>[avatar_url]!=</if>
+				<then>
+					<div _avatar onclick="Hash.set('user/[login]')" title="[login]: [avatar_title]">
+						<img src="[avatar_url]">
+					</div>
+				</then>
+			</condition>
+			<div _title>[title_user_comments] <b>[login]</b></div>
+		</div>
+		<button onclick="Hash.set('user/[login]')">[button_user_page]</button>
 	</div>
-	<button onclick="Hash.set('user/[user_login]')">[button_user_page]</button>
-</div>
-<module title="objects" variables="filters=user_id\\=[user_id]&type\\=comments;navigation=true;mode=list"></module>
+	<module title="objects" variables="filters=user_id\\=[id]&type\\=comments;navigation=true;mode=list"></module>
+</module>
