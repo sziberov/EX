@@ -1,0 +1,71 @@
+<title>Без названия - Редактирование доступа</title>
+<div _title="small">
+	<a href="#view/_ID_">Без названия</a>
+</div>
+<div _title>Редактирование доступа</div>
+<div _table="list" wide_ style="--columns: repeat(3, minmax(96px, auto));">
+	<div header_>
+		<div>Группа</div>
+		<div>Доступ</div>
+		<div>Действия</div>
+	</div>
+	<div data-group-id="_GROUP_ID_">
+		<div>
+			<div _description="short straight">Все</div>
+		</div>
+		<div>
+			<select>
+				<option>Нет</option>
+				<option>Чтение</option>
+				<option selected>Чтение + Комментирование</option>
+				<option>Чтение + Комментирование + Включение</option>
+				<option>Редактирование</option>
+				<option>Полный</option>
+			</select>
+		</div>
+		<div></div>
+	</div>
+	<div data-group-id="_GROUP_ID_">
+		<div>
+			<a _description="short straight" href="#group/_GROUP_ID_">Group_DIES</a>
+		</div>
+		<div>
+			<select>
+				<option>Нет</option>
+				<option>Чтение</option>
+				<option>Чтение + Комментирование</option>
+				<option>Чтение + Комментирование + Включение</option>
+				<option>Редактирование</option>
+				<option selected>Полный</option>
+			</select>
+		</div>
+		<div>
+			<button>Убрать</button>
+		</div>
+	</div>
+	<div data-group-id="_GROUP_ID_">
+		<div>
+			<select>
+				<option selected>-</option>
+				<option>Group_user</option>
+			</select>
+		</div>
+		<div>
+			<select>
+				<option>Нет</option>
+				<option>Чтение</option>
+				<option selected>Чтение + Комментирование</option>
+				<option>Чтение + Комментирование + Включение</option>
+				<option>Редактирование</option>
+				<option>Полный</option>
+			</select>
+		</div>
+		<div>
+			<button>Добавить</button>
+		</div>
+	</div>
+</div>
+<div _grid="h spaced">
+	<div></div>
+	<div fallback_="">Редактирование связи со своей основной группой может привести к потери доступа</div>
+</div>

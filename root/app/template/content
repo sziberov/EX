@@ -24,8 +24,9 @@
 			</div>
 		</then>
 		<elseif>[page]==user</elseif>
+		<elseif>[page]==menu_items</elseif>
 		<then>
-			<module title="user_page"></module>
+			<module title="[page]_page"></module>
 		</then>
 		<elseif>[page]==most</elseif>
 		<elseif>[page]==login</elseif>
@@ -48,7 +49,6 @@
 		<elseif>[page]==inbox</elseif>
 		<elseif>[page]==outbox</elseif>
 		<elseif>[page]==settings</elseif>
-		<elseif>[page]==menu_items</elseif>
 		<elseif>[page]==edit</elseif>
 		<elseif>[page]==edit_settings</elseif>
 		<elseif>[page]==edit_access</elseif>

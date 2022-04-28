@@ -1,0 +1,57 @@
+<title>Персональное меню</title>
+<div _title>Персональное меню</div>
+<div _table="list" wide_ style="--columns: repeat(3, minmax(96px, 1fr));">
+	<div header_>
+		<div>Пункт</div>
+		<div>URL</div>
+		<div>Действия</div>
+	</div>
+	<div data-id="0">
+		<div>
+			<a _description="short straight" href="#_URL_">Видео</a>
+		</div>
+		<div>
+			<div _description="short straight">video</div>
+		</div>
+		<div>
+			<button>↓</button>
+			<button>Убрать</button>
+		</div>
+	</div>
+	<div data-id="1">
+		<div>
+			<a _description="short straight" href="#_URL_">Аудио</a>
+		</div>
+		<div>
+			<div _description="short straight">audio</div>
+		</div>
+		<div>
+			<button>↑</button>
+			<button>↓</button>
+			<button>Убрать</button>
+		</div>
+	</div>
+	<div data-id="2">
+		<div>
+			<a _description="short straight" href="#_URL_">Изображения</a>
+		</div>
+		<div>
+			<div _description="short straight">images</div>
+		</div>
+		<div>
+			<button>↑</button>
+			<button>Убрать</button>
+		</div>
+	</div>
+	<div data-id>
+		<div>
+			<input size_="big" type="text" value="Объект">
+		</div>
+		<div>
+			<input size_="big" type="text" value="123456">
+		</div>
+		<div>
+			<button>Добавить</button>
+		</div>
+	</div>
+</div>

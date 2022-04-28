@@ -1,0 +1,60 @@
+<title>Уведомления</title>
+<div _title>Уведомления</div>
+<div _table="list" wide_ style="--columns: repeat(3, minmax(96px, auto));">
+	<div header_>
+		<div>Событие</div>
+		<div>Произошло</div>
+		<div>Действия</div>
+	</div>
+	<div data-user-id="_USER_ID_">
+		<div>
+			<div _description>Пользователь <a href="#user/_USER_TITLE_">user</a> написал вам личное сообщение <a href="#view/_ID_">Без названия</a></div>
+		</div>
+		<div>00:04, 01 января 2019</div>
+		<div>
+			<button onclick="Hash.set('view/_ID_')">Смотреть</button>
+			<button>Убрать</button>
+		</div>
+	</div>
+	<div data-user-id="_USER_ID_">
+		<div>
+			<div _description>Пользователь <a href="#user/_USER_TITLE_">user</a> оставил комментарий к вашему объекту <a href="#view/_ID_">Без названия</a></div>
+		</div>
+		<div>00:03, 01 января 2019</div>
+		<div>
+			<button onclick="Hash.set('view_comments/_ID_')">Смотреть</button>
+			<button>Убрать</button>
+		</div>
+	</div>
+	<div data-user-id="_USER_ID_">
+		<div>
+			<div _description>Пользователь <a href="#user/_USER_TITLE_">user</a> порекомендовал ваш объект <a href="#view/_ID_">Без названия</a></div>
+		</div>
+		<div>00:02, 01 января 2019</div>
+		<div>
+			<button>Убрать</button>
+		</div>
+	</div>
+	<div data-user-id="_USER_ID_">
+		<div>
+			<div _description>Пользователь <a href="#user/_USER_TITLE_">user</a> пригласил вас в группу User_user</div>
+		</div>
+		<div>00:01, 01 января 2019</div>
+		<div>
+			<button>Принять</button>
+			<button>Убрать</button>
+		</div>
+	</div>
+	<div data-user-id="_USER_ID_">
+		<div>
+			<div _description>Пользователь <a href="#user/_USER_TITLE_">Online</a> добавил вас в друзья</div>
+		</div>
+		<div>00:00, 01 января 2019</div>
+		<div>
+			<button>Убрать</button>
+		</div>
+	</div>
+</div>
+<div _grid="h">
+	<button>Убрать все</button>
+</div>

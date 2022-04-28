@@ -1,0 +1,17 @@
+<title>Без названия - Включение в раздел из закладок</title>
+<!--
+<div _title="small">
+	<a href="#user/_USER_TITLE_">DIES</a>
+</div>
+-->
+<div _title="small">
+	<a href="#view/_ID_">Без названия</a>
+</div>
+<div _title>Включение в раздел из закладок</div>
+<module title="objects" variables="filters=user_id\\=[id]&type\\=bookmarks;mode=list"></module>
+<div _grid="h">
+	<button onclick="Hash.set('view/_ID_')">Сохранить</button>
+	<button onclick="Hash.set('view/_ID_')">Отменить</button>
+	<button wide_>Выбрать все</button>
+	<button wide_>Очистить все</button>
+</div>
