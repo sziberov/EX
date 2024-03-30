@@ -1,0 +1,196 @@
+<?
+	// Outer: view_type_id, allow_advanced_control, id
+
+	$access_level_id ??= session_getAccessLevelID($object->id);
+	$allow_advanced_control ??= session_getSettings()['allow_advanced_control'] ?? false;
+
+	if($object->type_id == 1) { // group ?>
+		<div _grid="h">
+			<a _button href="/invite/<?= $object->id; ?>">Пригласить пользователей в группу</a>
+		</div>
+		<div _grid="h">
+			<? if($access_level_id >= 2) {
+				if($object->comments_count > 0) { ?>
+					<a _button href="/view_comments/<?= $object->id; ?>" badge_="<?= $object->comments_count; ?>"><?= D['button_comments']; ?></a>
+				<? } else { ?>
+					<a _button href="/edit?to_id=<?= $object->id; ?>&type_id=3,5"><?= D['button_comment']; ?></a>
+				<? }
+			} ?>
+			<button onclick="Button.toggle(this, Request.recommend('<?= $object->id; ?>'))"><?= D['button_recommend']; ?></button>
+		</div>
+		<? if(session()) { ?>
+			<div _grid="h">
+				<button onclick="Button.toggle(this, Request.my('<?= $object->id; ?>', 'bookmarks'))"><?= D['button_to_bookmarks']; ?></button>
+				<a _button href="/include_my/<?= $object->id; ?>"><?= D['button_to_my']; ?></a>
+			</div>
+		<? } ?>
+		<? if($access_level_id >= 4) { ?>
+			<div>&nbsp;</div>
+			<div _grid="h">
+				<a _button href="/edit/<?= $object->id; ?>"><?= D['button_edit']; ?></a>
+				<? if($access_level_id == 5) { ?>
+					<button onclick="Request.delete('<?= $object->id; ?>')"><?= D['button_delete']; ?></button>
+				<? } ?>
+			</div>
+		<? } ?>
+		<div>&nbsp;</div>
+		<div _grid="h">
+			<button onclick="Claim.toggle()"><?= D['button_claim']; ?></button>
+			<a _button href="/template/<?= $object->id; ?>"><?= D['button_template']; ?></a>
+		</div>
+	<? } else
+	if($object->type_id == 2) { // user
+		$current_session_user = session() && session_getSettings()['login'] == $object->login;
+
+		if($current_session_user) {
+			if($allow_advanced_control) { ?>
+				<div _grid="h">
+					<!--
+					/claims/id - Жалобы пользователя
+					/moderation - Все объекты с жалобами
+					/moderation/id - Жалобы на пользователя/объект
+					-->
+					<a _button href="/aliases">Алиасы</a>
+					<a _button href="/ban">Блокировки</a>
+					<a _button href="/moderation">Модерация</a>
+					<a _button href="/links">Связи</a>
+					<a _button href="/banners">Баннеры</a>
+					<a _button href="/languages">Языки</a>
+				</div>
+			<? } ?>
+			<div _grid="h">
+				<a _button href="/edit?to_id=<?= $object->id; ?>&type_id=3,4"><?= D['button_create']; ?></a>
+				<a _button href="/archive" <?= $object->archive_count > 0 ? 'badge_="'.$object->archive_count.'"' : ''; ?>><?= D['button_archive']; ?></a>
+				<? if($object->comments_count > 0) { ?>
+					<a _button href="/comments" badge_="<?= $object->comments_count; ?>"><?= D['button_comments']; ?></a>
+				<? }
+				if($object->recommendations_count > 0) { ?>
+					<a _button href="/recommendations" badge_="<?= $object->recommendations_count; ?>"><?= D['button_recommendations']; ?></a>
+				<? } ?>
+				<a _button href="/avatars" <?= $object->avatars_count > 0 ? 'badge_="'.$object->avatars_count.'"' : ''; ?>><?= D['button_avatars']; ?></a>
+				<? if($object->claims_count > 0) { ?>
+					<a _button href="/claims" badge_="<?= $object->claims_count; ?>">Жалобы</a>
+				<? } ?>
+				<a _button href="/templates" <?= $object->templates_count > 0 ? 'badge_="'.$object->templates_count.'"' : ''; ?>><?= D['button_templates']; ?></a>
+				<? if($object->drafts_count > 0) { ?>
+					<a _button href="/drafts" badge_="<?= $object->drafts_count; ?>"><?= D['button_drafts']; ?></a>
+				<? }
+				if($object->bookmarks_count > 0) { ?>
+					<a _button href="/bookmarks" badge_="<?= $object->bookmarks_count; ?>"><?= D['button_bookmarks']; ?></a>
+				<? } ?>
+				<a _button href="/groups" badge_="<?= $object->groups_count_alien.' / '.$object->groups_count_own; ?>" title="<?= D['button_groups_tooltip']; ?>"><?= D['button_groups']; ?></a>
+			</div>
+		<? } ?>
+		<div _grid="h">
+			<? if($access_level_id >= 2) {
+				if($object->comments_count > 0) { ?>
+					<a _button href="/view_comments/<?= $object->id; ?>" badge_="<?= $object->comments_count; ?>"><?= D['button_comments']; ?></a>
+				<? } else { ?>
+					<a _button href="/edit?to_id=<?= $object->id; ?>&type_id=3,5"><?= D['button_comment']; ?></a>
+				<? }
+			} ?>
+			<button onclick="Button.toggle(this, Request.recommend('<?= $object->id; ?>'))"><?= D['button_recommend']; ?></button>
+			<? if($current_session_user) {
+				if($object->inbox_count > 0) { ?>
+					<a _button href="/inbox" badge_="<?= $object->inbox_count; ?>"><?= D['button_inbox']; ?></a>
+				<? }
+				if($object->outbox_count > 0) { ?>
+					<a _button href="/outbox" badge_="<?= $object->outbox_count; ?>"><?= D['button_outbox']; ?></a>
+				<? }
+			} else { ?>
+				<a _button href="/edit?to_id=<?= $object->id; ?>&type_id=3,11"><?= D['button_private_message']; ?></a>
+			<? } ?>
+		</div>
+		<? if(session()) { ?>
+			<div _grid="h">
+				<button onclick="Button.toggle(this, Request.my('<?= $object->id; ?>', 'bookmarks'))"><?= D['button_to_bookmarks']; ?></button>
+				<a _button href="/include_my/<?= $object->id; ?>"><?= D['button_to_my']; ?></a>
+			</div>
+			<div _grid="h">
+				<? if($current_session_user || $allow_advanced_control) { ?>
+					<a _button href="/objects_stats/<?= $object->id; ?>">Статистика по объектам</a>
+				<? } ?>
+				<? if(!$current_session_user) { ?>
+					<button onclick="Button.toggle(this, Request.friend('<?= $login; ?>'))"><?= D['button_to_friends']; ?></button>
+				<? } ?>
+			</div>
+		<? }
+		if($allow_advanced_control && $access_level_id >= 4) { ?>
+			<div>&nbsp;</div>
+			<div _grid="h">
+				<a _button href="/edit/<?= $object->id; ?>"><?= D['button_edit']; ?></a>
+				<? if($access_level_id == 5) { ?>
+					<button onclick="Request.delete('<?= $object->id; ?>')"><?= D['button_delete']; ?></button>
+				<? } ?>
+			</div>
+		<? } ?>
+		<div>&nbsp;</div>
+		<div _grid="h">
+			<? if(!$current_session_user) { ?>
+				<button onclick="Claim.toggle()"><?= D['button_claim']; ?></button>
+			<? } ?>
+			<a _button href="/template/<?= $object->id; ?>"><?= D['button_template']; ?></a>
+		</div>
+		<? if($current_session_user) { ?>
+			<div>&nbsp;</div>
+			<div><?= D['string_content_rating_first']; ?><b>1</b><?= D['string_content_rating_second']; ?></div>
+		<? }
+	} else
+	if($object->type_id == 3) { // plain ?>
+		<? if($access_level_id >= 3) { ?>
+			<div _grid="h">
+				<? if(!filter_var($object->settings['deny_nonbookmark_inclusion']->value ?? null, FILTER_VALIDATE_BOOLEAN)) { ?>
+					<a _button href="/edit?type=plain&parent_id=<?= $object->id; ?>"><?= D['button_create_article_in_section']; ?></a>
+					<a _button href="/upload/<?= $object->id; ?>"><?= D['button_upload_files_to_section']; ?></a>
+				<? } ?>
+				<a _button href="/include/<?= $object->id; ?>"><?= D['button_include_from_bookmarks']; ?></a>
+			</div>
+		<? } ?>
+		<div _grid="h">
+			<? if($object->self_inclusions_count > 0) { ?>
+				<a _button href="/view_inclusions/<?= $object->id; ?>" badge_="<?= $object->self_inclusions_count; ?>"><?= D['button_inclusions']; ?></a>
+			<? } ?>
+			<? if($access_level_id >= 2) {
+				if($object->comments_count > 0) { ?>
+					<a _button href="/view_comments/<?= $object->id; ?>" badge_="<?= $object->comments_count; ?>"><?= D['button_comments']; ?></a>
+				<? } else { ?>
+					<a _button href="/edit?to_id=<?= $object->id; ?>&type_id=3,5"><?= D['button_comment']; ?></a>
+				<? }
+			} ?>
+			<button onclick="Button.toggle(this, Request.recommend('<?= $object->id; ?>'))"><?= D['button_recommend']; ?></button>
+			<!--
+			<button onclick="Button.toggle(this, Request.rate('<?= $object->id; ?>'))" badge_="192">👍︎</button>
+			<button onclick="Button.toggle(this, Request.rate('<?= $object->id; ?>', false))" badge_="12">👎︎</button>
+			-->
+		</div>
+		<? if(session()) { ?>
+			<div _grid="h">
+				<button onclick="Button.toggle(this, Request.my('<?= $object->id; ?>', 'bookmarks'))"><?= D['button_to_bookmarks']; ?></button>
+				<a _button href="/include_my/<?= $object->id; ?>"><?= D['button_to_my']; ?></a>
+			</div>
+		<? }
+		if($access_level_id >= 4) { ?>
+			<div>&nbsp;</div>
+			<div _grid="h">
+				<a _button href="/edit/<?= $object->id; ?>"><?= D['button_edit']; ?></a>
+				<? if($access_level_id == 5) { ?>
+					<button onclick="Request.delete('<?= $object->id; ?>')"><?= D['button_delete']; ?></button>
+				<? } ?>
+			</div>
+		<? } ?>
+		<div>&nbsp;</div>
+		<div _grid="h">
+			<button onclick="Claim.toggle()"><?= D['button_claim']; ?></button>
+			<a _button href="/template/<?= $object->id; ?>"><?= D['button_template']; ?></a>
+		</div>
+	<? } else
+	if($object->type_id == 4) { // shared ?>
+		<div _grid="h">
+			<a _button href="/edit/<?= $object->id; ?>"><?= D['button_edit']; ?></a>
+			<? if($access_level_id == 5) { ?>
+				<button onclick="Request.delete('<?= $object->id; ?>')"><?= D['button_delete']; ?></button>
+			<? } ?>
+		</div>
+	<? }
+?>
+<div>&nbsp;</div>

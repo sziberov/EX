@@ -1,0 +1,22 @@
+<?
+	if(!session()) {
+		return include 'login';
+	}
+
+	$user_id = session_getUserID();
+?>
+<title><?= dictionary_getPageTitle(D['title_archive']); ?></title>
+<div _title><?= D['title_archive']; ?></div>
+<?
+	$template = new Template('objects');
+	$template->navigation_mode_id = 2;
+	$template->navigation_page = $navigation_page;
+	$template->navigation_items_per_page = $navigation_items_per_page;
+	$template->search_condition = "WHERE o.user_id = $user_id AND o.type_id = 3";
+	$template->display_mode_id = 1;
+	$template->render(true);
+?>
+<div _grid="h">
+	<button><?= D['button_create']; ?></button>
+	<button><?= D['button_delete_all']; ?></button>
+</div>

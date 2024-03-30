@@ -1,0 +1,91 @@
+<?
+	// Outer: navigation_page, navigation_items_per_page, object
+
+	$navigation_page = $this->navigation_page ?? 0;
+	$navigation_items_per_page = $this->navigation_items_per_page ?? 24;
+	$object = $this->object;
+	$search_condition = "JOIN links AS l ON l.to_id = o.id AND l.from_id = $object->id AND l.type_id = 4";
+	$search = object_search($search_condition, $navigation_items_per_page, $navigation_items_per_page*$navigation_page);
+	$inclusions = $search['objects'];
+	$count = $search['count'];
+
+	if($count > 0) { ?>
+		<div _grid="h" navigation_>
+			<button disabled_>1</button>
+		</div>
+		<div _table="list" wide_ style="--columns: repeat(2, minmax(96px, auto));">
+	<? }
+		foreach($inclusions as $inclusion) {
+			$access_level_id = session_getAccessLevelID($inclusion->id);
+			$inclusion_url = '/'.$inclusion->id;
+
+			if($access_level_id > 0) { ?>
+				<div>
+					<div _flex="v left">
+						<div _grid="v stacked">
+							<b><a href="<?= $inclusion_url; ?>"><?= $inclusion->title; ?></a></b>
+							<?
+								$hide_author_and_times = filter_var($inclusion->settings['hide_author_and_times']->value ?? null, FILTER_VALIDATE_BOOLEAN);
+
+								if(!$hide_author_and_times) {
+									$template = new Template('user');
+									$template->user = $inclusion->user;
+									$template->primary_time = $inclusion->creation_time;
+									$template->render(true);
+								}
+							?>
+						</div>
+						<? if(!empty($inclusion->description)) { ?>
+							<div _description="short"><?= template_parseBB($inclusion->description); ?></div>
+						<? }
+						if($inclusion->inclusions_count+$inclusion->files_count+$inclusion->comments_count > 0) { ?>
+							<div _properties>
+								<? if($inclusion->inclusions_count > 0) { ?>
+									<div>
+										<div><?= D['string_inclusions_count']; ?></div>
+										<div><?= $inclusion->inclusions_count; ?></div>
+									</div>
+								<? } ?>
+								<? if($inclusion->files_count > 0) { ?>
+									<div>
+										<div><?= D['string_files_count']; ?></div>
+										<div><?= $inclusion->files_count; ?></div>
+									</div>
+								<? } ?>
+								<? if($inclusion->comments_count > 0) { ?>
+									<div>
+										<div><?= D['string_comments_count']; ?></div>
+										<div><?= $inclusion->comments_count; ?></div>
+									</div>
+								<? } ?>
+							</div>
+						<? }
+						/*if(session() && isset($inclusion->user) && session_getSettings()['login'] == $inclusion->user->login) { ?>
+							<div _grid="h">
+								<button><?= D['button_remove']; ?></button>
+								<button>Реферер по умолчанию</button>
+							</div>
+						<? }*/ ?>
+					</div>
+					<? if(isset($inclusion->poster['url'])) { ?>
+						<div>
+							<a href="<?= $inclusion_url; ?>" title="<?= $inclusion->title; ?>">
+								<img _image src="<?= $inclusion->poster['url']; ?>">
+							</a>
+						</div>
+					<? } ?>
+				</div>
+			<? } else { ?>
+				<div>
+					<div>Нет доступа к объекту <?= $inclusion->id; ?></div>
+				</div>
+			<? }
+		}
+	if($count > 0) { ?>
+		</div>
+		<div _grid="h" navigation_>
+			<button disabled_>1</button>
+		</div>
+		<div>&nbsp;</div>
+	<? }
+?>

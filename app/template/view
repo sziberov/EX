@@ -1,0 +1,220 @@
+<?
+	$object_id = $page == 'view' ? $path[1] ?? null : ($page == 'user' ? object_getUserID($path[1]) : $path[0]);
+	$display_mode_id = $_GET['display_mode_id'] ?? 0;
+	$sort_mode_id = $_GET['sort_mode_id'] ?? 0;
+
+	try {
+		$object = new Object_($object_id);
+	} catch(Exception $e) {
+		$error = D['error_page_not_found'];
+		http_response_code(404);
+		return include 'error';
+	}
+
+	$access_level_id = session_getAccessLevelID($object->id);
+
+	if($access_level_id == 0) {
+		$error = D['error_page_forbidden'];
+		http_response_code(403);
+		return include 'error';
+	}
+
+	if($object->type_id == 3) {
+		$hide_default_referrer = filter_var($object->settings['hide_default_referrer']->value ?? null, FILTER_VALIDATE_BOOLEAN);
+
+		try {
+			$referrer = new Object_(object_getValidReferrerID($object->id, $_GET['referrer_id'] ?? null, !$hide_default_referrer));
+		} catch(Exception $e) {}
+
+		$referred_title = $object->title.(!empty($referrer) ? ' - '.$referrer->title : '');
+	} else {
+		$referred_title = $object->title;
+	}
+
+	$page_title = $object->type_id == 1 ? D['title_group'].' '.$object->title :
+				 ($object->type_id == 2 ? D['title_user'].' '.$object->title :
+				 ($object->type_id == 3 ? $referred_title :
+										  $object->title));
+?>
+<title><?= dictionary_getPageTitle($page_title); ?></title>
+<!--
+<div _title="small" fallback_>Черновик</div>
+-->
+<? if(!empty($referrer)) { ?>
+	<div _title="small">
+		<a href="/<?= $referrer->id; ?>"><?= $referrer->title; ?></a>
+	</div>
+	<div _flex="h" fallback_>
+		<button icon_="to_back"></button>
+		<div fallback_>← Ctrl</div>
+		<button icon_="to_random"></button>
+		<div fallback_>Ctrl →</div>
+		<button icon_="to_forward"></button>
+	</div>
+<? } ?>
+<div _grid="h spaced">
+	<div _grid="v">
+		<? if($object->type_id == 1) { ?>
+			<div _title><?= D['title_group']; ?> <b><?= $object->title; ?></b></div>
+		<? } else
+		   if($object->type_id == 2) {
+			$login = $object->login;
+			$avatar_url = $object->avatar['url'] ?? null;
+			$avatar_title = $object->avatar['title'] ?? null;
+			$object_url = !empty($object->login) ? '/user/'.$object->login : '/'.$object->id;
+			$friends = $object->friends;
+			$session_login = session_getSettings()['login'] ?? '';
+		?>
+			<div _grid="h">
+				<? if(!empty($avatar_url)) { ?>
+					<a _avatar href="<?= $object_url; ?>" title="<?= $object->title.': '.$avatar_title; ?>">
+						<img src="<?= $avatar_url; ?>">
+					</a>
+				<? } ?>
+				<div _title><?= D['title_user']; ?> <b><?= $object->title; ?></b></div>
+				<form _grid="h" action="/search">
+					<input size_="medium" name="query" type="text">
+					<input name="user_id" type="hidden" value="<?= $object->id; ?>">
+					<button type="submit"><?= D['button_search']; ?></button>
+				</form>
+			</div>
+		<? } else
+		   if($object->type_id == 4) { ?>
+		   	<div _title="small"><?= D['title_shared']; ?> временного хранения с ключём доступа <b><?= $object->id; ?></b></div>
+			<div _title><?= $object->title; ?></div>
+		<? } else { ?>
+			<div _title><?= $object->title; ?></div>
+		<? }
+
+		$hide_author_and_times = $object->type_id == 2 ? true : filter_var($object->settings['hide_author_and_times']->value ?? null, FILTER_VALIDATE_BOOLEAN);
+
+		if(!$hide_author_and_times) {
+			$template = new Template('user');
+			$template->user = $object->user;
+			$template->primary_time = $object->creation_time;
+			$template->secondary_time = $object->edit_time;
+			$template->time_display_mode_id = 2;
+			$template->render(true);
+		}
+
+		if(!empty($object->description)) { ?>
+			<div _description><?= template_parseBB($object->description); ?></div>
+		<? } ?>
+	</div>
+	<? if($object->type_id == 2) { ?>
+		<div _flex="h right wrap">
+			<a _button href="/friends_comments/<?= $login; ?>"><?= D['button_friends_comments']; ?></a>
+			<a _button href="/friends_recommendations/<?= $login; ?>"><?= D['button_friends_recommendations']; ?></a>
+			<a _button href="/user_comments/<?= $login; ?>"><?= D['button_user_comments']; ?></a>
+			<a _button href="/user_recommendations/<?= $login; ?>"><?= D['button_user_recommendations']; ?></a>
+		</div>
+	<? } else
+	if(!empty($object->poster['url'])) { ?>
+		<div _flex="v right">
+			<img _image=<?= $object->inclusions_count > 0 ? 'big' : 'dynamic'; ?> src="<?= $object->poster['url']; ?>" title="<?= $referred_title; ?>">
+			<div fallback_>PNG: <?= $object->poster['width']->value.'x'.$object->poster['height']->value; ?></div>
+		</div>
+	<? } ?>
+</div>
+<? if($object->type_id == 2) {
+	if(count($friends) > 0) { ?>
+		<div _grid="v stacked">
+			<b><?= $login != $session_login ? D['link_friends'] : '<a href="/friends">'.D['link_friends'].'</a>'; ?></b>
+			<div _flex="h wrap">
+				<? foreach($friends as $friend) {
+					$template = new Template('user');
+					$template->user = $friend;
+					$template->mutual = object_areMutualFriends($object->id, $friend->id);
+					$template->time_display_mode_id = 0;
+					$template->render(true);
+				} ?>
+			</div>
+		</div>
+	<? }
+	if($login == $session_login) { ?>
+		<div _grid="v stacked">
+			<b><a href="/notifications"><?= D['link_notifications']; ?></a></b>
+			<div _flex="h wrap">
+				<div _properties>
+					<div>
+						<div><?= D['string_groups_invites_count']; ?></div>
+						<div>1</div>
+					</div>
+					<div>
+						<div><?= D['string_friends_count']; ?></div>
+						<div>1</div>
+					</div>
+					<div>
+						<div><?= D['string_recommendations_count']; ?></div>
+						<div>1</div>
+					</div>
+					<div>
+						<div><?= D['string_comments_count']; ?></div>
+						<div>1</div>
+					</div>
+					<div>
+						<div><?= D['string_private_messages_count']; ?></div>
+						<div>1</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	<? }
+} else
+if($object->inclusions_count > 0) { ?>
+	<div _grid="h">
+		<form _grid="h">
+			<select name="display_mode_id" onchange="this.form.submit();">
+				<?
+					$dmid_options = ['cells', 'list'];
+
+					foreach($dmid_options as $k => $dmid_option) { ?>
+						<option value="<?= $k; ?>" <?= $k == $display_mode_id ? 'selected' : ''; ?>><?= D['string_as_'.$dmid_option]; ?></option>
+					<? }
+				?>
+			</select>
+			<select name="sort_mode_id" onchange="this.form.submit();">
+				<?
+					$smid_options = [
+						'inclusion_time',
+						'edit_time',
+						'creation_time',
+						'popularity',
+						'visits',
+						'comments',
+						'recommendations',
+						'title'
+					];
+
+					foreach($smid_options as $k => $smid_option) { ?>
+						<option value="<?= $k; ?>" <?= $k == $sort_mode_id ? 'selected' : ''; ?>><?= D['string_by_'.$smid_option]; ?></option>
+					<? }
+				?>
+			</select>
+		</form>
+		<form _grid="h" action="/search">
+			<input size_="medium" name="query" type="text">
+			<input name="section_id" type="hidden" value="<?= $object->id; ?>">
+			<button type="submit"><?= D['button_search']; ?></button>
+		</form>
+	</div>
+<? } ?>
+<?
+	$template = new Template('objects');
+
+	if($object->type_id == 2) {
+		$template->display_mode_id = 1;
+	} else {
+		$template->navigation_mode_id = 1;
+		$template->navigation_page = $navigation_page;
+		$template->navigation_items_per_page = $navigation_items_per_page;
+		$template->display_mode_id = $display_mode_id;
+		$template->referrer_id = $object->id;
+	}
+
+	$template->search_condition = "JOIN links AS l ON l.from_id = o.id AND l.to_id = $object->id AND l.type_id = 4";
+	$template->render(true);
+
+	include 'files';
+	include 'actions';
+?>

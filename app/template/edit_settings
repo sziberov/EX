@@ -1,0 +1,117 @@
+<?
+	try {
+		$object = new Object_($path[1] ?? null);
+	} catch(Exception $e) {
+		$error = D['error_page_not_found'];
+		http_response_code(404);
+		return include 'error';
+	}
+
+	if(!session()) {
+		return include 'login';
+	}
+
+	$access_level_id = session_getAccessLevelID($object->id);
+
+	if($access_level_id < 4) {
+		$error = D['error_page_forbidden'];
+		http_response_code(403);
+		return include 'error';
+	}
+
+	$presets = [
+		2 => [ // user
+			['login', 'string'],
+			['password_hash', 'string'],
+			['email', 'string'],
+			['hide_from_search', 'boolean'],
+			['use_personal_menu', 'boolean'],
+			['group_id', 'integer'],
+			['editor_id', 'integer'],
+			['avatar_id', 'integer'],
+			['max_upload_size', 'integer'],
+			['notify_friendship', 'boolean'],
+			['notify_recommendations', 'boolean'],
+			['notify_comments', 'boolean'],
+			['notify_private_messages', 'boolean'],
+			['allow_any_upload_size', 'boolean'],
+			['allow_advanced_control', 'boolean'],
+			['allow_max_access_ignoring_groups', 'boolean']
+		],
+		3 => [ // plain
+			['hide_from_search', 'boolean'],
+			['hide_default_referrer', 'boolean'],
+			['hide_title', 'boolean'],
+			['hide_author_and_times', 'boolean'],
+			['avatar_id', 'integer'],
+			['poster_id', 'integer'],
+			['display_search_bar', 'boolean'],
+			['display_amount', 'integer'],
+			['display_mode_id', 'integer'],
+			['sort_mode_id', 'integer'],
+			['hide_file_list', 'boolean'],
+			['deny_nonbookmark_inclusion', 'boolean'],
+			['deny_claims', 'boolean'],
+			['allow_template_execution', 'boolean'],
+			['awaiting_save', 'boolean']
+		],
+	];
+?>
+<title><?= dictionary_getPageTitle($object->title.' - '.D['title_edit_settings']); ?></title>
+<div _title="small">
+	<a href="/<?= $object->id; ?>"><?= $object->title; ?></a>
+</div>
+<div _title><?= D['title_edit_settings']; ?></div>
+<div _table="list" wide_ style="--columns: repeat(4, minmax(96px, 1fr));">
+	<div header_>
+		<div><?= D['string_setting']; ?></div>
+		<div><?= D['string_value']; ?></div>
+		<div><?= D['string_redaction']; ?></div>
+		<div></div>
+	</div>
+	<? foreach($object->settings as $setting) { ?>
+		<div>
+			<div><?= $setting->key; ?></div>
+			<div>
+				<div _description="short straight"><?= $setting->value; ?></div>
+			</div>
+			<div>
+				<?
+					$template = new Template('user');
+					$template->user = $setting->user;
+					$template->primary_time = $setting->edit_time;
+					$template->render(true);
+				?>
+			</div>
+			<div>
+				<button><?= D['button_remove']; ?></button>
+			</div>
+		</div>
+	<? } ?>
+	<div footer_ switch_="current" data-switch="edit">
+		<div>
+			<a data-switch-ref="edit"><u><?= D['link_add']; ?></u></a>
+		</div>
+		<div></div>
+		<div></div>
+		<div></div>
+	</div>
+	<div footer_ switch_ data-switch="edit">
+		<div>
+			<input size_="big" type="text" list="settings" placeholder="Ключ">
+			<datalist id="settings">
+				<? foreach($presets[$object->type_id] as $preset) { ?>
+					<option value="<?= $preset[0]; ?>"><?= $preset[1]; ?></option>
+				<? } ?>
+			</datalist>
+		</div>
+		<div>
+			<input size_="big" type="text" placeholder="Значение">
+		</div>
+		<div></div>
+		<div>
+			<button><?= D['button_save']; ?></button>
+			<button data-switch-ref="edit"><?= D['button_cancel']; ?></button>
+		</div>
+	</div>
+</div>

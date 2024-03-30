@@ -1,0 +1,34 @@
+<?
+	try {
+		$object = new Object_($path[1] ?? null);
+	} catch(Exception $e) {
+		$error = D['error_page_not_found'];
+		http_response_code(404);
+		return include 'error';
+	}
+
+	$access_level_id = session_getAccessLevelID($object->id);
+
+	if($access_level_id == 0) {
+		$error = D['error_page_forbidden'];
+		http_response_code(403);
+		return include 'error';
+	}
+?>
+<title><?= dictionary_getPageTitle($object->title.' - '.D['title_view_comments']); ?></title>
+<div _grid="v stacked">
+	<div _title="small">Все комментарии: <a href="#view_comments/_ID_">Без названия</a></div>
+	<div>...</div>
+	<div _title="small">Предыдущий комментарий: <a href="#view_comments/_ID_">Без названия</a></div>
+</div>
+<? include 'view_short'; ?>
+<b><?= D['title_view_comments']; ?></b>
+<?
+	$template = new Template('comments');
+	$template->object = $object;
+	$template->render(true);
+?>
+<div _grid="h">
+	<button onclick="Hash.set('edit?type=comment&parent_id=_ID_')">Комментировать</button>
+</div>
+<div>&nbsp;</div>

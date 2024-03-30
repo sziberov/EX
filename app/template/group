@@ -1,0 +1,59 @@
+<title>Группа доступа Group_DIES</title>
+<div _title>Группа доступа <b>Group_DIES</b></div>
+<div _table="list" wide_ style="--columns: repeat(5, minmax(96px, auto));">
+	<div header_>
+		<div>
+			<select>
+				<option>Файлы</option>
+				<option selected>Участники</option>
+			</select>
+		</div>
+		<div>[string_access]</div>
+		<div>Привилегии</div>
+		<div>[string_who]</div>
+		<div>[string_when]</div>
+	</div>
+	<div data-user-id="_GROUP_ID_">
+		<div>
+			<a _description="short straight" href="#user/DIES">DIES</a>
+		</div>
+		<div>Полный</div>
+		<div>
+			<div _flex="v stacked left">
+				<div>Предпочтение высшего доступа</div>
+				<div>Возможность приглашать участников</div>
+			</div>
+		</div>
+		<div>
+			<a _description="short straight" href="#user/system">system</a>
+		</div>
+		<div>00:00, 01 января 2019</div>
+	</div>
+	<div data-user-id="_GROUP_ID_">
+		<div>
+			<a _description="short straight" href="#user/UserIn">UserIn</a>
+		</div>
+		<div>Редактирование</div>
+		<div>
+			<div _flex="v stacked left">
+				<div>Возможность приглашать участников</div>
+			</div>
+		</div>
+		<div>
+			<a _description="short straight" href="#user/system">system</a>
+		</div>
+		<div>00:00, 01 января 2019</div>
+	</div>
+</div>
+<div _grid="h">
+	<button onclick="Hash.set('invite/_ID_')">Пригласить пользователей в группу</button>
+</div>
+<div>&nbsp;</div>
+<div _grid="h">
+	<button onclick="Hash.set('edit/[id]')">[button_edit]</button>
+	<button onclick="Request.delete('[id]')">[button_delete]</button>
+</div>
+<div>&nbsp;</div>
+<div _grid="h">
+	<button onclick="Hash.set('template/[id]')">[button_template]</button>
+</div>

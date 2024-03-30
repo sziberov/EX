@@ -1,0 +1,98 @@
+<?
+	if(!session()) {
+		return include 'login';
+	}
+?>
+<title>Уведомления @ EX</title>
+<div _title>Уведомления</div>
+<div _table="list" wide_ style="--columns: repeat(5, minmax(96px, auto));">
+	<div header_>
+		<div>Событие</div>
+		<div>Объект</div>
+		<div>Кто</div>
+		<div>Когда</div>
+		<div></div>
+	</div>
+	<div data-user-id="_USER_ID_">
+		<div>
+			<div _description>Вам прислали личное сообщение</div>
+		</div>
+		<div>
+			<a _description="short straight" href="#view/_ID_">Привет</a>
+		</div>
+		<div>
+			<a _description="short straight" href="#user/user">user</a>
+		</div>
+		<div>00:04, 01 января 2019</div>
+		<div>
+			<button onclick="Hash.set('view/_ID_')">Смотреть</button>
+			<button>Убрать</button>
+		</div>
+	</div>
+	<div data-user-id="_USER_ID_">
+		<div>
+			<div _description>Ваш объект прокомментировали</div>
+		</div>
+		<div>
+			<a _description="short straight" href="#view/_ID_">Без названия</a>
+		</div>
+		<div>
+			<a _description="short straight" href="#user/user">user</a>
+		</div>
+		<div>00:03, 01 января 2019</div>
+		<div>
+			<button onclick="Hash.set('view_comments/_ID_')">Смотреть</button>
+			<button>Убрать</button>
+		</div>
+	</div>
+	<div data-user-id="_USER_ID_">
+		<div>
+			<div _description>Ваш объект порекомендовали</div>
+		</div>
+		<div>
+			<a _description="short straight" href="#view/_ID_">Без названия</a>
+		</div>
+		<div>
+			<a _description="short straight" href="#user/user">user</a>
+		</div>
+		<div>00:02, 01 января 2019</div>
+		<div>
+			<button>Убрать</button>
+		</div>
+	</div>
+	<div data-user-id="_USER_ID_">
+		<div>
+			<div _description>Вас пригласили в группу</div>
+		</div>
+		<div>
+			<a _description="short straight" href="#view/_ID_">User_user</a>
+		</div>
+		<div>
+			<a _description="short straight" href="#user/user">user</a>
+		</div>
+		<div>00:01, 01 января 2019</div>
+		<div>
+			<button>Принять</button>
+			<button onclick="Hash.set('group/_ID_')">Смотреть</button>
+			<button>Убрать</button>
+		</div>
+	</div>
+	<div data-user-id="_USER_ID_">
+		<div>
+			<div _description>Вас добавили в друзья</div>
+		</div>
+		<div>
+			<a _description="short straight" href="#view/_ID_"><?= session_getSettings()['login'] ?? ''; ?></a>
+		</div>
+		<div>
+			<a _description="short straight" href="#user/Online">Online</a>
+		</div>
+		<div>00:00, 01 января 2019</div>
+		<div>
+			<button>Убрать</button>
+		</div>
+	</div>
+</div>
+<div _grid="h">
+	<button>Убрать все</button>
+</div>

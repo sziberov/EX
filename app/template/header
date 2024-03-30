@@ -1,0 +1,28 @@
+<div __section>
+	<div __menu>
+		<div __logo></div>
+		<? include 'menu_items'; ?>
+	</div>
+	<div __menu>
+		<? include 'menu_user_items'; ?>
+	</div>
+</div>
+<? if($page == '') { ?>
+	<div __section>
+		<div _grid="padded">
+			<div><?= template_parseBB(D['string_shared_objects']); ?></div>
+			<div _flex="h" __get>
+				<a _button primary_ href="/edit?type=shared"><?= D['button_create']; ?></a>
+				<div _flex="stacked">
+					<input size_="max" type="text" placeholder="<?= D['string_object_number']; ?>" oninput="Header.getInput(this)">
+					<button primary_ onclick="Header.get(this)"><?= D['button_get']; ?></button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div __section>
+		<div __image>
+			<img src="/app/image/header_image.png">
+		</div>
+	</div>
+<? } ?>

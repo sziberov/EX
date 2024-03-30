@@ -1,0 +1,66 @@
+<?
+	if(!session()) {
+		return include 'login';
+	}
+
+	$user = new Object_(session_getUserID());
+?>
+<title><?= D['title_groups']; ?></title>
+<div _title><?= D['title_groups']; ?></div>
+<div _table="list" wide_ style="--columns: repeat(5, minmax(96px, auto));">
+	<div header_>
+		<div><?= D['string_group']; ?></div>
+		<div><?= D['string_access']; ?></div>
+		<div><?= D['string_privileges']; ?></div>
+		<div><?= D['string_redaction']; ?></div>
+		<div></div>
+	</div>
+	<? foreach($user->user_group_access_links as $uga_link) {
+		$privileges = ['allow_invites' => 0, 'allow_members_list_view' => 0, 'allow_higher_access_preference' => 0];
+
+		foreach($privileges as $k => $v) {
+			$privileges[$k] = filter_var($uga_link->settings[$k]->value ?? null, FILTER_VALIDATE_BOOLEAN);
+		}
+	?>
+		<div>
+			<div>
+				<a _description="short straight" href="/<?= $uga_link->to->id; ?>"><?= $uga_link->to->title; ?></a>
+			</div>
+			<div>
+				<div _description="short straight"><?= D['string_access_level_'.($uga_link->settings['access_level_id']->value ?? 0)]; //, основная группа ?></div>
+			</div>
+			<div>
+				<? if(in_array(true, $privileges)) { ?>
+					<div _flex="v stacked right">
+						<? foreach(array_filter($privileges) as $k => $v) { ?>
+							<div><?= D['string_'.$k]; ?></div>
+						<? } ?>
+					</div>
+				<? } ?>
+			</div>
+			<div>
+				<?
+					$template = new Template('user');
+					$template->user = $uga_link->user;
+					$template->primary_time = $uga_link->edit_time;
+					$template->render(true);
+				?>
+			</div>
+			<div>
+				<? if($privileges['allow_invites']) { ?>
+					<a _button href="/invite/<?= $uga_link->to->id; ?>"><?= D['button_invite']; ?></a>
+				<? }
+				if(session_getAccessLevelID($uga_link->to->id) >= 4) { ?>
+					<a _button href="/edit/<?= $uga_link->to->id; ?>"><?= D['button_edit']; ?></a>
+					<? if(session_getAccessLevelID($uga_link->to->id) == 5) { ?>
+						<button><?= D['button_delete']; ?></button>
+					<? }
+				} ?>
+			</div>
+		</div>
+	<? } ?>
+</div>
+<div fallback_><?= D['string_groups_description']; ?></div>
+<div _grid="h">
+	<button><?= D['button_create']; ?></button>
+</div>

@@ -1,0 +1,25 @@
+<?
+	try {
+		$object = new Object_($path[1] ?? null);
+	} catch(Exception $e) {
+		$error = D['error_page_not_found'];
+		http_response_code(404);
+		return include 'error';
+	}
+
+	$access_level_id = session_getAccessLevelID($object->id);
+
+	if($access_level_id == 0) {
+		$error = D['error_page_forbidden'];
+		http_response_code(403);
+		return include 'error';
+	}
+?>
+<title><?= dictionary_getPageTitle($object->title.' - '.D['title_view_inclusions']); ?></title>
+<? include 'view_short'; ?>
+<b><?= D['title_view_inclusions']; ?></b>
+<?
+	$template = new Template('inclusions');
+	$template->object = $object;
+	$template->render(true);
+?>

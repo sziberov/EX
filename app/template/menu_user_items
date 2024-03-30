@@ -1,0 +1,13 @@
+<?
+	if(session()) {
+		$login = session_getSettings()['login'] ?? '';
+		$notifications_count = session_getNotificationsCount();
+	?>
+		<div __user <?= $notifications_count > 0 ? 'badge_="'.$notifications_count.'"' : ''; ?>><?= $login; ?></div>
+		<a href="/user/<?= $login; ?>"><?= D['link_page']; ?></a>
+		<a href="/settings"><?= D['link_settings']; ?></a>
+		<a href="/logout"><?= D['link_logout']; ?></a>
+	<? } else { ?>
+		<a href="/login"><?= D['link_login']; ?></a>
+	<? }
+?>

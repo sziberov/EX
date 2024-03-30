@@ -1,0 +1,36 @@
+<?
+	// Outer: user, user_id, mutual, primary_time, secondary_time, time_display_mode_id
+
+	if(isset($this->user)) {
+		$user = $this->user;
+	} else
+	if(isset($this->user_id)) {
+		$user = new Object_($this->user_id);
+	}
+
+	$online = $user->online ?? false;
+	$non_mutual = isset($this->mutual) && !$this->mutual;
+	$avatar_url = $user->avatar['url'] ?? null;
+	$avatar_title = $user->avatar['title'] ?? null;
+	$user_url = !empty($user) ? (!empty($user->login) ? '/user/'.$user->login : '/'.$user->id) : null;
+	$user_title = $user->title ?? null;
+	$primary_time = $this->primary_time ?? $user->creation_time ?? null;
+	$secondary_time = $this->secondary_time ?? $user->edit_time ?? null;
+	$time_display_mode_id = $this->time_display_mode_id ?? 1;
+?>
+<div _user="<?= ($online ? 'online' : '').' '.($non_mutual ? 'non-mutual-friend' : ''); ?>">
+	<? if(!empty($user) && !empty($avatar_url)) { ?>
+		<a _avatar="small" href="<?= $user_url; ?>" title="<?= $user_title.': '.$avatar_title; ?>">
+			<img src="<?= $avatar_url; ?>">
+		</a>
+	<? } ?>
+	<? if(!empty($user)) { ?>
+		<a href="<?= $user_url; ?>"><?= $user_title; ?></a>
+	<? } ?>
+	<? if($time_display_mode_id >= 1 && !empty($primary_time)) { ?>
+		<div><?= template_formatTime($primary_time); ?></div>
+	<? } ?>
+	<? if($time_display_mode_id >= 2 && !empty($secondary_time) && $secondary_time != $primary_time) { ?>
+		<div fallback_><?= template_formatTime($secondary_time); ?></div>
+	<? } ?>
+</div>

@@ -1,0 +1,38 @@
+<?
+	// Outer: navigation_mode_id, navigation_page, navigation_items_per_page, search_condition, display_mode_id, referrer_id
+
+	$navigation_mode_id = $this->navigation_mode_id ?? 0;
+
+	if($navigation_mode_id > 0) {
+		$navigation_page = $this->navigation_page ?? 0;
+		$navigation_items_per_page = $this->navigation_items_per_page ?? 24;
+		$search = object_search($this->search_condition ?? null, $navigation_items_per_page, $navigation_items_per_page*$navigation_page);
+	} else {
+		$search = object_search($this->search_condition ?? null);
+	}
+
+	$objects = $search['objects'];
+	$count = $search['count'];
+	$display_mode_id = $this->display_mode_id ?? 0;
+	$referrer_id = $this->referrer_id;
+
+	if($navigation_mode_id > 0) {
+		$navigation_template = new Template('navigation');
+		$navigation_template->page = $navigation_page;
+		$navigation_template->items_per_page = $navigation_items_per_page;
+		$navigation_template->items = $count;
+	}
+	if($navigation_mode_id == 1 && $count > 0) {
+		$navigation_template->render(true);
+	}
+	if($count > 0) {
+		if($display_mode_id == 1) {
+			include 'objects_list';
+		} else {
+			include 'objects_cells';
+		}
+	}
+	if($navigation_mode_id == 1 && $count > 0 || $navigation_mode_id == 2) {
+		$navigation_template->render(true);
+	}
+?>

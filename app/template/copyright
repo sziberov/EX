@@ -1,0 +1,2 @@
+<title><?= dictionary_getPageTitle(D['title_copyright']); ?></title>
+<div _title><?= D['title_copyright']; ?></div>

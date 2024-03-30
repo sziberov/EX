@@ -1,0 +1,100 @@
+<title>Приглашение</title>
+<div _title="small">
+	<a href="#view/_ID_">Group_DIES</a>
+</div>
+<div _table style="--columns: repeat(2, minmax(0, max-content));">
+	<div>
+		<div></div>
+		<div _title centered_>Приглашение</div>
+	</div>
+	<div>
+		<div>Логин</div>
+		<div>
+			<input name="login" type="text">
+		</div>
+	</div>
+	<div>
+		<div>Доступ</div>
+		<div>
+			<select>
+				<option>Чтение</option>
+				<option>Чтение + Комментирование</option>
+				<option>Чтение + Комментирование + Включение</option>
+				<option selected>Редактирование</option>
+				<option>Полный</option>
+			</select>
+		</div>
+	</div>
+	<div>
+		<div>Привилегии</div>
+		<div _flex="v stacked left">
+			<div _check>
+				<div></div>
+				<div>Высший доступ</div>
+			</div>
+			<div _check>
+				<div></div>
+				<div>Приглашение участников</div>
+			</div>
+			<div _check>
+				<div></div>
+				<div>Просмотр списка участников участников</div>
+			</div>
+		</div>
+	</div>
+	<div>
+		<div></div>
+		<div>
+			<button onclick="Hash.set('edit/_ID_')">Пригласить</button>
+		</div>
+	</div>
+</div>
+<div _table="list" wide_ style="--columns: repeat(6, minmax(96px, auto));">
+	<div header_>
+		<div>[string_user]</div>
+		<div>[string_access]</div>
+		<div>Привилегии</div>
+		<div>[string_who]</div>
+		<div>[string_when]</div>
+		<div></div>
+	</div>
+	<div data-user-id="_GROUP_ID_">
+		<div>
+			<a _description="short straight" href="#user/DIES">DIES</a>
+		</div>
+		<div>Полный</div>
+		<div>
+			<div _flex="v stacked left">
+				<div>Высший доступ</div>
+				<div>Приглашение участников</div>
+			</div>
+		</div>
+		<div>
+			<a _description="short straight" href="#user/system">system</a>
+		</div>
+		<div>00:00, 01 января 2019</div>
+		<div></div>
+	</div>
+	<div data-user-id="_GROUP_ID_">
+		<div>
+			<a _description="short straight" href="#user/UserIn">UserIn</a>
+		</div>
+		<div>Редактирование</div>
+		<div>
+			<div _flex="v stacked left">
+				<div>Приглашение участников</div>
+			</div>
+		</div>
+		<div>
+			<a _description="short straight" href="#user/system">system</a>
+		</div>
+		<div>00:00, 01 января 2019</div>
+		<div>
+			<button>Убрать</button>
+		</div>
+	</div>
+</div>
+<div _grid="h spaced">
+	<div></div>
+	<div fallback_>Пользователь получит доступ только после принятия приглашения</div>
+</div>

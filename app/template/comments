@@ -1,0 +1,106 @@
+<?
+	// Outer: navigation_page, navigation_items_per_page, object, level
+
+	$navigation_page = $this->navigation_page ?? 0;
+	$navigation_items_per_page = $this->navigation_items_per_page ?? 24;
+	$object = $this->object;
+	$search_condition = "JOIN links AS l ON l.from_id = o.id AND l.to_id = $object->id AND l.type_id = 5";
+	$search = object_search($search_condition, $navigation_items_per_page, $navigation_items_per_page*$navigation_page);
+	$comments = $search['objects'];
+	$count = $search['count'];
+	$level = $this->level ?? 0;
+
+	if($count > 0 && $level == 0) { ?>
+		<div _grid="h" navigation_>
+			<button disabled_>1</button>
+		</div>
+		<div _table="list" wide_ style="--columns: repeat(2, minmax(96px, auto));">
+	<? }
+		foreach($comments as $comment) {
+			$access_level_id = session_getAccessLevelID($comment->id);
+			$comment_url = '/view_comments/'.$comment->id;
+
+			if($access_level_id > 0) { ?>
+				<div>
+					<div _flex="v left" style="padding-left: <?= $level*48; ?>px;">
+						<div _grid="v stacked">
+							<b><a href="<?= $comment_url; ?>"><?= $comment->title; ?></a></b>
+							<?
+								$hide_author_and_times = filter_var($comment->settings['hide_author_and_times']->value ?? null, FILTER_VALIDATE_BOOLEAN);
+
+								if(!$hide_author_and_times) {
+									$template = new Template('user');
+									$template->user = $comment->user;
+									$template->primary_time = $comment->creation_time;
+									$template->render(true);
+								}
+							?>
+						</div>
+						<? if(!empty($comment->description)) { ?>
+							<div _description="short"><?= template_parseBB($comment->description); ?></div>
+						<? }
+						if($comment->files_count > 0) { ?>
+							<div _properties>
+								<div>
+									<div><?= D['string_files_count']; ?></div>
+									<div><?= $comment->files_count; ?></div>
+								</div>
+							</div>
+						<? }
+						/*if(session() && isset($comment->user) && session_getSettings()['login'] == $comment->user->login) { ?>
+							<div _grid="h">
+								<button>Ответить</button>
+								<a _button href="/edit/<?= $comment->comment_id; ?>"><?= D['button_edit']; ?></a>
+								<button><?= D['button_delete']; ?></button>
+								<button><?= D['button_remove']; ?></button>
+							</div>
+						<? }*/ ?>
+					</div>
+					<? if(isset($comment->poster['url'])) { ?>
+						<div>
+							<a href="<?= $comment_url; ?>" title="<?= $comment->title; ?>">
+								<img _image src="<?= $comment->poster['url']; ?>">
+							</a>
+						</div>
+					<? } ?>
+				</div>
+				<? if($comment->comments_count > 0) {
+					$template = new Template('comments');
+					$template->navigation_items_per_page = 4;
+					$template->object = $comment;
+					$template->level = $level+1;
+					$template->render(true);
+				}
+			} else { ?>
+				<div>
+					<div _flex="h" style="padding-left: <?= $level*48; ?>px;">
+						<div _icon="comment"></div>
+						<div _flex="v left">
+							<div>Нет доступа к объекту <?= $comment->id; ?></div>
+							<div _properties>
+								<div>
+									<div><?= D['string_comments_count']; ?></div>
+									<div><?= $comment->comments_count+1; ?></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			<? }
+		}
+		if($count > $navigation_items_per_page && $level > 0) { ?>
+			<div>
+				<div _flex="h" style="padding-left: <?= $level*48; ?>px;">
+					<div _icon="comment"></div>
+					<a href="/view_comments/<?= $object->id; ?>" badge_="<?= $count-$navigation_items_per_page; ?>">Ещё комментарии</a>
+				</div>
+			</div>
+		<? }
+	if($count > 0 && $level == 0) { ?>
+		</div>
+		<div _grid="h" navigation_>
+			<button disabled_>1</button>
+		</div>
+		<div>&nbsp;</div>
+	<? }
+?>

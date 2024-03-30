@@ -1,0 +1,175 @@
+<? if($object->type_id != 2 && $object->files_count > 0) { ?>
+	<div _table="list" wide_ switch_="current" style="--columns: minmax(192px, auto) repeat(2, minmax(96px, max-content));" data-sync="files_list">
+		<div header_>
+			<div>
+				<div _grid="v stacked">
+					<select data-sync-ref="list">
+						<option value="files_list"><?= D['string_files']; ?></option>
+						<? if($object->type_id == 1) { ?>
+							<option value="members_list" selected><?= D['string_members']; ?></option>
+						<? } ?>
+					</select>
+					<div _properties>
+						<div>
+							<div><?= D['string_count']; ?></div>
+							<div><?= count($object->files); ?></div>
+						</div>
+						<div>
+							<div><?= D['string_size']; ?></div>
+							<div><?= template_formatSize($object->files_size); ?></div>
+						</div>
+						<? if($object->files_length > 0) { ?>
+							<div>
+								<div><?= D['string_length']; ?></div>
+								<div><?= template_formatLength($object->files_length); ?></div>
+							</div>
+						<? } ?>
+						<a href="/filelist/<?= $object->id; ?>.urls"><?= D['link_file_list']; ?></a>
+						<? if($object->files_length > 0) { ?>
+							<a href="/playlist/<?= $object->id; ?>.m3u"><b><?= D['link_play_list']; ?></b></a>
+						<? } ?>
+					</div>
+				</div>
+			</div>
+			<div></div>
+			<div>
+				<button onclick="Viewer.toggleClose()"><?= D['button_display_viewer']; ?></button>
+			</div>
+		</div>
+		<? $i = 1; foreach($object->files as $file_title => $file) {
+			$format = $file->settings['format']->value ?? '';
+			$width = $file->settings['width']->value ?? null;
+			$height = $file->settings['height']->value ?? null;
+			$length = $file->settings['length']->value ?? null;
+		?>
+			<div>
+				<div>
+					<div _icon="floppy"></div>
+					<div _grid="v stacked">
+						<div fallback_><?= $i; ?></div>
+						<a href="/get/<?= $file->id; ?>"><?= $file_title; ?></a>
+					</div>
+				</div>
+				<div _flex="v center">
+					<? if(str_starts_with($format, 'image/')) { ?>
+							<a onclick="Viewer.toggleClose('image', '<?= $file->id; ?>');"><img _image src="/storage/<?= $file_title; ?>" title="<?= $file_title.' - '.$referred_title; ?>"></a>
+					<? } ?>
+					<? if(str_starts_with($format, 'video/')) { ?>
+						<button onclick="Viewer.toggleClose('video', '<?= $file->id; ?>')" <?= ''; // badge_="currentPlaybackTime" ?>><?= D['button_play']; ?></button>
+					<? } ?>
+				</div>
+				<div _flex="v right" fallback_>
+					<b><?= template_formatSize($file->size); ?></b>
+					<div _flex="v right stacked">
+						<div><?= template_formatTime($file->edit_time); ?></div>
+						<a href="/search?query=md5:<?= $file->md5; ?>"><?= $file->md5; ?></a>
+						<? if(!empty($format)) { ?>
+							<div><?= strtoupper(explode('/', $format)[1]).(!empty($width) ? ': '.$width.'x'.$height : '').(!empty($length) ? ', '.template_formatLength($length) : ''); ?></div>
+						<? } ?>
+					</div>
+					<div _grid="h">
+						<a _button href="/load/<?= $file->id; ?>"><?= D['button_download']; ?></a>
+						<? if($file->size >= 1000000) { ?>
+							<a _button href="/torrent/<?= $file->id; ?>"><?= D['button_torrent']; ?></a>
+						<? } ?>
+						<a _button href="/copy/<?= $object->id.'/'.$file->id; ?>"><?= D['button_copy']; ?></a>
+					</div>
+					<!--
+					<div _grid="h">
+						<button>Смотреть на карте</button>
+					</div>
+					-->
+					<div _flex="h wrap">
+						<? foreach($file->file_systems as $fs) { ?>
+							<a href="/load/<?= $file->id; ?>?fs_id=<?= $fs->id; ?>">FS<?= $fs->id; ?></a>
+						<? } ?>
+					</div>
+				</div>
+			</div>
+		<? $i++; } ?>
+	</div>
+	<div _viewer="closed">
+		<div _grid="h spaced" __panel>
+			<div __title>video.mp4</div>
+			<div _grid="h stacked">
+				<button icon_="minimize" onclick="Viewer.toggleMinimize()"></button>
+				<button icon_="close" onclick="Viewer.toggleClose()"></button>
+			</div>
+		</div>
+		<div __content>
+			<img src="/storage/example.jpg">
+			<video src="/storage/example.jpg" nocontrols>
+		</div>
+		<div _grid="h spaced" __panel>
+			<div __progress>
+				<div __playback></div>
+			</div>
+			<div _grid="h">
+				<button icon_="play"></button>
+				<div>0:00 / 0:00</div>
+			</div>
+			<div _grid="h">
+				<button icon_="volume"></button>
+				<button icon_="maximize"></button>
+				<button icon_="back" disabled_></button>
+				<button icon_="forward" disabled_></button>
+			</div>
+			<button icon_="resize"></button>
+		</div>
+	</div>
+<? } ?>
+<? if($object->type_id == 1) { ?>
+	<div _table="list" wide_ switch_ style="--columns: repeat(4, minmax(96px, auto));" data-sync="members_list">
+		<div header_>
+			<div>
+				<select data-sync-ref="list">
+					<? if($object->files_count > 0) { ?>
+						<option value="files_list"><?= D['string_files']; ?></option>
+					<? } ?>
+					<option value="members_list" selected><?= D['string_members']; ?></option>
+				</select>
+			</div>
+			<div><?= D['string_access']; ?></div>
+			<div><?= D['string_privileges']; ?></div>
+			<div><?= D['string_redaction']; ?></div>
+		</div>
+		<? foreach($object->user_group_access_links as $uga_link) {
+			$privileges = ['allow_invites' => 0, 'allow_members_list_view' => 0, 'allow_higher_access_preference' => 0];
+
+			foreach($privileges as $k => $v) {
+				$privileges[$k] = filter_var($uga_link->settings[$k]->value ?? null, FILTER_VALIDATE_BOOLEAN);
+			}
+		?>
+			<div>
+				<div>
+					<?
+						$template = new Template('user');
+						$template->user = $uga_link->from;
+						$template->time_display_mode_id = 0;
+						$template->render(true);
+					?>
+				</div>
+				<div>
+					<div _description="short straight"><?= D['string_access_level_'.($uga_link->settings['access_level_id']->value ?? 0)]; ?></div>
+				</div>
+				<div>
+					<? if(in_array(true, $privileges)) { ?>
+						<div _flex="v stacked right">
+							<? foreach(array_filter($privileges) as $k => $v) { ?>
+								<div><?= D['string_'.$k]; ?></div>
+							<? } ?>
+						</div>
+					<? } ?>
+				</div>
+				<div>
+					<?
+						$template = new Template('user');
+						$template->user = $uga_link->user;
+						$template->primary_time = $uga_link->edit_time;
+						$template->render(true);
+					?>
+				</div>
+			</div>
+		<? } ?>
+	</div>
+<? } ?>

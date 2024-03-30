@@ -1,0 +1,49 @@
+<div _grid="h spaced">
+	<div _grid="v">
+		<div _title>
+			<a href="/<?= $object->id; ?>"><?= $object->title; ?></a>
+		</div>
+		<?
+			$hide_author_and_times = filter_var($object->settings['hide_author_and_times']->value ?? null, FILTER_VALIDATE_BOOLEAN);
+
+			if(!$hide_author_and_times) {
+				$template = new Template('user');
+				$template->user = $object->user;
+				$template->primary_time = $object->creation_time;
+				$template->secondary_time = $object->edit_time;
+				$template->time_display_mode_id = 2;
+				$template->render(true);
+			}
+		?>
+		<? if(!empty($object->description)) { ?>
+			<div _description="short"><?= template_parseBB($object->description); ?></div>
+		<? } ?>
+		<? if($object->inclusions_count+$object->files_count+$object->comments_count > 0) { ?>
+			<div _properties>
+				<? if($object->inclusions_count > 0) { ?>
+					<div>
+						<div><?= D['string_inclusions_count']; ?></div>
+						<div><?= $object->inclusions_count; ?></div>
+					</div>
+				<? } ?>
+				<? if($object->files_count > 0) { ?>
+					<div>
+						<div><?= D['string_files_count']; ?></div>
+						<div><?= $object->files_count; ?></div>
+					</div>
+				<? } ?>
+				<? if($object->comments_count > 0) { ?>
+					<div>
+						<div><?= D['string_comments_count']; ?></div>
+						<div><?= $object->comments_count; ?></div>
+					</div>
+				<? } ?>
+			</div>
+		<? } ?>
+	</div>
+	<? if(isset($object->poster['url'])) { ?>
+		<a href="/<?= $object->id.(!empty($referrer_id) ? '?referrer_id='.$referrer_id : ''); ?>" title="<?= $object->title; ?>">
+			<img _image src="<?= $object->poster['url']; ?>">
+		</a>
+	<? } ?>
+</div>

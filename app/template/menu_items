@@ -1,0 +1,17 @@
+<?
+	$menu_items = session_getSettings()['menu'] ?? [
+		['url' => '', 'title' => D['link_files']],
+		['url' => 'video', 'title' => D['link_video']],
+		['url' => 'audio', 'title' => D['link_audio']],
+		['url' => 'images', 'title' => D['link_images']],
+		['url' => 'texts', 'title' => D['link_texts']],
+		['url' => 'apps', 'title' => D['link_apps']],
+		['url' => 'games', 'title' => D['link_games']],
+		['url' => 'about', 'title' => D['link_about']],
+		['url' => 'search', 'title' => D['link_search']]
+	];
+
+	foreach($menu_items as $menu_item) { ?>
+	    <a href="/<?= $menu_item['url'] ?>"><?= $menu_item['title'] ?></a>
+	<? }
+?>

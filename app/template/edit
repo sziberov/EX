@@ -1,0 +1,301 @@
+<?
+	try {
+		$object = new Object_($path[1] ?? null);
+	} catch(Exception $e) {
+		$error = D['error_page_not_found'];
+		http_response_code(404);
+		return include 'error';
+	}
+
+	if($object->type_id != 4) {
+		if(!session()) {
+			return include 'login';
+		} else {
+			$user = new Object_(session_getUserID());
+		}
+	}
+
+	if($object->type_id == 4) {
+		$access_level_id = 5;
+	} else {
+		$access_level_id = session_getAccessLevelID($object->id);
+	}
+
+	if($access_level_id < 4) {
+		$error = D['error_page_forbidden'];
+	//	$error = 'Доступ ограничен из-за несоблюдения правил использования сервиса.';
+		http_response_code(403);
+		return include 'error';
+	}
+
+	$hide_default_referrer = filter_var($object->settings['hide_default_referrer']->value ?? null, FILTER_VALIDATE_BOOLEAN);
+
+	try {
+		$referrer = new Object_(object_getValidReferrerID($object->id, $_GET['referrer_id'] ?? null, !$hide_default_referrer));
+	} catch(Exception $e) {}
+
+	$referred_title = $object->title.(!empty($referrer) ? ' - '.$referrer->title : '');
+?>
+<title><?= dictionary_getPageTitle($referred_title.' - '.D['title_edit']); ?></title>
+<? if(!empty($referrer)) { ?>
+	<div _flex="h wrap" _title="small">
+		<!--
+		<div fallback_>Создание статьи на странице пользователя</div>
+		<div fallback_>Создание аватара</div>
+		<div fallback_>Создание группы доступа</div>
+		<div fallback_>Включение в раздел</div>
+		<div fallback_>Комментарий к</div>
+		-->
+		<a href="/<?= $referrer->id; ?>"><?= $referrer->title; ?></a>
+	</div>
+<? } ?>
+<div _table style="--columns: minmax(96px, max-content) minmax(96px, auto) minmax(96px, max-content);">
+	<div>
+		<div></div>
+		<div _title centered_><?= D['title_edit']; ?></div>
+		<div></div>
+	</div>
+	<? if($object->type_id == 4) { ?>
+		<div>
+			<div>Ключ доступа</div>
+			<div _flex="v stacked left">
+				<div>Номер <b><?= $object->id; ?></b> или ссылка <b><?= DOMAIN_ROOT.'/'.$object->id; ?></b></div>
+				<div fallback_>Сохраните эти данные, доступ к объекту возможен только по ним</div>
+			</div>
+			<div></div>
+		</div>
+	<? } ?>
+	<div>
+		<div><?= D['string_title']; ?></div>
+		<div>
+			<input size_="max" name="title" type="text" value="<?= $object->title; ?>">
+		</div>
+		<div></div>
+	</div>
+	<div>
+		<div><?= D['string_description']; ?></div>
+		<div _flex="v left">
+			<textarea size_="max" name="description"><?= $object->description; ?></textarea>
+			<div _grid="h">
+				<button><b><?= D['button_bold']; ?></b></button>
+				<button><i><?= D['button_italic']; ?></i></button>
+				<button><u><?= D['button_underscored']; ?></u></button>
+				<button><s><?= D['button_striked']; ?></s></button>
+				<button><sup><?= D['button_super']; ?></sup></button>
+				<button><sub><?= D['button_sub']; ?></sub></button>
+				<button><?= D['button_link']; ?></button>
+				<button><?= D['button_color']; ?></button>
+				<button><?= D['button_language']; ?></button>
+			</div>
+		</div>
+		<div></div>
+	</div>
+	<? if($object->type_id != 4) { ?>
+		<div>
+			<div><?= D['string_avatar']; ?></div>
+			<div>
+				<? if($user->avatars_count > 0) { ?>
+					<select>
+						<option><?= $object->type_id != 2 ? 'По умолчанию' : 'Нет' ; ?></option>
+						<option>DIES</option>
+					</select>
+					<a _avatar href="/user/_USER_TITLE_" title="DIES">
+						<img src="/app/image/background.png">
+					</a>
+				<? } else { ?>
+					<div>Для выбора аватара его необходимо создать <a href="/avatars">здесь</a></div>
+				<? } ?>
+			</div>
+			<div></div>
+		</div>
+	<? }
+	if($object->type_id != 4 && $access_level_id == 5 || (session_getSettings()['allow_advanced_control'] ?? false)) { ?>
+		<div>
+			<div>Доступ для "Всех"</div>
+			<div>
+				<select name="everyone_access_level_id">
+					<?
+						$everyone_access_level_id = 0;
+
+						foreach($object->group_object_access_links as $goa_link) {
+							if($goa_link->from_id == 1) {
+								$everyone_access_level_id = $goa_link->settings['access_level_id']->value ?? 0;
+
+								break;
+							}
+						}
+
+						for($i = 0; $i < 6; $i++) { ?>
+							<option value="<?= $i; ?>" <?= $i == $everyone_access_level_id ? 'selected' : ''; ?>><?= D['string_access_level_'.$i]; ?></option>
+						<? }
+					?>
+				</select>
+			</div>
+			<div></div>
+		</div>
+	<? } ?>
+	<div>
+		<div></div>
+		<div>
+			<a _button href="/view/<?= $object->id; ?>"><?= D['button_view']; ?></a>
+			<button onclick="Request.save('<?= $object->id; ?>')"><?= D['button_save']; ?></button>
+			<? if($object->type_id != 4 && $access_level_id == 5) { ?>
+				<button onclick="Request.delete('<?= $object->id; ?>')"><?= D['button_delete']; ?></button>
+			<? } ?>
+			<? if($object->type_id != 4) { ?>
+				<a _button href="/edit_settings/<?= $object->id; ?>"><?= D['button_settings']; ?></a>
+			<? } ?>
+			<? if($object->type_id != 4 && $access_level_id == 5) { ?>
+				<a _button href="/edit_access/<?= $object->id; ?>"><?= D['button_access']; ?></a>
+			<? } ?>
+		</div>
+		<div></div>
+	</div>
+</div>
+<div _table="list" wide_ switch_="current" style="--columns: repeat(4, minmax(96px, auto));" data-sync="files_list">
+	<div header_>
+		<div>
+			<select data-sync-ref="list">
+				<option value="files_list"><?= D['string_files']; ?></option>
+				<? if($object->type_id == 1) { ?>
+					<option value="members_list" selected><?= D['string_members']; ?></option>
+				<? } ?>
+			</select>
+		</div>
+		<div></div>
+		<div></div>
+		<div></div>
+	</div>
+	<? foreach($object->files as $file_title => $file) {
+		$format = $file->settings['format']->value ?? '';
+	?>
+		<div data-file-id="<?= $file->id; ?>">
+			<div>
+				<div _description="short straight"><?= $file_title; ?></div>
+			</div>
+			<div>
+				<? if(str_starts_with($format, 'image/')) { ?>
+					<img _image src="/storage/<?= $file_title; ?>">
+				<? } ?>
+			</div>
+			<div><?= template_formatSize($file->size); ?></div>
+			<div>
+				<? if(str_starts_with($format, 'image/')) { // TODO: Not svg ?>
+					<button>✓</button>
+					<button>↺</button>
+					<button>↻</button>
+				<? } ?>
+				<a _button href="/copy/<?= $object->id.'/'.$file->id; ?>"><?= D['button_copy']; ?></a>
+				<button><?= D['button_delete']; ?></button>
+			</div>
+		</div>
+	<? } ?>
+</div>
+<div _grid="h spaced" switch_="current" data-sync="files_list">
+	<a><u><?= D['link_upload']; ?></u></a>
+	<div fallback_>
+		<?
+			$file_systems = [];
+
+			foreach($object->files as $file) foreach($file->file_systems as $fs) { // TODO: Single SQL request via $object->files_systems
+				$file_systems[$fs->id] = 'FS'.$fs->id;
+			}
+
+			echo implode(', ', $file_systems);
+		?>
+	</div>
+	<div fallback_>
+		<? if($object->type_id == 3) { ?>
+			Для создания фотоальбома используйте <a href="/upload/<?= $object->id; ?>"><u>загрузку файлов в раздел</u></a>
+		<? } else { ?>
+			Для загрузки нескольких файлов используйте Ctrl и Shift при выделении
+		<? } ?>
+	</div>
+</div>
+<? if($object->type_id == 1) { ?>
+	<div _table="list" wide_ switch_ style="--columns: repeat(4, minmax(96px, auto));" data-sync="members_list">
+		<div header_>
+			<div>
+				<select data-sync-ref="list"></select>
+			</div>
+			<div><?= D['string_access']; ?></div>
+			<div><?= D['string_privileges']; ?></div>
+			<div></div>
+		</div>
+		<? foreach($object->user_group_access_links as $uga_link) {
+			$privileges = ['allow_invites' => 0, 'allow_members_list_view' => 0, 'allow_higher_access_preference' => 0];
+
+			foreach($privileges as $k => $v) {
+				$privileges[$k] = filter_var($uga_link->settings[$k]->value ?? null, FILTER_VALIDATE_BOOLEAN);
+			}
+		?>
+			<div>
+				<div>
+					<?
+						$template = new Template('user');
+						$template->user = $uga_link->from;
+						$template->time_display_mode_id = 0;
+						$template->render(true);
+					?>
+				</div>
+				<div>
+					<div _description="short straight"><?= D['string_access_level_'.($uga_link->settings['access_level_id']->value ?? 0)]; ?></div>
+				</div>
+				<div>
+					<? if(in_array(true, $privileges)) { ?>
+						<div _flex="v stacked right">
+							<? foreach(array_filter($privileges) as $k => $v) { ?>
+								<div><?= D['string_'.$k]; ?></div>
+							<? } ?>
+						</div>
+					<? } ?>
+				</div>
+				<div>
+					<button><?= D['button_remove']; ?></button>
+				</div>
+			</div>
+		<? } ?>
+		<div footer_ switch_="current" data-switch="edit">
+			<div>
+				<a data-switch-ref="edit"><u><?= D['link_add']; ?></u></a>
+			</div>
+			<div></div>
+			<div></div>
+		</div>
+		<div footer_ switch_ data-switch="edit">
+			<div>
+				<input size_="big" type="text" value="UserOut">
+			</div>
+			<div>
+				<select>
+					<? for($i = 0; $i < 6; $i++) { ?>
+						<option <?= $i == 2 ? 'selected' : ''; ?>><?= D['string_access_level_'.$i]; ?></option>
+					<? } ?>
+				</select>
+			</div>
+			<div>
+				<div _flex="v stacked left">
+					<label _check>
+						<input name="allow_invites" type="checkbox">
+						<div></div>
+						<div><?= D['string_allow_invites']; ?></div>
+					</label>
+					<label _check>
+						<input name="allow_members_list_view" type="checkbox">
+						<div></div>
+						<div><?= D['string_allow_members_list_view']; ?></div>
+					</label>
+					<label _check>
+						<input name="allow_higher_access_preference" type="checkbox">
+						<div></div>
+						<div><?= D['string_allow_higher_access_preference']; ?></div>
+					</label>
+				</div>
+			</div>
+			<div>
+				<button><?= D['button_save']; ?></button>
+				<button data-switch-ref="edit"><?= D['button_cancel']; ?></button>
+			</div>
+		</div>
+	</div>
+<? } ?>

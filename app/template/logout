@@ -1,0 +1,15 @@
+<?
+	if(!session()) {
+		return include 'login';
+	}
+
+	$logged_in = session('logout');
+
+	if(!$logged_in) {
+		$referer = $_SERVER['HTTP_REFERER'] ?? '/';
+		$refererPage = explode('/', parse_url($referer, PHP_URL_PATH))[1];
+		$location = $refererPage == 'logout' ? '/' : $referer;
+
+		exit(header('Location: '.$location));
+	}
+?>

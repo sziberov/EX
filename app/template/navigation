@@ -1,0 +1,70 @@
+<?
+	// Outer: page, items_per_page, items, buttons, rss_id
+
+	$page = $this->page;
+	$items_per_page = $this->items_per_page;
+	$items = $this->items;
+	$buttons = $this->buttons ?? 7;
+	$rss_id = $this->rss_id;
+	$pages = max(1, ceil($items/$items_per_page));
+	$at_first_page = $page == 0;
+	$at_last_page = $page == $pages-1;
+?>
+<form _flex="h" type="get">
+	<button icon_="to_first"<?= $at_first_page ? ' disabled_' : ''; ?>></button>
+	<?
+		$half_buttons = floor($buttons/2);
+		$start_page = max(0, $page-$half_buttons);
+		$end_page = $start_page+$buttons-1;
+
+		if($end_page >= $pages) {
+			$start_page = max(0, $pages-$buttons);
+			$end_page = $pages-1;
+		}
+
+		for($page_ = $start_page; $page_ <= $end_page; $page_++) {
+			$from_item = min($items, $items_per_page*$page_+1);
+			$to_item = min($items, $items_per_page*($page_+1));
+
+			if($page_ == $page) {
+				if(!$at_first_page) { ?>
+					<div fallback_>← Ctrl</div>
+					<button icon_="to_back"></button>
+				<? } else { ?>
+					<button icon_="to_back" disabled_></button>
+				<? } ?>
+				<b fallback_><?= $from_item.'..'.$to_item; ?></b>
+				<? if(!$at_last_page) { ?>
+					<button icon_="to_forward"></button>
+					<div fallback_>Ctrl →</div>
+				<? } else { ?>
+					<button icon_="to_forward" disabled_></button>
+				<? }
+			} else { ?>
+				<a href="?<?= http_build_query(array_merge($_GET, ['page' => $page_])); ?>"><?= $from_item.'..'.$to_item; ?></a>
+			<? }
+		}
+	?>
+	<button icon_="to_last"<?= $at_last_page ? ' disabled_' : ''; ?>></button>
+	<? foreach($_GET as $key => $value) {
+		if($key == 'items_per_page')
+			continue; ?>
+		<input type="hidden" name="<?= $key; ?>" value="<?= $value; ?>">
+	<? } ?>
+	<select fallback_ name="items_per_page" onchange="this.form.submit();" title="<?= D['select_items_per_page_tooltip']; ?>">
+		<?
+			$ipp_options = [4, 6, 8, 12, 16, 24, 32, 48, 64, 96, 128, 192, 256];
+
+			if(!in_array($items_per_page, $ipp_options)) {
+				$ipp_options[] = $items_per_page;
+			}
+
+			foreach($ipp_options as $ipp_option) { ?>
+				<option value="<?= $ipp_option; ?>" <?= $ipp_option == $items_per_page ? 'selected' : ''; ?>><?= $ipp_option; ?></option>
+			<? }
+		?>
+	</select>
+	<? if(!empty($rss_id)) { ?>
+		<a fallback_ href="/rss/<?= $rss_id; ?>">RSS</a>
+	<? } ?>
+</form>

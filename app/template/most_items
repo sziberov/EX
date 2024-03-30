@@ -1,0 +1,11 @@
+<div _grid="list">
+	<div _title="small"><?= $title ?></div>
+	<?
+		$most_items = json_decode(request_get(DOMAIN_ROOT.'/app/api/most_items.php?amount=6&link_id='.$link_id), true);
+
+		foreach($most_items as $most_item) { ?>
+			<a href="<?= $most_item['object_id']; ?>"><?= $most_item['title']; ?></a>
+		<? }
+	?>
+	<b><a href="most<?= $link_id > 0 ? '/'.$link_id : ''; ?>"><?= D['link_complete_list']; ?></a></b>
+</div>
