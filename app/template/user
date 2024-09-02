@@ -1,31 +1,24 @@
 <?
-	// Outer: user, user_id, mutual, primary_time, secondary_time, time_display_mode_id
+	// Outer: object, mutual, primary_time, secondary_time, time_display_mode_id
 
-	if(isset($this->user)) {
-		$user = $this->user;
-	} else
-	if(isset($this->user_id)) {
-		$user = new Object_($this->user_id);
-	}
-
+	$object = $this->object;
+	$user = $object->type_id == 2 ? $object : $object->user;
 	$online = $user->online ?? false;
 	$non_mutual = isset($this->mutual) && !$this->mutual;
-	$avatar_url = $user->avatar['url'] ?? null;
-	$avatar_title = $user->avatar['title'] ?? null;
-	$user_url = !empty($user) ? (!empty($user->login) ? '/user/'.$user->login : '/'.$user->id) : null;
-	$user_title = $user->title ?? null;
-	$primary_time = $this->primary_time ?? $user->creation_time ?? null;
-	$secondary_time = $this->secondary_time ?? $user->edit_time ?? null;
+	$avatar = $object->avatar ?? ($user != $object ? $user->avatar ?? null : null);
+	$user_url = !empty($user) ? (!empty($user->alias) ? '/'.$user->alias : '/user/'.$user->login) : null;
+	$primary_time = $this->primary_time ?? $object->creation_time ?? null;
+	$secondary_time = $this->secondary_time ?? $object->edit_time ?? null;
 	$time_display_mode_id = $this->time_display_mode_id ?? 1;
 ?>
 <div _user="<?= ($online ? 'online' : '').' '.($non_mutual ? 'non-mutual-friend' : ''); ?>">
-	<? if(!empty($user) && !empty($avatar_url)) { ?>
-		<a _avatar="small" href="<?= $user_url; ?>" title="<?= $user_title.': '.$avatar_title; ?>">
-			<img src="<?= $avatar_url; ?>">
+	<? if(!empty($user) && !empty($avatar)) { ?>
+		<a _avatar="small" href="<?= $user_url; ?>" href_2="/avatar_object_id" title="<?= $user->title.': '.$avatar->title; ?>">
+			<img src="/get/<?= $avatar->poster->id; ?>">
 		</a>
 	<? } ?>
 	<? if(!empty($user)) { ?>
-		<a href="<?= $user_url; ?>"><?= $user_title; ?></a>
+		<a href="<?= $user_url; ?>"><?= $user->title; ?></a>
 	<? } ?>
 	<? if($time_display_mode_id >= 1 && !empty($primary_time)) { ?>
 		<div><?= template_formatTime($primary_time); ?></div>

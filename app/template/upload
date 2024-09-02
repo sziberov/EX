@@ -1,14 +1,37 @@
-<title>Без названия - Загрузка файлов в раздел</title>
-<div _title="small">
-	<a href="#view/_ID_">Без названия</a>
-</div>
+<?
+	try {
+		$object = new Object_($path[1] ?? null);
+	} catch(Exception $e) {
+		$error = D['error_page_not_found'];
+		http_response_code(404);
+		return include 'error';
+	}
+
+	if(!session()) {
+		return include 'login';
+	}
+
+	if($object->access_level_id < 3) {
+		$error = D['error_page_forbidden'];
+		http_response_code(403);
+		return include 'error';
+	}
+
+	$user = new Object_(session_getUserID());
+?>
+<title><?= dictionary_getPageTitle($object->title.' - '.D['title_upload']); ?></title>
+<?
+	$template = new Template('referrer');
+	$template->object = $object;
+	$template->render(true);
+?>
 <div _table style="--columns: minmax(96px, max-content) minmax(96px, max-content)">
 	<div>
 		<div></div>
-		<div _title centered_>Загрузка файлов в раздел</div>
+		<div _title centered_><?= D['title_upload']; ?></div>
 	</div>
 	<div>
-		<div>Аватар</div>
+		<div><?= D['string_avatar']; ?></div>
 		<!--
 		<div>Для выбора аватара его необходимо создать <a href="#avatars">здесь</a>.</div>
 		-->
@@ -19,7 +42,7 @@
 				<option>DIES</option>
 			</select>
 			<div _avatar onclick="Hash.set('user/_USER_TITLE_')" title="DIES">
-				<img src="/app/image/background.png">
+				<img src="/get/4">
 			</div>
 		</div>
 	</div>
@@ -30,8 +53,8 @@
 	<div>
 		<div></div>
 		<div>
-			<button onclick="Hash.set('view/_ID_')">Смотреть</button>
-			<button onclick="Hash.set('edit/_ID_')">Вернуться</button>
+			<button onclick="Hash.set('view/_ID_')"><?= D['button_view']; ?></button>
+			<button onclick="Hash.set('edit/_ID_')"><?= D['button_return']; ?></button>
 		</div>
 	</div>
 </div>
@@ -47,7 +70,7 @@
 			<div _description="short straight">background.png</div>
 		</div>
 		<div>
-			<img _image src="/storage/example.jpg">
+			<img _image src="/get/3">
 		</div>
 		<div>2,558,625</div>
 		<div>
@@ -60,7 +83,7 @@
 		<div>
 			<div _description="short straight">video.mp4</div>
 		</div>
-		<div upload_="finish">Загружено</div>
+		<div upload_="finished">Загружено</div>
 		<div>386,537,472</div>
 		<div>
 			<button onclick="Hash.set('copy/_ID_/_FILE_ID_')">Копировать</button>

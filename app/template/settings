@@ -47,13 +47,13 @@
 			</div>
 		</div>
 		<div>
-			<div>Имя</div>
+			<div><?= D['string_name']; ?></div>
 			<div>
 				<input size_="big" name="title" type="text" value="<?= $title ?? ''; ?>">
 			</div>
 		</div>
 		<div>
-			<div>О себе</div>
+			<div><?= D['string_about_self']; ?></div>
 			<div>
 				<textarea size_="big" name="description" type="text"><?= $description ?? ''; ?></textarea>
 			</div>
@@ -120,9 +120,14 @@
 					<div><?= D['string_friendship']; ?></div>
 				</label>
 				<label _check>
-					<input name="notify_recommendations" type="checkbox" <?= ($notifications['recommendations'] ?? false) ? 'checked' : ''; ?>>
+					<input name="notify_private_messages" type="checkbox" <?= ($notifications['private_messages'] ?? false) ? 'checked' : ''; ?>>
 					<div></div>
-					<div><?= D['string_recommendations']; ?></div>
+					<div><?= D['string_private_messages']; ?></div>
+				</label>
+				<label _check>
+					<input name="notify_inclusions" type="checkbox" <?= ($notifications['inclusions'] ?? false) ? 'checked' : ''; ?>>
+					<div></div>
+					<div><?= D['string_inclusions']; ?></div>
 				</label>
 				<label _check>
 					<input name="notify_comments" type="checkbox" <?= ($notifications['comments'] ?? false) ? 'checked' : ''; ?>>
@@ -130,9 +135,9 @@
 					<div><?= D['string_comments']; ?></div>
 				</label>
 				<label _check>
-					<input name="notify_private_messages" type="checkbox" <?= ($notifications['private_messages'] ?? false) ? 'checked' : ''; ?>>
+					<input name="notify_recommendations" type="checkbox" <?= ($notifications['recommendations'] ?? false) ? 'checked' : ''; ?>>
 					<div></div>
-					<div><?= D['string_private_messages']; ?></div>
+					<div><?= D['string_recommendations']; ?></div>
 				</label>
 			</div>
 		</div>

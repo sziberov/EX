@@ -11,9 +11,7 @@
 		return include 'login';
 	}
 
-	$access_level_id = session_getAccessLevelID($object->id);
-
-	if($access_level_id < 5) {
+	if($object->access_level_id < 5) {
 		$error = D['error_page_forbidden'];
 		http_response_code(403);
 		return include 'error';
@@ -22,9 +20,11 @@
 	$user = new Object_(session_getUserID());
 ?>
 <title><?= dictionary_getPageTitle($object->title.' - '.D['title_edit_access']); ?></title>
-<div _title="small">
-	<a href="/<?= $object->id; ?>"><?= $object->title; ?></a>
-</div>
+<?
+	$template = new Template('referrer');
+	$template->object = $object;
+	$template->render(true);
+?>
 <div _title><?= D['title_edit_access']; ?></div>
 <div _table="list" wide_ style="--columns: repeat(4, minmax(96px, auto));">
 	<div header_>
@@ -44,7 +44,7 @@
 			<div>
 				<?
 					$template = new Template('user');
-					$template->user = $goa_link->user;
+					$template->object = $goa_link->user;
 					$template->primary_time = $goa_link->creation_time;
 					$template->render(true);
 				?>

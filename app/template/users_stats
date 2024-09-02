@@ -1,39 +1,24 @@
-<title>[title_users_stats]</title>
-<div _title>[title_users_stats]</div>
-<div _table="list" wide_ style="--columns: repeat(12, minmax(48px, auto));">
-	<div header_>
-		<div>[string_user]</div>
-		<div>[string_friends_count]</div>
-		<div>[string_objects_count]</div>
-		<div>[string_originals_count]</div>
-		<div>[string_summary_size]</div>
-		<div>[string_duplicates_count]</div>
-		<div>[string_summary_size]</div>
-		<div>[string_registered]</div>
-		<div>[string_online]</div>
-		<div>[string_hits_count]</div>
-		<div>[string_hosts_count]</div>
-		<div>[string_guests_count]</div>
-	</div>
-	<module variables-instances="@/app/api/users_stats.php">
-		<div>
-			<div>
-				<div _description="short straight">
-					<module title="user"></module>
-				</div>
-			</div>
-			<div>[friends_count]</div>
-			<div>[objects_count]</div>
-			<div>[originals_count]</div>
-			<div>[originals_size]</div>
-			<div>[duplicates_count]</div>
-			<div>[duplicates_size]</div>
-			<div>[registration_time]</div>
-			<div>[online_time]</div>
-			<div>[hits_count]</div>
-			<div>[hosts_count]</div>
-			<div>[guests_count]</div>
-		</div>
-	</module>
-</div>
-<module title="objects_navigation" variables="...=@/app/api/objects.php"></module>
+<?
+	if(!session()) {
+		return include 'login';
+	}
+
+	$allow_advanced_control = session_getSettings()['allow_advanced_control'] ?? false;
+
+	if(!$allow_advanced_control) {
+		$error = D['error_page_forbidden'];
+		http_response_code(403);
+		return include 'error';
+	}
+?>
+<title><?= dictionary_getPageTitle(D['title_users_stats']); ?></title>
+<div _title><?= D['title_users_stats']; ?></div>
+<?
+	$template = new Template('entities');
+	$template->navigation_mode_id = 2;
+	$template->navigation_page = $navigation_page;
+	$template->navigation_items_per_page = $navigation_items_per_page;
+	$template->search_condition = 'WHERE o.type_id = 2';
+	$template->template_title = 'users_stats.objects';
+	$template->render(true);
+?>

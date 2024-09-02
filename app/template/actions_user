@@ -1,0 +1,87 @@
+<?
+	$current_session_user = session() && session_getSettings()['login'] == $object->login;
+?>
+<? if($current_session_user) { ?>
+	<div _grid="h">
+		<a _button href="/create?to_id=<?= $object->id; ?>&type_id=3,4"><?= D['button_create']; ?></a>
+		<a _button href="/archive"><?= D['button_archive'].($object->archive_count > 0 ? '<div _badge>'.$object->archive_count.'</div>' : ''); ?></a>
+		<? if($object->user_comments_count > 0) { ?>
+			<a _button href="/comments"><?= D['button_comments']; ?><div _badge><?= $object->user_comments_count; ?></div></a>
+		<? }
+		if($object->recommendations_count > 0) { ?>
+			<a _button href="/recommendations"><?= D['button_recommendations']; ?><div _badge><?= $object->recommendations_count; ?></div></a>
+		<? } ?>
+		<a _button href="/avatars"><?= D['button_avatars'].($object->avatars_count > 0 ? '<div _badge>'.$object->avatars_count.'</div>' : ''); ?></a>
+		<? if($object->user_claims_count > 0) { ?>
+			<a _button href="/claims">Жалобы<div _badge><?= $object->user_claims_count; ?></div></a>
+		<? } ?>
+		<a _button href="/templates"><?= D['button_templates'].($object->templates_count > 0 ? '<div _badge>'.$object->templates_count.'</div>' : ''); ?></a>
+		<? if($object->drafts_count > 0) { ?>
+			<a _button href="/drafts"><?= D['button_drafts']; ?><div _badge><?= $object->drafts_count; ?></div></a>
+		<? }
+		if($object->bookmarks_count > 0) { ?>
+			<a _button href="/bookmarks"><?= D['button_bookmarks']; ?><div _badge><?= $object->bookmarks_count; ?></div></a>
+		<? } ?>
+		<a _button href="/groups" title="<?= D['button_groups_tooltip']; ?>"><?= D['button_groups']; ?><div _badge><?= $object->groups_count_alien.' / '.$object->groups_count_own; ?></div></a>
+	</div>
+<? } ?>
+<div _grid="h">
+	<? if($current_session_user && $object->inbox_count+$object->outbox_count > 0) { ?>
+		<a _button href="/private_messages" title="<?= D['button_private_messages_tooltip']; ?>"><?= D['button_private_messages']; ?><div _badge><?= $object->inbox_count.' / '.$object->outbox_count; ?></div></a>
+	<? } else { ?>
+		<a _button href="/create?to_id=<?= $object->id; ?>&type_id=3,11"><?= D['button_private_message']; ?></a>
+	<? }
+	if($object->comments_count > 0) { ?>
+		<a _button href="/view_comments/<?= $object->id; ?>"><?= D['button_comments']; ?><div _badge><?= $object->comments_count; ?></div></a>
+	<? } else
+	if($object->access_level_id >= 2) { ?>
+		<a _button href="/create?to_id=<?= $object->id; ?>&type_id=3,5"><?= D['button_comment']; ?></a>
+	<? } ?>
+	<a _button href="/create_link?from_id=<?= $object->id; ?>&type_id=6" onclick="Button.toggle(this);"><?= D['button_recommend']; ?></a>
+</div>
+<? if(session()) { ?>
+	<div _grid="h">
+		<? if(!$current_session_user) { ?>
+			<a _button href="/create_link?from_id=<?= $object->id; ?>&to_id=<?= session_getUserID(); ?>&type_id=2" onclick="Button.toggle(this);"><?= D['button_to_friends']; ?></a>
+		<? } ?>
+		<a _button href="/create_link?from_id=<?= $object->id; ?>&type_id=10" onclick="Button.toggle(this);"><?= D['button_to_bookmarks']; ?></a>
+		<a _button href="/my/<?= $object->id; ?>"><?= D['button_to_my']; ?></a>
+	</div>
+	<? if($current_session_user || $allow_advanced_control) { // TODO: Display buttons conditionally ?>
+		<div _grid="h">
+			<a _button href="/objects_stats?user_id=<?= $object->id; ?>"><?= D['button_objects_stats']; ?></a>
+			<a _button href="/moderation?user_id=<?= $object->id; ?>"><?= D['button_moderation']; ?></a>
+			<a _button href="/claims?user_id=<?= $object->id; ?>"><?= D['button_claims']; ?></a>
+		</div>
+	<? }
+	if($current_session_user && $allow_advanced_control) { ?>
+		<div _grid="h">
+			<a _button href="/aliases"><?= D['button_aliases']; ?></a>
+			<a _button href="/banners"><?= D['button_banners']; ?></a>
+			<a _button href="/fs"><?= D['button_fs']; ?></a>
+		</div>
+	<? }
+}
+if($allow_advanced_control && $object->access_level_id >= 4) { ?>
+	<div>&nbsp;</div>
+	<div _grid="h">
+		<a _button href="/edit/<?= $object->id; ?>"><?= D['button_edit']; ?></a>
+		<? if($object->access_level_id == 5) { ?>
+			<a _button href="/destroy/<?= $object->id; ?>"><?= D['button_delete']; ?></a>
+		<? } ?>
+	</div>
+<? } ?>
+<div>&nbsp;</div>
+<div _grid="h">
+	<? if($object->claims_count > 0 && ($allow_advanced_control || $object->user->id == session_getUserID())) { ?>
+		<a _button href="/claims?object_id=<?= $object->id; ?>"><?= D['button_claims']; ?><div _badge><?= $object->claims_count; ?></div></a>
+	<? } else
+	if(!filter_var($object->settings['deny_claims']->value ?? null, FILTER_VALIDATE_BOOLEAN)) { ?>
+		<a _button href="/create?to_id=<?= $object->id; ?>&type_id=3,8"><?= D['button_claim']; ?></a>
+	<? } ?>
+	<a _button href="/template/<?= $object->id; ?>"><?= D['button_template']; ?></a>
+</div>
+<? if($current_session_user) { ?>
+	<div>&nbsp;</div>
+	<div><?= D['string_content_rating_first']; ?><b>1</b><?= D['string_content_rating_second']; ?></div>
+<? } ?>

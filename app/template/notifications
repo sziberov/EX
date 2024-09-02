@@ -2,97 +2,46 @@
 	if(!session()) {
 		return include 'login';
 	}
+
+	$user = new Object_(session_getUserID());
 ?>
-<title>Уведомления @ EX</title>
-<div _title>Уведомления</div>
-<div _table="list" wide_ style="--columns: repeat(5, minmax(96px, auto));">
+<title><?= dictionary_getPageTitle(D['title_notifications']); ?></title>
+<div _title><?= D['title_notifications']; ?></div>
+<div _table="list" wide_ style="--columns: repeat(4, minmax(96px, 1fr));">
 	<div header_>
-		<div>Событие</div>
-		<div>Объект</div>
-		<div>Кто</div>
-		<div>Когда</div>
+		<div><?= D['string_event']; ?></div>
+		<div><?= D['string_object']; ?></div>
+		<div><?= D['string_redaction']; ?></div>
 		<div></div>
 	</div>
-	<div data-user-id="_USER_ID_">
+	<? foreach($user->notifications as $notification) {
+		$notification_url = $notification->from->type_id == 2 ? '/user/'.$notification->from->login : '/'.$notification->from->id;
+	?>
 		<div>
-			<div _description>Вам прислали личное сообщение</div>
+			<div><?= D['string_event_'.$notification->settings['event_id']->value]; ?></div>
+			<div>
+				<a _description="short straight" href="<?= $notification_url; ?>"><?= $notification->from->title; ?></a>
+			</div>
+			<div>
+				<?
+					$template = new Template('user');
+					$template->object = $notification->user;
+					$template->primary_time = $notification->creation_time;
+					$template->render(true);
+				?>
+			</div>
+			<div>
+				<? if($notification->settings['event_id']->value == 0) { ?>
+					<button><?= D['button_accept']; ?></button>
+				<? } ?>
+				<? if(in_array($notification->settings['event_id']->value, [0, 2, 3, 4])) { ?>
+					<a _button href="<?= $notification_url; ?>"><?= D['button_view']; ?></a>
+				<? } ?>
+				<button><?= D['button_remove']; ?></button>
+			</div>
 		</div>
-		<div>
-			<a _description="short straight" href="#view/_ID_">Привет</a>
-		</div>
-		<div>
-			<a _description="short straight" href="#user/user">user</a>
-		</div>
-		<div>00:04, 01 января 2019</div>
-		<div>
-			<button onclick="Hash.set('view/_ID_')">Смотреть</button>
-			<button>Убрать</button>
-		</div>
-	</div>
-	<div data-user-id="_USER_ID_">
-		<div>
-			<div _description>Ваш объект прокомментировали</div>
-		</div>
-		<div>
-			<a _description="short straight" href="#view/_ID_">Без названия</a>
-		</div>
-		<div>
-			<a _description="short straight" href="#user/user">user</a>
-		</div>
-		<div>00:03, 01 января 2019</div>
-		<div>
-			<button onclick="Hash.set('view_comments/_ID_')">Смотреть</button>
-			<button>Убрать</button>
-		</div>
-	</div>
-	<div data-user-id="_USER_ID_">
-		<div>
-			<div _description>Ваш объект порекомендовали</div>
-		</div>
-		<div>
-			<a _description="short straight" href="#view/_ID_">Без названия</a>
-		</div>
-		<div>
-			<a _description="short straight" href="#user/user">user</a>
-		</div>
-		<div>00:02, 01 января 2019</div>
-		<div>
-			<button>Убрать</button>
-		</div>
-	</div>
-	<div data-user-id="_USER_ID_">
-		<div>
-			<div _description>Вас пригласили в группу</div>
-		</div>
-		<div>
-			<a _description="short straight" href="#view/_ID_">User_user</a>
-		</div>
-		<div>
-			<a _description="short straight" href="#user/user">user</a>
-		</div>
-		<div>00:01, 01 января 2019</div>
-		<div>
-			<button>Принять</button>
-			<button onclick="Hash.set('group/_ID_')">Смотреть</button>
-			<button>Убрать</button>
-		</div>
-	</div>
-	<div data-user-id="_USER_ID_">
-		<div>
-			<div _description>Вас добавили в друзья</div>
-		</div>
-		<div>
-			<a _description="short straight" href="#view/_ID_"><?= session_getSettings()['login'] ?? ''; ?></a>
-		</div>
-		<div>
-			<a _description="short straight" href="#user/Online">Online</a>
-		</div>
-		<div>00:00, 01 января 2019</div>
-		<div>
-			<button>Убрать</button>
-		</div>
-	</div>
+	<? } ?>
 </div>
 <div _grid="h">
-	<button>Убрать все</button>
+	<button><?= D['button_remove_all']; ?></button>
 </div>

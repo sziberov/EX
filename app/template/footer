@@ -1,20 +1,27 @@
-<div __section>
-	<? if(session_getSettings()['allow_advanced_control'] ?? false) { ?>
-		<div><?= D['string_stats_of']; ?></div>
-		<a href="/users_stats"><?= D['link_users_stats']; ?></a>
-		<a href="/objects_stats"><?= D['link_objects_stats']; ?></a>
-		<a href="/fs_stats"><?= D['link_fs_stats']; ?></a>
-	<? } ?>
-</div>
-<div __section>
-	<div>© <?= D['string_app_title']; ?></div>
-	<a href="/contacts"><?= D['link_contacts']; ?></a>
-	<a href="/copyright"><?= D['link_copyright']; ?></a>
-	<form action="/app/api/language.php" method="get">
-		<select name="language" onchange="this.form.submit();">
-			<? foreach($languages as $k => $v) { ?>
-				<option value="<?= $k; ?>" <?= ($_COOKIE['language'] ?? '') == $k ? 'selected' : ''; ?>><?= D['string_'.$v]; ?></option>
+<footer>
+	<div __section>
+		<? if(session_getSettings()['allow_advanced_control'] ?? false) { ?>
+			<? if(!empty($object)) { ?>
+				<a href="/visits/<?= $object->id; ?>"><?= $object->hits_count.'/'.$object->hosts_count.'/'.$object->guests_count; ?></a>
 			<? } ?>
-		</select>
-	</form>
-</div>
+			<div><?= D['string_stats_of']; ?></div>
+			<a href="/users_stats"><?= D['link_users_stats']; ?></a>
+			<a href="/objects_stats"><?= D['link_objects_stats']; ?></a>
+			<a href="/fs_stats"><?= D['link_fs_stats']; ?></a>
+			<a href="/moderation"><?= D['link_moderation']; ?></a>
+			<a href="/claims"><?= D['link_claims']; ?></a>
+		<? } ?>
+	</div>
+	<div __section>
+		<div>© <?= D['string_app_title']; ?></div>
+		<a href="/contacts"><?= D['link_contacts']; ?></a>
+		<a href="/copyright"><?= D['link_copyright']; ?></a>
+		<form action="/app/api/language.php" method="get">
+			<select name="language" onchange="this.form.submit();">
+				<? foreach($languages as $language) { ?>
+					<option value="<?= $language; ?>" <?= ($_COOKIE['language'] ?? '') == $language ? 'selected' : ''; ?>><?= D['string_language_'.$language]; ?></option>
+				<? } ?>
+			</select>
+		</form>
+	</div>
+</footer>

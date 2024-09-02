@@ -1,0 +1,30 @@
+<?
+	try {
+		$upload = new Upload($path[1] ?? null);
+	} catch(Exception $e) {
+		error_404:
+		$error = D['error_page_not_found'];
+		http_response_code(404);
+		return include 'error';
+	}
+
+	if(empty($upload->file->url)) {
+		goto error_404;
+	}
+
+	$file = $upload->file;
+	$file_title = $path[2] ?? $upload->title;
+	$mime_type = $file->mime_type ?? 'application/octet-stream';
+
+	ob_end_clean();
+	header('Cache-Control: must-revalidate');
+	header('Content-Description: File Transfer');
+	header('Content-Disposition: attachment; filename="'.$file_title.'"');
+	header('Content-Length: '.$file->size);
+	header('Content-Type: '.$mime_type);
+	header('Expires: 0');
+	header('Pragma: public');
+	readfile($file->url);
+
+	exit;
+?>

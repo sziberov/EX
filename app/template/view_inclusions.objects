@@ -1,0 +1,35 @@
+<? if(count($entities) > 0) { ?>
+	<div _table="list" wide_ style="--columns: minmax(96px, auto);">
+		<? foreach($entities as $link) {
+			$object = $link->to;
+			$object_url = !empty($object->alias) ? '/'.$object->alias : ($object->type_id == 2 ? '/user/'.$object->login : '/'.$object->id);
+		?>
+			<div>
+				<div _flex="v left">
+					<? if($object->access_level_id > 0) {
+						include 'objects-list.post'; ?>
+						<div _flex="h wrap">
+							<div fallback_><?= D['string_redaction']; ?></div>
+							<div>
+								<?
+									$template = new Template('user');
+									$template->object = $link->user;
+									$template->primary_time = $link->creation_time;
+									$template->render(true);
+								?>
+							</div>
+						</div>
+						<? /*if(session() && isset($object->user) && session_getSettings()['login'] == $object->user->login) { ?>
+							<div _grid="h">
+								<button><?= D['button_remove']; ?></button>
+								<button>Реферер по умолчанию</button>
+							</div>
+						<? }*/
+					} else {
+						echo D['string_no_access_to_object'].' '.$object->id;
+					} ?>
+				</div>
+			</div>
+		<? } ?>
+	</div>
+<? } ?>

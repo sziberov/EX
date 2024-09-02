@@ -1,8 +1,8 @@
-<!DOCTYPE html>
-<title>. . .</title>
-<link href="/app/image/favicon.png" rel="icon" type="image/png">
-<link href="/app/main.css" rel="stylesheet">
-<!--<link href="/storage/main.css" rel="stylesheet">-->
-<script src="/app/plugin/jquery-3.6.0.min.js"></script>
-<script src="/app/main.js"></script>
-<meta name="description" content="[string_app_description]">
+<head>
+	<title>. . .</title>
+	<link href="/app/image/favicon.png" rel="icon" type="image/png">
+	<link href="/app/main.css" rel="stylesheet">
+	<script src="/app/plugin/jquery-3.6.0.min.js"></script>
+	<script src="/app/main.js"></script>
+	<meta name="description" content="<?= D['string_app_description']; ?>">
+</head>

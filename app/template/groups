@@ -41,7 +41,7 @@
 			<div>
 				<?
 					$template = new Template('user');
-					$template->user = $uga_link->user;
+					$template->object = $uga_link->user;
 					$template->primary_time = $uga_link->edit_time;
 					$template->render(true);
 				?>
@@ -50,9 +50,9 @@
 				<? if($privileges['allow_invites']) { ?>
 					<a _button href="/invite/<?= $uga_link->to->id; ?>"><?= D['button_invite']; ?></a>
 				<? }
-				if(session_getAccessLevelID($uga_link->to->id) >= 4) { ?>
+				if($uga_link->to->access_level_id >= 4) { ?>
 					<a _button href="/edit/<?= $uga_link->to->id; ?>"><?= D['button_edit']; ?></a>
-					<? if(session_getAccessLevelID($uga_link->to->id) == 5) { ?>
+					<? if($uga_link->to->access_level_id == 5) { ?>
 						<button><?= D['button_delete']; ?></button>
 					<? }
 				} ?>
@@ -62,5 +62,5 @@
 </div>
 <div fallback_><?= D['string_groups_description']; ?></div>
 <div _grid="h">
-	<button><?= D['button_create']; ?></button>
+	<a _button href="/create?type_id=1"><?= D['button_create']; ?></a>
 </div>

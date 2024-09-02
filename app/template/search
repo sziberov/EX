@@ -27,31 +27,32 @@
 	<? } ?>
 	<button primary_ type="submit"><?= D['button_search']; ?></button>
 </form>
-<div>Не можете найти что-то - напишите в <a href="/view/0">Ищем и находим</a></div>
+<div>Не можете найти что-то - напишите в <b><a href="/view/0">Ищем и находим</a></b></div>
 <? if(!empty($user) || !empty($section)) { ?>
-	<div _properties>
+	<div _grid="h">
 		<? if(!empty($user)) { ?>
-			<div>
+			<div _flex="h wrap">
 				<div><?= D['string_user']; ?></div>
-				<a href="/user/<?= $user->login; ?>"><?= $user->login; ?></a>
+				<?
+					$template = new Template('user');
+					$template->object = $user;
+					$template->time_display_mode_id = 0;
+					$template->render(true);
+				?>
 			</div>
 		<? }
 		   if(!empty($section)) { ?>
-			<div>
-				<div><?= D['string_section']; ?></div>
-				<a href="/view/<?= $section->id; ?>"><?= $section->title; ?></a>
-			</div>
+			<div><?= D['string_section']; ?><b _badge><a href="<?= !empty($section->alias) ? '/'.$section->alias : '/'.$section->id; ?>"><?= $section->title; ?></a></b></div>
 		<? } ?>
 	</div>
 <? }
 
 	if(!empty($query)) {
-		$template = new Template('objects');
+		$template = new Template('entities');
 		$template->navigation_mode_id = 2;
 		$template->navigation_page = $navigation_page;
 		$template->navigation_items_per_page = $navigation_items_per_page;
 		$template->search_condition = object_getGenericSearchCondition($query, $user->id ?? null, $section->id ?? null);
-		$template->display_mode_id = 1;
 		$template->render(true);
 
 		if(!empty($user) || !empty($section)) { ?>

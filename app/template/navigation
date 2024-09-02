@@ -7,11 +7,15 @@
 	$buttons = $this->buttons ?? 7;
 	$rss_id = $this->rss_id;
 	$pages = max(1, ceil($items/$items_per_page));
-	$at_first_page = $page == 0;
-	$at_last_page = $page == $pages-1;
+	$first_page = 0;
+	$last_page = $pages-1;
 ?>
 <form _flex="h" type="get">
-	<button icon_="to_first"<?= $at_first_page ? ' disabled_' : ''; ?>></button>
+	<? if($page != $first_page) { ?>
+		<a _button icon_="to_first" href="?<?= http_build_query(array_merge($_GET, ['page' => $first_page])); ?>"></a>
+	<? } else { ?>
+		<a _button icon_="to_first" disabled_></a>
+	<? } ?>
 	<?
 		$half_buttons = floor($buttons/2);
 		$start_page = max(0, $page-$half_buttons);
@@ -27,25 +31,29 @@
 			$to_item = min($items, $items_per_page*($page_+1));
 
 			if($page_ == $page) {
-				if(!$at_first_page) { ?>
+				if($page != $first_page) { ?>
 					<div fallback_>← Ctrl</div>
-					<button icon_="to_back"></button>
+					<a _button icon_="to_back" href="?<?= http_build_query(array_merge($_GET, ['page' => $page_-1])); ?>"></a>
 				<? } else { ?>
-					<button icon_="to_back" disabled_></button>
+					<a _button icon_="to_back" disabled_></a>
 				<? } ?>
 				<b fallback_><?= $from_item.'..'.$to_item; ?></b>
-				<? if(!$at_last_page) { ?>
-					<button icon_="to_forward"></button>
+				<? if($page != $last_page) { ?>
+					<a _button icon_="to_forward" href="?<?= http_build_query(array_merge($_GET, ['page' => $page_+1])); ?>"></a>
 					<div fallback_>Ctrl →</div>
 				<? } else { ?>
-					<button icon_="to_forward" disabled_></button>
+					<a _button icon_="to_forward" disabled_></a>
 				<? }
 			} else { ?>
 				<a href="?<?= http_build_query(array_merge($_GET, ['page' => $page_])); ?>"><?= $from_item.'..'.$to_item; ?></a>
 			<? }
 		}
 	?>
-	<button icon_="to_last"<?= $at_last_page ? ' disabled_' : ''; ?>></button>
+	<? if($page != $last_page) { ?>
+		<a _button icon_="to_last" href="?<?= http_build_query(array_merge($_GET, ['page' => $last_page])); ?>"></a>
+	<? } else { ?>
+		<a _button icon_="to_last" disabled_></a>
+	<? } ?>
 	<? foreach($_GET as $key => $value) {
 		if($key == 'items_per_page')
 			continue; ?>
@@ -53,7 +61,11 @@
 	<? } ?>
 	<select fallback_ name="items_per_page" onchange="this.form.submit();" title="<?= D['select_items_per_page_tooltip']; ?>">
 		<?
-			$ipp_options = [4, 6, 8, 12, 16, 24, 32, 48, 64, 96, 128, 192, 256];
+			$ipp_options = [4];
+
+			for($i = 0; $i < 12; $i++) {
+			    $ipp_options[] = round($ipp_options[$i]*($i%2 == 0 ? 1.5 : 1.3333));
+			}
 
 			if(!in_array($items_per_page, $ipp_options)) {
 				$ipp_options[] = $items_per_page;

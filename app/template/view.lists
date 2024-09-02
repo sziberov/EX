@@ -1,0 +1,4 @@
+<?
+	if($object->type_id != 2 && $object->files_count > 0)	include 'view.lists.files';
+	if($object->type_id == 1 && $object->members_count > 0)	include 'view.lists.members';
+?>

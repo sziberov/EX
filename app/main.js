@@ -81,28 +81,34 @@ $(() => {
 	});
 
 	$('[data-switch-ref]').on('click', function() {
-		$('[data-switch="'+this.dataset.switchRef+'"]').attr('switch_', function(i, a) {
-			return a !== 'current' ? 'current' : '';
-		});
+		$('[data-switch="'+this.dataset.switchRef+'"]').attr('switch_', (i, a) => a !== 'current' ? 'current' : '');
 	});
 
 	$('select[data-sync-ref]').on('change', function() {
-		let value = this.value;
+		let syncRef = this.dataset.syncRef,
+			value = this.value,
+			values = [],
+			html = '';
 
-		if(value === '') {
-			return;
-		}
+		$('select[data-sync-ref="'+syncRef+'"]').each(function() {
+			for(let option of this.options) {
+				if(!values.includes(option.value)) {
+					values.push(option.value);
+					html += '<option value="'+option.value+'"'+(option.value === value ? ' selected' : '')+'>'+option.text+'</option>';
 
-		$('select[data-sync-ref="'+this.dataset.syncRef+'"]').html(this.innerHTML).val(value);
-
-		for(let option of this.options) {
-			$('[data-sync="'+option.value+'"]').attr('switch_', function() {
-				return this.dataset.sync === value ? 'current' : '';
-			});
-		}
+					$('[data-sync="'+option.value+'"]').attr('switch_', function() {
+						return this.dataset.sync === value ? 'current' : '';
+					});
+				}
+			}
+		}).html(html).val(value);
 	});
 
 	$(document).ready(() => {
-	    $('select[data-sync-ref]').change();
+		$('select[data-sync-ref]').each(function() {
+			this.selectedIndex = this.options.length-1;
+
+			$(this).change();
+		});
 	});
 });

@@ -1,17 +1,44 @@
-<title>Без названия - Включение в раздел из закладок</title>
-<!--
-<div _title="small">
-	<a href="#user/_USER_TITLE_">DIES</a>
-</div>
--->
-<div _title="small">
-	<a href="#view/_ID_">Без названия</a>
-</div>
-<div _title>Включение в раздел из закладок</div>
-<module title="objects" variables="filters=user_id\\=[id]&type\\=bookmarks;mode=list"></module>
+<?
+	try {
+		$object = new Object_($path[1] ?? null);
+	} catch(Exception $e) {
+		$error = D['error_page_not_found'];
+		http_response_code(404);
+		return include 'error';
+	}
+
+	if(!session()) {
+		return include 'login';
+	}
+
+	if($object->access_level_id < 3) {
+		$error = D['error_page_forbidden'];
+		http_response_code(403);
+		return include 'error';
+	}
+
+	$user = new Object_(session_getUserID());
+?>
+<title><?= dictionary_getPageTitle($object->title.' - '.D['title_include']); ?></title>
+<?
+	$template = new Template('referrer');
+	$template->object = $object;
+	$template->render(true);
+?>
+<div _title><?= D['title_include']; ?></div>
+<?
+	$template = new Template('entities');
+	$template->search_entity = 'links';
+	$template->search_class = 'Link';
+	$template->search_condition = "JOIN objects AS o ON o.id = l.from_id WHERE l.type_id = 10 AND l.user_id = $user->id
+								   GROUP BY o.id, l.id
+								   ORDER BY l.creation_time DESC, l.id DESC";
+	$template->template_title = 'include.objects';
+	$template->render(true);
+?>
 <div _grid="h">
-	<button onclick="Hash.set('view/_ID_')">Сохранить</button>
-	<button onclick="Hash.set('view/_ID_')">Отменить</button>
+	<a _button href="/<?= $object->id; ?>"><?= D['button_save']; ?></a>
+	<a _button href="/<?= $object->id; ?>"><?= D['button_cancel']; ?></a>
 	<button wide_>Выбрать все</button>
 	<button wide_>Очистить все</button>
 </div>

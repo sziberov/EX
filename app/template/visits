@@ -1,0 +1,46 @@
+<?
+	try {
+		$object = new Object_($path[1] ?? null);
+	} catch(Exception $e) {
+		$error = D['error_page_not_found'];
+		http_response_code(404);
+		return include 'error';
+	}
+
+	if(!session()) {
+		return include 'login';
+	}
+
+	if($object->access_level_id < 5) {
+		$error = D['error_page_forbidden'];
+		http_response_code(403);
+		return include 'error';
+	}
+
+	$user = new Object_(session_getUserID());
+	$allow_advanced_control = session_getSettings()['allow_advanced_control'] ?? false;
+?>
+<title><?= dictionary_getPageTitle($object->title.' - '.D['title_visits']); ?></title>
+<?
+	$template = new Template('referrer');
+	$template->object = $object;
+	$template->render(true);
+?>
+<div _title><?= D['title_visits']; ?></div>
+<?
+	$template = new Template('entities');
+	$template->navigation_mode_id = 2;
+	$template->navigation_page = $navigation_page;
+	$template->navigation_items_per_page = $navigation_items_per_page;
+	$template->search_entity = 'visits';
+	$template->search_class = 'Visit';
+	$template->search_fields = 'MAX(id) AS id, COUNT(*) AS count';
+	$template->search_condition = "WHERE object_id = $object->id
+								   GROUP BY referrer_url
+								   ORDER BY count DESC, id DESC";
+	$template->template_title = 'visits.visits';
+	$template->template_namespace = [
+		'allow_advanced_control' => $allow_advanced_control
+	];
+	$template->render(true);
+?>

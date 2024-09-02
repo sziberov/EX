@@ -1,98 +1,76 @@
-<?
-	$navigation_page = $_GET['page'] ?? 0;
-	$navigation_items_per_page = $_GET['items_per_page'] ?? 24;
+<content>
+	<?
+		$navigation_page = $_GET['page'] ?? 0;
+		$navigation_items_per_page = $_GET['items_per_page'] ?? 24;
 
-	$modules = [
-		'aliases',
-		'archive',
-		'avatars',
-		'ban',
-		'bookmarks',
-		'comments',
-		'contacts',
-		'copy',
-		'copyright',
-		'drafts',
-		'edit',
-		'edit_access',
-		'edit_settings',
-		'friends',
-		'friends_comments',
-		'friends_recommendations',
-		'fs_stats',
-		'group',
-		'groups',
-		'inbox',
-		'include',
-		'include_my',
-		'invite',
-		'languages',
-		'login',
-		'logout',
-		'most',
-		'notifications',
-		'objects_stats',
-		'outbox',
-		'password',
-		'recommendations',
-		'registration',
-		'search',
-		'settings',
-		'template',
-		'templates',
-		'upload',
-		'user_comments',
-		'user_recommendations',
-		'users_stats',
-		'view',
-		'view_comments',
-		'view_inclusions'
-	];
-	$ambiguous_modules = [
-		'comments',
-		'menu_items'
-	];
+		$modules = [
+			'aliases',
+			'archive',
+			'avatars',
+			'ban',
+			'bookmarks',
+			'claims',
+			'comments',
+			'contacts',
+			'copy',
+			'copyright',
+			'create',
+			'destroy',
+			'drafts',
+			'edit',
+			'edit_access',
+			'edit_settings',
+			'friends',
+			'friends_comments',
+			'friends_recommendations',
+			'fs_stats',
+			'get',
+			'groups',
+			'inbox',
+			'include',
+			'invite',
+			'languages',
+			'load',
+			'login',
+			'logout',
+			'menu_items',
+			'moderation',
+			'most',
+			'my',
+			'notifications',
+			'objects_stats',
+			'outbox',
+			'password',
+			'recommendations',
+			'registration',
+			'search',
+			'settings',
+			'template',
+			'templates',
+			'upload',
+			'user_comments',
+			'user_recommendations',
+			'users_stats',
+			'view',
+			'view_comments',
+			'view_inclusions',
+			'visits'
+		];
+		$ambiguous_modules = [
+			'comments',
+			'most'
+		];
 
-	if($page == '') { ?>
-		<title><?= dictionary_getPageTitle(D['title_files']); ?></title>
-		<div _grid="padded">
-			<div _grid="v">
-				<div _title="small">Крайние включения</div>
-				<?
-					$template = new Template('objects');
-					$template->navigation_mode_id = 2;
-					$template->navigation_page = $navigation_page;
-					$template->navigation_items_per_page = $navigation_items_per_page;
-					$template->search_condition = "WHERE o.type_id = 3 ORDER BY o.creation_time DESC";
-					$template->display_mode_id = 1;
-					$template->render(true);
-				?>
-			</div>
-			<div _grid="v">
-				<?
-					$most_items = [
-						['link_id' => 0, 'title' => D['title_most_popular']],
-						['link_id' => 1, 'title' => D['title_most_visited']],
-						['link_id' => 2, 'title' => D['title_most_commented']],
-						['link_id' => 3, 'title' => D['title_most_recommended']]
-					];
-
-					foreach($most_items as $most_item) {
-						$title = $most_item['title'];
-						$link_id = $most_item['link_id'];
-
-					    include 'most_items';
-					}
-				?>
-			</div>
-		</div>
-	<? } else
-	if(in_array($page, $ambiguous_modules)) {
-		include $page.'_page';
-	} else
-	if(in_array($page, $modules)) {
-		include $page;
-	} else {
-		include 'view';
-	}
-?>
+		if($page == '') {
+			include 'files_page';
+		} else
+		if(in_array($page, $ambiguous_modules)) {
+			include $page.'_page';
+		} else
+		if(in_array($page, $modules)) {
+			include $page;
+		} else {
+			include 'view';
+		}
+	?>
+</content>
