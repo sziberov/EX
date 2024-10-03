@@ -1,21 +1,30 @@
 $(() => {
 	window.Header = class {
 		static selector = 'header';
+		static viewURL = '/view';
 
 		static menu(a) {
-			$(this.selector+` [__menu] a`).removeAttr('current_');
-			$(this.selector+` [__menu] a[href="${a}"]`).attr('current_', '');
+			$(this.selector+` [__menu] a`).removeAttr('current_').filter(`[href="${a}"]`).attr('current_', '');
 		}
 
 		static get(a) {
-			$(a).attr('disabled_', '').closest(this.selector+' [__get]').attr('__get', 'wrong');
-			setTimeout(() =>
-				$(a).removeAttr('disabled_').closest(this.selector+' [__get]').attr('__get', '')
-			, 500);
+			fetch(this.viewURL, {
+				method: 'HEAD'
+			}).then(response => {
+				if(response.ok) {
+					window.location.href = this.viewURL;
+				} else {
+					$(a).attr('disabled_', '').closest(this.selector+' [__get]').attr('__get', 'wrong');
+					setTimeout(() =>
+						$(a).removeAttr('disabled_').closest(this.selector+' [__get]').attr('__get', '')
+					, 500);
+				}
+			});
 		}
 
 		static getInput(a) {
 			a.value = a.value.replaceAll(/[^0-9]/g, '');
+			this.viewURL = '/'+a.value;
 		}
 	}
 
@@ -23,45 +32,79 @@ $(() => {
 		static selector = 'footer';
 
 		static menu(a) {
-			$(this.selector+` a`).removeAttr('current_');
-			$(this.selector+` a[href="${a}"]`).attr('current_', '');
+			$(this.selector+` a`).removeAttr('current_').filter(`[href="${a}"]`).attr('current_', '');
+		}
+	}
+
+	window.Editor = class {
+		static selector = 'textarea[name="description"]';
+
+		static addBB(key, text, value) {
+			let editor = $(this.selector)[0],
+				start = editor.selectionStart,
+				end = editor.selectionEnd,
+				selectedText = '';
+
+			if(start !== end) {
+				selectedText = editor.value.substring(start, end);
+			}
+
+			let insertText = selectedText || (text ?? ''),
+				bbOpen = '['+key+(value ? '='+value : '')+']',
+				bbClose = '[/'+key+']',
+				finalText = bbOpen+insertText+bbClose;
+
+			editor.setRangeText(finalText, start, end, 'end');
+			editor.dispatchEvent(new Event('input', { bubbles: true }));
+			editor.focus();
 		}
 	}
 
 	window.Viewer = class {
 		static attribute = '_viewer';
-		static fileID;
+		static uploadID;
 
 		static toggleMinimize() {
 			let state = $('['+this.attribute+']').attr(this.attribute).split(' ').filter(v => v !== '');
 
 			if(state.includes('minimized')) {
 				state = state.filter(v => v !== 'minimized');
+				$('['+this.attribute+'~="video"] video')[0]?.play();
 			} else {
 				state.push('minimized');
+				$('['+this.attribute+'~="video"] video')[0]?.pause();
 			}
 
 			$('['+this.attribute+']').attr(this.attribute, state.join(' '));
 		}
 
-		static toggleClose(type, fileID) {
+		static toggleClose(element) {
 			let state = $('['+this.attribute+']').attr(this.attribute).split(' ').filter(v => v !== ''),
 				closed = state.includes('closed'),
-				fileIDChanged = fileID !== undefined && fileID !== this.fileID;
+				element_ = element != null ? $(element).parents('[data-viewer-id]') : null,
+				uploadID = element_?.attr('data-viewer-id'),
+				uploadIDChanged = uploadID != null && uploadID !== this.uploadID,
+				type = element_?.attr('data-viewer-type');
 
-			if(closed || fileIDChanged) {
+			if(closed || uploadIDChanged) {
 				if(closed) {
 					state = state.filter(v => v !== 'closed' && v !== 'minimized');
 				}
-				if(type !== undefined) {
+				if(type != null) {
 					state = state.filter(v => v !== 'image' && v !== 'video');
 					state.push(type);
 				}
-				if(fileIDChanged) {
-					this.fileID = fileID;
+				if(uploadIDChanged) {
+					this.uploadID = uploadID;
+					$('['+this.attribute+'] '+type.replace('image', 'img')).attr('src', '/get/'+uploadID);
+					$('['+this.attribute+'~="video"] video')[0]?.play();
 				}
 			} else {
 				state.push('closed');
+				if($('['+this.attribute+'~="video"] video')[0] != null) {
+					$('['+this.attribute+'~="video"] video')[0].pause();
+					$('['+this.attribute+'~="video"] video')[0].currentTime = 0;
+				}
 			}
 
 			$('['+this.attribute+']').attr(this.attribute, state.join(' '));
@@ -80,7 +123,18 @@ $(() => {
 		this.style.setProperty('--y', e.clientY-coordinates.y);
 	});
 
-	$('[data-switch-ref]').on('click', function() {
+	$('a[href-alt]').on('click keydown', function(e) {
+		if(
+			e.type === 'click' && e.altKey ||
+			e.type === 'keydown' && e.altKey && (e.which === 13 || e.key === 'Enter')
+		) {
+			e.preventDefault();
+
+			window.location.href = $(this).attr('href-alt');
+		}
+	});
+
+	$('[data-switch-ref]').on('click keydown', function() {
 		$('[data-switch="'+this.dataset.switchRef+'"]').attr('switch_', (i, a) => a !== 'current' ? 'current' : '');
 	});
 
@@ -104,11 +158,9 @@ $(() => {
 		}).html(html).val(value);
 	});
 
-	$(document).ready(() => {
-		$('select[data-sync-ref]').each(function() {
-			this.selectedIndex = this.options.length-1;
+	$('select[data-sync-ref]').each(function() {
+		this.selectedIndex = this.options.length-1;
 
-			$(this).change();
-		});
+		$(this).change();
 	});
 });

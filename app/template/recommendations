@@ -1,6 +1,0 @@
-<title>[title_recommendations]</title>
-<div _title>[title_recommendations]</div>
-<module title="objects" variables="filters=user_id\\=[user_id]&type\\=recommendations;navigation=true;mode=list"></module>
-<div _grid="h">
-	<button>[button_remove_all]</button>
-</div>

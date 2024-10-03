@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    sodipodi:docname="EX CMS.svg"
-   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
    id="svg8"
    version="1.1"
    viewBox="0 0 304 48"
    height="48"
    width="304"
+   inkscape:export-filename="EX CMS.png"
+   inkscape:export-xdpi="384"
+   inkscape:export-ydpi="384"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -108,15 +111,15 @@
      inkscape:window-maximized="1"
      inkscape:window-y="-8"
      inkscape:window-x="-8"
-     inkscape:window-height="746"
-     inkscape:window-width="1366"
+     inkscape:window-height="1017"
+     inkscape:window-width="1920"
      units="px"
      showgrid="false"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
-     inkscape:cy="23"
-     inkscape:cx="107.5"
-     inkscape:zoom="1"
+     inkscape:cy="7.2478445"
+     inkscape:cx="153.44217"
+     inkscape:zoom="5.6568542"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0"
      borderopacity="1"
@@ -124,11 +127,19 @@
      pagecolor="#808080"
      id="base"
      height="48px"
-     width="304px">
+     width="304px"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1">
     <inkscape:grid
        empspacing="4"
        id="grid3713"
-       type="xygrid" />
+       type="xygrid"
+       originx="0"
+       originy="0"
+       spacingy="1"
+       spacingx="1"
+       units="px"
+       visible="false" />
   </sodipodi:namedview>
   <metadata
      id="metadata5">
@@ -176,7 +187,7 @@
        d="m 136,-84 a 8,8 0 0 0 -8,8 v 32 a 8,8 0 0 0 8,8 h 40 v -8 h -38 v -32 h 38 v -8 z" />
     <path
        id="path3764"
-       style="fill:#7f7f7f;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;opacity:1"
+       style="opacity:1;fill:#7f7f7f;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m 264,-84 a 8,8 0 0 0 -8,8 v 10 a 8,8 0 0 0 8,8 h 30 v 14 h -38 v 8 h 40 a 8,8 0 0 0 8,-8 v -14 a 8,8 0 0 0 -8,-8 h -30 v -10 h 38 v -8 z" />
     <g
        id="g4711"

@@ -7,5 +7,6 @@
 	include 'plugin/dictionary.php';
 	include 'plugin/entities.php';
 	include 'plugin/user_session.php';
+	include 'plugin/routes.php';
 	include 'plugin/template.php';
 ?>

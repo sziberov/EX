@@ -1,7 +1,0 @@
-<body>
-	<div _wrapper>
-		<? include 'header'; ?>
-		<? include 'content'; ?>
-		<? include 'footer'; ?>
-	</div>
-</body>

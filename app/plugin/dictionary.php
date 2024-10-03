@@ -1,7 +1,7 @@
 <?
 	// Dictionary
 
-	$languages = ['ru', 'ng', 'en'];
+	$languages = ['ru', 'en'];
 	$language = $_COOKIE['language'] ?? null;
 	$strings;
 
@@ -33,7 +33,8 @@
 	function dictionary_setLanguage($language) {
 		global $strings;
 
-		$strings = json_decode(request_get(DOMAIN_ROOT.'/app/template/language-'.$language.'.json'), true);
+	//	$strings = json_decode(request_get(DOMAIN_ROOT.'/app/language/'.$language.'.json'), true);
+		$strings = json_decode(file_get_contents(ROOT.'/app/language/'.$language.'.json'), true);
 	}
 
 	function dictionary_setDefaultLanguage() {

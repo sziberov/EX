@@ -1,69 +1,149 @@
 <?
 	// User session
 
-	function session_createPasswordHash($password) {
-		return password_hash($password, PASSWORD_DEFAULT);
-	}
+	class Session {
+		protected static $user;
+		protected static $title;
+		protected static $notifications_count;
+		protected static $settings;
+		protected static $menu_items;
 
-	function session_verifyPasswordHash($password, $hash) {
-		return password_verify($password, $hash);
-	}
+		public static function createPasswordHash($password) {
+			return password_hash($password, PASSWORD_DEFAULT);
+		}
 
-	function session($action = null, $login = '', $password = '') {
-		if(in_array($action, ['login', 'logout'])) {
+		public static function verifyPasswordHash($password, $hash) {
+			return password_verify($password, $hash);
+		}
+
+		public static function login($login = '', $password = '') {
 			global $connection;
 
-			if($action == 'login') {
-				$sql = "SELECT o.id, s_1.value
-						FROM objects AS o
-						JOIN settings AS s_0 ON s_0.object_id = o.id AND s_0.key = 'login' AND s_0.value = '$login'
-						JOIN settings AS s_1 ON s_1.object_id = o.id AND s_1.key = 'password_hash'";
-				$query = mysqli_query($connection, $sql);
+			$sql = "SELECT o.id, s_1.value
+					FROM objects AS o
+					JOIN settings AS s_0 ON s_0.object_id = o.id AND s_0.key = 'login' AND s_0.value = '$login'
+					JOIN settings AS s_1 ON s_1.object_id = o.id AND s_1.key = 'password_hash'";
+			$query = mysqli_query($connection, $sql);
 
-				if(mysqli_num_rows($query) > 0) {
-					$row = mysqli_fetch_assoc($query);
-					$hash = $row['value'];
+			if($query->num_rows > 0) {
+				$row = $query->fetch_assoc();
+				$hash = $row['value'];
 
-					if(session_verifyPasswordHash($password, $hash)) {
-						$_SESSION['user_id'] = $row['id'];
-					}
+				if(self::verifyPasswordHash($password, $hash)) {
+					$_SESSION['user_id'] = $row['id'];
+
+					return true;
 				}
 			}
-			if($action == 'logout') {
-				session_unset();
+
+			return false;
+		}
+
+		public static function logout() {
+			session_unset();
+		}
+
+		public static function set() {
+			// TODO: Logout if user has been deleted
+
+			return isset($_SESSION['user_id']);
+		}
+
+		public static function getUserID() {
+			return $_SESSION['user_id'] ?? null;
+		}
+
+		public static function getUser() {
+			if(!empty(self::$user)) {
+				return self::$user;
 			}
+			if(!self::set()) {
+				return;
+			}
+
+			try {
+				self::$user = new Object_(self::getUserID());
+			} catch(Exception $e) {}
+
+			return self::$user;
 		}
 
-		// TODO: Logout if user has been deleted
+		public static function getTitle() {
+			if(!empty(self::$title)) {
+				return self::$title;
+			}
+			if(!self::set()) {
+				return '';
+			}
 
-		return isset($_SESSION['user_id']);
-	}
+			global $connection;
 
-	function session_getUserID() {
-		return $_SESSION['user_id'] ?? null;
-	}
+			$user_id = $_SESSION['user_id'];
+			$sql = "SELECT title FROM objects WHERE id = $user_id";
+			$query = mysqli_query($connection, $sql);
+			self::$title = '';
 
-	function session_getNotificationsCount() {
-		if(!session()) {
-			return 0;
+			if($query->num_rows > 0) {
+				self::$title = $query->fetch_column();
+			}
+
+			return self::$title;
 		}
 
-		global $connection;
+		public static function getNotificationsCount() {
+			if(!empty(self::$notifications_count)) {
+				return self::$notifications_count;
+			}
+			if(!self::set()) {
+				return 0;
+			}
 
-		$user_id = $_SESSION['user_id'];
-		$sql = "SELECT COUNT(*) AS count FROM links AS l WHERE l.to_id = $user_id AND l.type_id = 3";
-		$query = mysqli_query($connection, $sql);
-		$notifications_count = 0;
+			global $connection;
 
-		if(mysqli_num_rows($query) > 0) {
-			$row = mysqli_fetch_assoc($query);
-			$notifications_count = $row['count'];
+			$user_id = $_SESSION['user_id'];
+			$sql = "SELECT COUNT(*) FROM links WHERE to_id = $user_id AND type_id = 3";
+			$query = mysqli_query($connection, $sql);
+			self::$notifications_count = 0;
+
+			if($query->num_rows > 0) {
+				self::$notifications_count = $query->fetch_column();
+			}
+
+			return self::$notifications_count;
 		}
 
-		return $notifications_count;
-	}
+		public static function getSettings() {
+			if(!self::set()) {
+				return [];
+			}
 
-	function session_getSettings() {
-		return object_getSettings(session_getUserID());
+			return self::$settings ??= Object_::getSettings(self::getUserID());
+		}
+
+		public static function getSetting($key) {
+			return Object_::getFilteredSetting(self::getUser(), $key);
+		}
+
+		public static function getMenuItems() {
+			if(!empty(self::$menu_items)) {
+				return self::$menu_items;
+			}
+			if(!self::set()) {
+				return [];
+			}
+
+			global $connection;
+
+			$user_id = $_SESSION['user_id'];
+			$sql = "SELECT url, title FROM menu_items WHERE user_id = $user_id";
+			$query = mysqli_query($connection, $sql);
+			self::$menu_items = [];
+
+			while($row = $query->fetch_assoc()) {
+				self::$menu_items[] = $row;
+			}
+
+			return self::$menu_items;
+		}
 	}
 ?>

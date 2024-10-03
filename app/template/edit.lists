@@ -1,7 +1,0 @@
-<?
-	include 'edit.lists.files';
-
-	if($object->type_id == 1) {
-		include 'edit.lists.members';
-	}
-?>

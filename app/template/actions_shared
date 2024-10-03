@@ -1,6 +1,0 @@
-<div _grid="h">
-	<a _button href="/edit/<?= $object->id; ?>"><?= D['button_edit']; ?></a>
-	<? if($object->access_level_id == 5) { ?>
-		<a _button href="/destroy/<?= $object->id; ?>"><?= D['button_delete']; ?></a>
-	<? } ?>
-</div>
