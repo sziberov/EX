@@ -36,9 +36,8 @@
 				 ($object->type_id == 2 ? D['title_user'].' '.$object->title :
 				 ($object->type_id == 3 ? $referred_title :
 										  $object->title));
-?>
-<title><?= dictionary_getPageTitle($page_title); ?></title>
-<?
+	$page_description = mb_strimwidth(template_clearBB($object->description ?? ''), 0, 384, '...');
+
 	$template = new Template('referrer');
 	$template->object = $object;
 	$template->referrer = $referrer ?? null;

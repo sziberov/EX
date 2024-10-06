@@ -59,6 +59,13 @@
 		if(!in_array($to->type_id, $types[$type_id][$subtype_id])) {
 			goto error_404;
 		}
+
+		if($to->access_level_id == 0 || $to->getSetting('awaiting_save')) {
+			error_403:
+			$error = D['error_page_forbidden'];
+			http_response_code(403);
+			return include 'plugin/error.php';
+		}
 	}
 
 	if($type_id == 3 && (
@@ -66,9 +73,7 @@
 		$subtype_id == 5 && $to->access_level_id < 2 ||
 		$subtype_id == 8 && $to->getSetting('deny_claims')
 	)) {
-		$error = D['error_page_forbidden'];
-		http_response_code(403);
-		return include 'plugin/error.php';
+		goto error_403;
 	}
 
 	$object_id = $type_id == 1 ? Object_::createGroupID() :

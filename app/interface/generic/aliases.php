@@ -1,4 +1,6 @@
-<title>Алиасы</title>
+<?
+	$page_title = 'Алиасы';
+?>
 <div _title>Алиасы</div>
 <div _table="list" wide_ style="--columns: repeat(3, minmax(96px, 1fr));">
 	<div header_>

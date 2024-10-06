@@ -13,21 +13,21 @@
 		return include 'generic/login.php';
 	}
 
-	if(!empty($object) && $object->access_level_id < 1) {
+	if(!empty($object) && $object->access_level_id == 0) {
 		$error = D['error_page_forbidden'];
 		http_response_code(403);
 		return include 'plugin/error.php';
 	}
 
-	$user = new Object_(Session::getUserID());
+	$user = Session::getUser();
 	$page_title = (!empty($object) ? $object->title.' - ' : '').D['title_template'];
+
+	if(!empty($object)) {
+		$template = new Template('referrer');
+		$template->object = $object;
+		$template->render(true);
+	}
 ?>
-<title><?= dictionary_getPageTitle($page_title); ?></title>
-<? if(!empty($object)) { ?>
-	<div _title="small">
-		<a href="/<?= $object->id; ?>"><?= $object->title; ?></a>
-	</div>
-<? } ?>
 <div _table style="--columns: repeat(2, minmax(0, max-content));">
 	<div>
 		<div></div>

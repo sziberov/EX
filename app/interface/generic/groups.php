@@ -3,9 +3,8 @@
 		return include 'generic/login.php';
 	}
 
-	$user = new Object_(Session::getUserID());
+	$page_title = D['title_groups'];
 ?>
-<title><?= D['title_groups']; ?></title>
 <div _title><?= D['title_groups']; ?></div>
 <div _table="list" wide_ style="--columns: repeat(5, minmax(96px, auto));">
 	<div header_>
@@ -13,26 +12,19 @@
 		<div><?= D['string_access']; ?></div>
 		<div><?= D['string_privileges']; ?></div>
 		<div><?= D['string_redaction']; ?></div>
-		<div></div>
 	</div>
-	<? foreach($user->user_group_access_links as $uga_link) {
-		$privileges = ['allow_invites' => false, 'allow_members_list_view' => false, 'allow_higher_access_preference' => false];
-
-		foreach($privileges as $k => $v) {
-			$privileges[$k] = $uga_link->getSetting($k);
-		}
-	?>
+	<? foreach(Session::getUser()->user_group_access_links as $uga_link) { ?>
 		<div>
 			<div>
 				<a _description="short straight" href="/<?= $uga_link->to->id; ?>"><?= e($uga_link->to->title); ?></a>
 			</div>
 			<div>
-				<div _description="short straight"><?= D['string_access_level_'.$uga_link->getSetting('access_level_id')]; //, основная группа ?></div>
+				<div _description="short straight"><?= D['string_access_level_'.$uga_link->getSetting('access_level_id')].($uga_link->to->id == Session::getSetting('group_id') ? ', основная группа' : ''); ?></div>
 			</div>
 			<div>
-				<? if(in_array(true, $privileges)) { ?>
+				<? if(in_array(true, $uga_link->privileges)) { ?>
 					<div _flex="v stacked right">
-						<? foreach(array_filter($privileges) as $k => $v) { ?>
+						<? foreach(array_filter($uga_link->privileges) as $k => $v) { ?>
 							<div><?= D['string_'.$k]; ?></div>
 						<? } ?>
 					</div>
@@ -47,7 +39,7 @@
 				?>
 			</div>
 			<div>
-				<? if($privileges['allow_invites']) { ?>
+				<? if($uga_link->privileges['allow_invites']) { ?>
 					<a _button href="/invite/<?= $uga_link->to->id; ?>"><?= D['button_invite']; ?></a>
 				<? }
 				if($uga_link->to->access_level_id >= 4) { ?>

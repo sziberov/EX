@@ -10,8 +10,8 @@
 	$user_url = !empty($user->alias) ? '/'.$user->alias : '/user/'.$user->login;
 	$avatar = $user->avatar;
 	$avatar_url = !empty($avatar) ? (!empty($avatar->alias) ? '/'.$avatar->alias : '/'.$avatar->id) : null;
+	$page_title = D['title_friends_comments'].' '.$user->title;
 ?>
-<title><?= dictionary_getPageTitle(D['title_friends_comments'].' '.e($user->title)); ?></title>
 <div _grid="h spaced">
 	<div _grid="h">
 		<? if(!empty($avatar)) { ?>

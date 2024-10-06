@@ -17,8 +17,9 @@
 
 		$error = D['error_login_is_incorrect'];
 	}
+
+	$page_title = D['title_login'];
 ?>
-<title><?= dictionary_getPageTitle(D['title_login']); ?></title>
 <form _table style="--columns: repeat(3, minmax(0, max-content));" method="post">
 	<div>
 		<div></div>

@@ -4,8 +4,8 @@
 	}
 
 	$user_id = Session::getUserID();
+	$page_title = D['title_bookmarks'];
 ?>
-<title><?= dictionary_getPageTitle(D['title_bookmarks']); ?></title>
 <div _title><?= D['title_bookmarks']; ?></div>
 <?
 	$template = new Template('entities');

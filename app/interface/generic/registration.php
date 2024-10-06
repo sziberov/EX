@@ -41,8 +41,9 @@
 
 		exit(header("Location: /user/$login"));
 	}
+
+	$page_title = D['title_registration'];
 ?>
-<title><?= dictionary_getPageTitle(D['title_registration']); ?></title>
 <form _table style="--columns: repeat(2, minmax(0, max-content));" method="post">
 	<div>
 		<div></div>

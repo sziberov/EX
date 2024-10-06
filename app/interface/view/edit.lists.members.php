@@ -8,13 +8,7 @@
 		<div><?= D['string_access']; ?></div>
 		<div><?= D['string_privileges']; ?></div>
 	</div>
-	<? foreach($object->user_group_access_links as $uga_link) {
-		$privileges = ['allow_invites' => false, 'allow_members_list_view' => false, 'allow_higher_access_preference' => false];
-
-		foreach($privileges as $k => $v) {
-			$privileges[$k] = $uga_link->getSetting($k);
-		}
-	?>
+	<? foreach($object->user_group_access_links as $uga_link) { ?>
 		<div>
 			<div>
 				<?
@@ -28,9 +22,9 @@
 				<div _description="short straight"><?= D['string_access_level_'.$uga_link->getSetting('access_level_id')]; ?></div>
 			</div>
 			<div>
-				<? if(in_array(true, $privileges)) { ?>
+				<? if(in_array(true, $uga_link->privileges)) { ?>
 					<div _flex="v stacked right">
-						<? foreach(array_filter($privileges) as $k => $v) { ?>
+						<? foreach(array_filter($uga_link->privileges) as $k => $v) { ?>
 							<div><?= D['string_'.$k]; ?></div>
 						<? } ?>
 					</div>
@@ -59,21 +53,13 @@
 		</div>
 		<div>
 			<div _flex="v stacked left">
-				<label _check>
-					<input name="allow_invites" type="checkbox">
-					<div></div>
-					<div><?= D['string_allow_invites']; ?></div>
-				</label>
-				<label _check>
-					<input name="allow_members_list_view" type="checkbox">
-					<div></div>
-					<div><?= D['string_allow_members_list_view']; ?></div>
-				</label>
-				<label _check>
-					<input name="allow_higher_access_preference" type="checkbox">
-					<div></div>
-					<div><?= D['string_allow_higher_access_preference']; ?></div>
-				</label>
+				<? foreach(array_filter(Link::$settings_filters[1], fn($k) => str_starts_with($k, 'allow_'), ARRAY_FILTER_USE_KEY) as $k => $v) { ?>
+					<label _check>
+						<input name="<?= $k; ?>" type="checkbox">
+						<div></div>
+						<div><?= D['string_'.$k]; ?></div>
+					</label>
+				<? } ?>
 			</div>
 		</div>
 		<div>

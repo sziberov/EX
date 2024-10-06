@@ -4,8 +4,8 @@
 	}
 
 	$user = new Object_(Session::getUserID());
+	$page_title = D['title_notifications'];
 ?>
-<title><?= dictionary_getPageTitle(D['title_notifications']); ?></title>
 <div _title><?= D['title_notifications']; ?></div>
 <div _table="list" wide_ style="--columns: repeat(4, minmax(96px, auto));">
 	<div header_>

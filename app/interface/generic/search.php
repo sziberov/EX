@@ -15,8 +15,9 @@
 			$section = null;
 		}
 	} catch(Exception $e) {}
+
+	$page_title = D['title_search'].(!empty($query) ? ' "'.$query.'"' : '');
 ?>
-<title><?= dictionary_getPageTitle(D['title_search'].(!empty($query) ? ' "'.$query.'"' : '')); ?></title>
 <form _grid="h">
 	<input size_="large" name="query" type="text" value="<?= $query; ?>">
 	<? if(!empty($user)) { ?>

@@ -36,7 +36,7 @@
 									<button><?= D['button_remove']; ?></button>
 								</div>
 						<? } else {
-							echo D['no_access_to_object'].' '.$object->id;
+							echo D['string_no_access_to_object'].' '.$object->id;
 						} ?>
 					</div>
 				</div>

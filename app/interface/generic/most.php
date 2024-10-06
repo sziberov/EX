@@ -11,11 +11,10 @@
 		D['title_most_commented'],
 		D['title_most_recommended']
 	];
-	$title = $most[$most_id];
+	$page_title = $most[$most_id];
 ?>
-<title><?= dictionary_getPageTitle($title); ?></title>
 <div _grid="h spaced">
-	<div _title><?= $title; ?></div>
+	<div _title><?= $page_title; ?></div>
 	<div _flex="h">
 		<? foreach(array_filter($most, fn($k) => $k != $most_id, ARRAY_FILTER_USE_KEY) as $k => $v) { ?>
 			<a _button href="/most<?= $k == 0 ? '' : '/'.$k; ?>"><?= $v; ?></a>

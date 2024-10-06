@@ -4,10 +4,11 @@
 	}
 
 	extract(Session::getSettings());
+
+	$page_title = D['title_settings'];
 ?>
-<title><?= dictionary_getPageTitle(D['title_settings']); ?></title>
-<form _grid="h" method="post">
-	<div _table style="--columns: repeat(2, minmax(0, max-content));">
+<div _grid="h">
+	<form _table style="--columns: repeat(2, minmax(0, max-content));" method="post">
 		<div>
 			<div></div>
 			<div _title centered_><?= D['title_settings']; ?></div>
@@ -174,10 +175,10 @@
 				<button primary_ type="submit"><?= D['button_save']; ?></button>
 			</div>
 		</div>
-	</div>
-	<div _flex="v center">
+	</form>
+	<form _flex="v center" action="/destroy/<?= Session::getUserID(); ?>" method="post" onsubmit="return confirm('<?= D['string_account_deletion_confirmation']; ?>');">
 		<div _title>&nbsp;</div>
 		<div><?= template_parseBB(D['string_account_deletion']); ?></div>
-		<button onclick="confirm('<?= D['string_account_deletion_confirmation']; ?>')"><?= D['button_delete']; ?></button>
-	</div>
-</form>
+		<button type="submit"><?= D['button_delete']; ?></button>
+	</form>
+</div>

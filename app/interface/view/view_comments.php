@@ -12,9 +12,9 @@
 		http_response_code(403);
 		return include 'plugin/error.php';
 	}
-?>
-<title><?= dictionary_getPageTitle($object->title.' - '.D['title_view_comments']); ?></title>
-<?
+
+	$page_title = $object->title.' - '.D['title_view_comments'];
+
 	$template = new Template('referrer');
 	$template->object = $object;
 	$template->display_mode_id = 2;

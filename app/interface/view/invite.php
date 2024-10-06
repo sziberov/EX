@@ -18,22 +18,20 @@
 
 	foreach($object->user_group_access_links as $uga_link) {  // TODO: Optimize by direct function
 		if($uga_link->from_id == Session::getUserID()) {
-			$allow_invites = $uga_link->getSetting('allow_invites');
-			$allow_members_list_view = $uga_link->getSetting('allow_members_list_view');  // TODO: Full list vs invited only
-			$allow_higher_access_preference = $uga_link->getSetting('allow_higher_access_preference');
+			$privileges = $uga_link->privileges;
 
 			break;
 		}
 	}
 
-	if(empty($allow_invites)) {
+	if(empty($privileges) || !$privileges['allow_invites']) {
 		$error = D['error_page_forbidden'];
 		http_response_code(403);
 		return include 'plugin/error.php';
 	}
-?>
-<title><?= dictionary_getPageTitle($object->title.' - '.D['title_invite']); ?></title>
-<?
+
+	$page_title = $object->title.' - '.D['title_invite'];
+
 	$template = new Template('referrer');
 	$template->object = $object;
 	$template->render(true);
@@ -62,21 +60,13 @@
 	<div>
 		<div><?= D['string_privileges']; ?></div>
 		<div _flex="v stacked left">
-			<label _check>
-				<input name="allow_invites" type="checkbox">
-				<div></div>
-				<div><?= D['string_allow_invites']; ?></div>
-			</label>
-			<label _check <?= !$allow_members_list_view ? 'disabled_' : ''; ?>>
-				<input name="allow_members_list_view" type="checkbox">
-				<div></div>
-				<div><?= D['string_allow_members_list_view']; ?></div>
-			</label>
-			<label _check <?= !$allow_higher_access_preference ? 'disabled_' : ''; ?>>
-				<input name="allow_higher_access_preference" type="checkbox">
-				<div></div>
-				<div><?= D['string_allow_higher_access_preference']; ?></div>
-			</label>
+			<? foreach($privileges as $k => $v) { ?>
+				<label _check <?= !$v ? 'disabled_' : ''; ?>>
+					<input name="<?= $k; ?>" type="checkbox">
+					<div></div>
+					<div><?= D['string_'.$k]; ?></div>
+				</label>
+			<? } ?>
 		</div>
 	</div>
 	<div>

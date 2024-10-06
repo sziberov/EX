@@ -10,8 +10,9 @@
 		http_response_code(403);
 		return include 'plugin/error.php';
 	}
+
+	$page_title = D['title_users_stats'];
 ?>
-<title><?= dictionary_getPageTitle(D['title_users_stats']); ?></title>
 <div _title><?= D['title_users_stats']; ?></div>
 <?
 	$template = new Template('entities');

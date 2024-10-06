@@ -4,8 +4,8 @@
 	}
 
 	$user_id = Session::getUserID();
+	$page_title = D['title_drafts'];
 ?>
-<title><?= dictionary_getPageTitle(D['title_drafts']); ?></title>
 <div _title><?= D['title_drafts']; ?></div>
 <?
 	$template = new Template('entities');

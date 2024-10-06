@@ -1,8 +1,8 @@
-<div _table="list" wide_ style="--columns: minmax(48px, max-content) repeat(6, minmax(96px, auto));">
+<div _table="list" wide_ style="--columns: minmax(48px, max-content) repeat(5, minmax(96px, auto));">
 	<div header_>
 		<div fallback_></div>
 		<div><?= D['string_object']; ?></div>
-		<div><?= D['string_recommendations_count']; ?></div>
+		<!--<div><?= D['string_recommendations_count']; ?></div>-->
 		<div><?= D['string_inclusions_count']; ?></div>
 		<div><?= D['string_hits_count']; ?></div>
 		<div><?= D['string_hosts_count']; ?></div>
@@ -17,7 +17,7 @@
 				<div>
 					<? include 'plugin/objects-list.post.php'; ?>
 				</div>
-				<div><?= $object->recommendations_count; ?></div>
+				<!--<div><?= $object->recommendations_count; ?></div>-->
 				<div>
 					<? if($object->self_inclusions_count > 0) { ?>
 						<a href="/view_inclusions/<?= $object->id; ?>"><?= $object->self_inclusions_count; ?></a>

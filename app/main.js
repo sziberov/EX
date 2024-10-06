@@ -114,8 +114,6 @@ $(() => {
 	Header.menu(window.location.pathname);
 	Footer.menu(window.location.pathname);
 
-	document.title = $('title').last().text() ?? '. . .';
-
 	$('a:has(img[_image])').on('mousemove', function(e) {
 		let coordinates = this.getBoundingClientRect();
 

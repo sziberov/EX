@@ -1,4 +1,6 @@
-<title><?= dictionary_getPageTitle(D['title_banners']); ?></title>
+<?
+	$page_title = D['title_banners'];
+?>
 <div _title><?= D['title_banners']; ?></div>
 <div _table="list" wide_ style="--columns: repeat(8, minmax(96px, auto));">
 	<div header_>

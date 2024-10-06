@@ -1,4 +1,6 @@
-<title><?= dictionary_getPageTitle(D['title_files']); ?></title>
+<?
+	$page_title = D['title_files'];
+?>
 <div _grid="padded">
 	<div _grid="v">
 		<?

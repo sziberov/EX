@@ -39,13 +39,10 @@
 		try {
 			$referrer = new Object_($object->getValidReferrerID($_GET['referrer_id'] ?? null, !$hide_default_referrer));
 		} catch(Exception $e) {}
-
-		$referred_title = $object->title.(!empty($referrer) ? ' - '.$referrer->title : '');
-	} else {
-		$referred_title = $object->title;
 	}
+
+	$page_title = $object->title.' - '.D['title_edit'];
 ?>
-<title><?= dictionary_getPageTitle($referred_title.' - '.D['title_edit']); ?></title>
 <? if($awaiting_save && count($object->links) <= 1) { ?>
 	<div _flex="h wrap" _title="small">
 		<? if(count($object->links) == 0) { ?>

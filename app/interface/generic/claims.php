@@ -33,8 +33,9 @@
 		http_response_code(403);
 		return include 'plugin/error.php';
 	}
+
+	$page_title = D['title_claims'];
 ?>
-<title><?= dictionary_getPageTitle(D['title_claims']); ?></title>
 <div _title><?= D['title_claims']; ?></div>
 <? if($allow_advanced_control && !empty($user) || !empty($section)) { ?>
 	<div _grid="h">

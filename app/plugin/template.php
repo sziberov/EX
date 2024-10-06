@@ -137,6 +137,41 @@
 		return $string;
 	}
 
+	function template_clearBB($string) {
+		$codes = [
+			'/\n/',
+			'/\t/',
+			'/\[b\](.*?)\[\/b\]/s',
+			'/\[i\](.*?)\[\/i\]/s',
+			'/\[u\](.*?)\[\/u\]/s',
+			'/\[s\](.*?)\[\/s\]/s',
+			'/\[sup\](.*?)\[\/sup\]/s',
+			'/\[sub\](.*?)\[\/sub\]/s',
+			'/\[url=(?:.*?)\](.*?)\[\/url\]/s',
+			'/\[color=(?:.*?)\](.*?)\[\/color\]/s',
+			'/\[code\](.*?)\[\/code\]/s',
+			'/\[left\](.*?)\[\/left\]/s',
+			'/\[center\](.*?)\[\/center\]/s',
+			'/\[right\](.*?)\[\/right\]/s',
+			'/\[just\](.*?)\[\/just\]/s'
+		];
+
+		global $language;
+
+		$string = preg_replace_callback('/\[lang=(.*?)\](.*?)\[\/lang\]/s', function($matches) use ($language) {
+			$languages = explode('|', $matches[1]);
+			$text = $matches[2];
+
+			return in_array($language, $languages) ? $text : '';
+		}, $string);
+
+		foreach($codes as $pattern) {
+			$string = preg_replace($pattern, '$1', $string);
+		}
+
+		return $string;
+	}
+
 	function template_formatTime($time, $date_only = false) {
 		$date = date_create($time ?? '0');
 

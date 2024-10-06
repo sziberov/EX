@@ -63,13 +63,17 @@
 	function dictionary_getPageTitle($title) {
 		global $strings;
 
-		$appTitle = $strings['string_app_title'];
+		$app_title = $strings['string_app_title'];
 
-		if(strlen($title) > 0) {
-			return $title.' @ '.$appTitle;
-		} else {
-			return $appTitle;
-		}
+		return strlen($title) > 0 ? $title.' @ '.$app_title : $app_title;
+	}
+
+	function dictionary_getPageDescription($description) {
+		global $strings;
+
+		$app_description = $strings['string_app_description'];
+
+		return strlen($description) > 0 ? $description : $app_description;
 	}
 
 	dictionary_setDefaultLanguage();

@@ -1103,45 +1103,43 @@
 			return $this->uga_links_;
 		}
 
-		public function _getAccessLevelId($user_id = null) {
+		public function _getAccessLevelId() {
 			if($this->type_id == 4) {
 				return 5;
 			}
-
-			$this->access_level_ids_ ??= [];
-			$user_id ??= Session::getUserID();
-
-			if(isset($this->access_level_ids_[$user_id])) {
-				return $this->access_level_ids_[$user_id];
+			if(isset($this->access_level_id_)) {
+				return $this->access_level_id_;
 			}
 
 			global $connection;
 
+			$user_id = Session::getUserID();
+			/*
+			$redis = new Redis();
+			$redis->connect('127.0.0.1', 6379);
+			$cache_key = "object_{$this->id}_access_level_id_{$user_id}";
+			$access_level_id = $redis->get($cache_key);
+
+			if($access_level_id !== false) {
+				return $access_level_id;
+			}
+			*/
+
+			if((empty($user_id) || $user_id != $this->user_id) && $this->getSetting('awaiting_save')) {
+				$this->access_level_id_ = 0;
+			//	$redis->set($cache_key, $this->access_level_id_, 3600);
+				return $this->access_level_id_;
+			}
+
 			$user_group_access = [
 				1 => ['access_level_id' => 2]
 			];
-			/*$redis = new Redis();
-			$redis->connect('127.0.0.1', 6379);
-			$cache_key = "user_access_level_{$user_id}_{$this->id}";*/
 
-			if($user_id != null) {
-				/*$access_level_id = $redis->get($cache_key);
-
-				if($access_level_id !== false) {
-					return $access_level_id;
-				}*/
-
-				if($user_id == Session::getUserID()) {
-					if(Session::getSetting('allow_max_access_ignoring_groups')) {
-						return $this->access_level_ids_[$user_id] = 5;
-					}
-				} else {
-					$sql = "SELECT value FROM settings WHERE object_id = $user_id AND `key` = 'allow_max_access_ignoring_groups' AND value = 'true'";
-					$query = $connection->query($sql);
-
-					if($query->num_rows > 0) {
-						return $this->access_level_ids_[$user_id] = 5;
-					}
+			if(!empty($user_id)) {
+				if(Session::getSetting('allow_max_access_ignoring_groups')) {
+					$this->access_level_id_ = 5;
+				//	$redis->set($cache_key, $this->access_level_id_, 3600);
+					return $this->access_level_id_;
 				}
 
 				$sql = "SELECT l.to_id AS group_id, s_0.value AS access_level_id, s_1.value AS allow_higher_access_preference
@@ -1153,7 +1151,7 @@
 						WHERE l.from_id = $user_id AND l.type_id = 1";
 				$query = $connection->query($sql);
 
-				foreach($query->fetch_all(MYSQLI_ASSOC) as $uga/*buga*/) {
+				foreach($query->fetch_all(MYSQLI_ASSOC) as $uga) {
 					$user_group_access[$uga['group_id']] = $uga;
 				}
 			}
@@ -1177,13 +1175,9 @@
 				}
 			}
 
-			$access_level_id = max($access_level_ids);
-
-			/*if($user_id != null) {
-				$redis->set($cache_key, $access_level_id, 3600);
-			}*/
-
-			return $this->access_level_ids_[$user_id] = $access_level_id;
+			$this->access_level_id_ = max($access_level_ids);
+		//	$redis->set($cache_key, $this->access_level_id_, 3600);
+			return $this->access_level_id_;
 		}
 
 		public function areMutualFriends($user_id) {
@@ -1510,6 +1504,7 @@
 		protected $user_;
 		protected $settings_;
 		protected $filtered_settings_;
+		protected $privileges_;
 
 		public function __construct($id = null) {
 			if(isset($this->id)) {
@@ -1559,6 +1554,23 @@
 			}
 
 			return $this->settings_;
+		}
+
+		public function _getPrivileges() {
+			if(isset($this->privileges_)) {
+				return $this->privileges_;
+			}
+			if($this->type_id != 1) {
+				return;
+			}
+
+			$this->privileges_ = array_filter(self::$settings_filters[1], fn($k) => str_starts_with($k, 'allow_'), ARRAY_FILTER_USE_KEY);
+
+			foreach($this->privileges_ as $k => $v) {
+				$this->privileges_[$k] = $this->getSetting($k);
+			}
+
+			return $this->privileges_;
 		}
 
 		public function getSetting($key) {

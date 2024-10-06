@@ -22,10 +22,8 @@
 		return include 'plugin/error.php';
 	}
 
-	$user = new Object_(Session::getUserID());
-?>
-<title><?= dictionary_getPageTitle($object->title.' - '.D['title_edit_access']); ?></title>
-<?
+	$page_title = $object->title.' - '.D['title_edit_access'];
+
 	$template = new Template('referrer');
 	$template->object = $object;
 	$template->render(true);
@@ -36,7 +34,6 @@
 		<div><?= D['string_group']; ?></div>
 		<div><?= D['string_access']; ?></div>
 		<div><?= D['string_redaction']; ?></div>
-		<div></div>
 	</div>
 	<? foreach($object->group_object_access_links as $goa_link) { ?>
 		<div>
@@ -63,7 +60,7 @@
 		<div>
 			<input type="text" list="groups" placeholder="<?= D['string_object_id']; ?>">
 			<datalist id="groups">
-				<? foreach($user->user_group_access_links as $uga_link) { ?>
+				<? foreach(Session::getUser()->user_group_access_links as $uga_link) { ?>
 					<option value="<?= $uga_link->to->id; ?>"><?= $uga_link->to->title; ?></option>
 				<? } ?>
 			</datalist>

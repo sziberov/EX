@@ -1,4 +1,6 @@
-<title><?= dictionary_getPageTitle(D['title_copyright']); ?></title>
+<?
+	$page_title = D['title_copyright'];
+?>
 <div _title><?= D['title_copyright']; ?></div>
 <? if($language == 'en') { ?>
 	<b>1. General provisions</b>

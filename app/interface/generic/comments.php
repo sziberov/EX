@@ -4,8 +4,8 @@
 	}
 
 	$user_id = Session::getUserID();
+	$page_title = D['title_comments'];
 ?>
-<title><?= dictionary_getPageTitle(D['title_comments']); ?></title>
 <div _title><?= D['title_comments']; ?></div>
 <?
 	$template = new Template('entities');

@@ -18,8 +18,9 @@
 		http_response_code(403);
 		return include 'plugin/error.php';
 	}
+
+	$page_title = $upload->title.' - '.D['title_copy'];
 ?>
-<title><?= dictionary_getPageTitle($upload->title.' - '.D['title_copy']); ?></title>
 <div _table style="--columns: repeat(2, minmax(0, max-content));">
 	<div>
 		<div></div>

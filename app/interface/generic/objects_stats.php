@@ -20,8 +20,9 @@
 		http_response_code(403);
 		return include 'plugin/error.php';
 	}
+
+	$page_title = D['title_objects_stats'];
 ?>
-<title><?= dictionary_getPageTitle(D['title_objects_stats']); ?></title>
 <div _title><?= D['title_objects_stats']; ?></div>
 <? if($allow_advanced_control && !empty($user)) { ?>
 	<div _flex="h wrap">

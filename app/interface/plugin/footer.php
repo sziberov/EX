@@ -3,7 +3,7 @@
 		<?
 			$allow_advanced_control = Session::getSetting('allow_advanced_control');
 
-			if(!empty($object) && ($allow_advanced_control || $object->access_level_id >= 4)) { ?>
+			if(!empty($object) && ($object->access_level_id >= 4 || $object->access_level_id > 0 && $allow_advanced_control)) { ?>
 				<a href="/visits/<?= $object->id; ?>" title="<?= D['link_hits_hosts_guests_tooltip']; ?>"><?= "$object->hits_count-$object->hosts_count/$object->guests_count"; ?></a>
 			<? }
 			if($allow_advanced_control) { ?>

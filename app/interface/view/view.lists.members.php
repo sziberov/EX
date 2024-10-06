@@ -9,13 +9,7 @@
 		<div><?= D['string_privileges']; ?></div>
 		<div><?= D['string_redaction']; ?></div>
 	</div>
-	<? foreach($object->user_group_access_links as $uga_link) {
-		$privileges = ['allow_invites' => false, 'allow_members_list_view' => false, 'allow_higher_access_preference' => false];
-
-		foreach($privileges as $k => $v) {
-			$privileges[$k] = $uga_link->getSetting($k);
-		}
-	?>
+	<? foreach($object->user_group_access_links as $uga_link) { ?>
 		<div>
 			<div>
 				<?
@@ -29,9 +23,9 @@
 				<div _description="short straight"><?= D['string_access_level_'.$uga_link->getSetting('access_level_id')]; ?></div>
 			</div>
 			<div>
-				<? if(in_array(true, $privileges)) { ?>
+				<? if(in_array(true, $uga_link->privileges)) { ?>
 					<div _flex="v stacked right">
-						<? foreach(array_filter($privileges) as $k => $v) { ?>
+						<? foreach(array_filter($uga_link->privileges) as $k => $v) { ?>
 							<div><?= D['string_'.$k]; ?></div>
 						<? } ?>
 					</div>

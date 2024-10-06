@@ -21,9 +21,9 @@
 		http_response_code(403);
 		return include 'plugin/error.php';
 	}
-?>
-<title><?= dictionary_getPageTitle($object->title.' - '.D['title_edit_settings']); ?></title>
-<?
+
+	$page_title = $object->title.' - '.D['title_edit_settings'];
+
 	$template = new Template('referrer');
 	$template->object = $object;
 	$template->render(true);

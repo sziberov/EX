@@ -2,9 +2,14 @@
 	try {
 		$object = new Object_($path[1] ?? null);
 	} catch(Exception $e) {
+		error_404:
 		$error = D['error_page_not_found'];
 		http_response_code(404);
 		return include 'plugin/error.php';
+	}
+
+	if($object->type_id != 3) {
+		goto error_404;
 	}
 
 	if(!Session::set()) {
@@ -18,14 +23,13 @@
 	}
 
 	$user = new Object_(Session::getUserID());
-?>
-<title><?= dictionary_getPageTitle($object->title.' - '.D['title_upload']); ?></title>
-<?
+	$page_title = $object->title.' - '.D['title_upload'];
+
 	$template = new Template('referrer');
 	$template->object = $object;
 	$template->render(true);
 ?>
-<div _table style="--columns: minmax(96px, max-content) minmax(96px, max-content)">
+<div _table style="--columns: repeat(2, minmax(96px, max-content))">
 	<div>
 		<div></div>
 		<div _title centered_><?= D['title_upload']; ?></div>

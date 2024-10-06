@@ -1,10 +1,10 @@
 <?
-	[$page_type, $page_title] = route_getPageTypeAndTitle($page);
+	[$page_type, $page_module] = route_getPageTypeAndModule($page);
 
 	ob_start();
 
 	if($page_type == 'request') {
-		include "$page_type/$page_title.php";
+		include "$page_type/$page_module.php";
 	} else {
 		$navigation_page = $_GET['page'] ?? 0;
 		$navigation_items_per_page = $_GET['items_per_page'] ?? 24;
@@ -12,8 +12,8 @@
 		if($page == '') {
 			include 'generic/files.php';
 		} else
-		if(!empty($page_type) && !empty($page_title)) {
-			include "$page_type/$page_title.php";
+		if(!empty($page_type) && !empty($page_module)) {
+			include "$page_type/$page_module.php";
 		} else {
 			include 'view/view.php';
 		}

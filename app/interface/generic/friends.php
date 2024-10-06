@@ -2,8 +2,9 @@
 	if(!Session::set()) {
 		return include 'generic/login.php';
 	}
+
+	$page_title = 'Друзья';
 ?>
-<title>Друзья @ EX</title>
 <div _title>Друзья</div>
 <div _table="list" wide_ style="--columns: repeat(5, minmax(96px, auto));">
 	<div header_>

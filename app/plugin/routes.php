@@ -89,7 +89,7 @@
 	array_shift($path);
 	$page = $path[0];
 
-	function route_getPageTypeAndTitle($page) {
+	function route_getPageTypeAndModule($page) {
 		global $requests,
 			   $generics,
 			   $views;

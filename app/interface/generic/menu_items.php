@@ -1,6 +1,8 @@
-<title><?= dictionary_getPageTitle(D['title_menu_items']); ?></title>
+<?
+	$page_title = D['title_menu_items'];
+?>
 <div _title><?= D['title_menu_items']; ?></div>
-<div _table="list" wide_ style="--columns: repeat(3, minmax(96px, 1fr));">
+<div _table="list" wide_ style="--columns: repeat(3, minmax(96px, auto));">
 	<div header_>
 		<div>Пункт</div>
 		<div>URL</div>
@@ -15,7 +17,7 @@
 		</div>
 		<div>
 			<button>↓</button>
-			<button>Убрать</button>
+			<button><?= D['button_remove']; ?></button>
 		</div>
 	</div>
 	<div>
@@ -28,7 +30,7 @@
 		<div>
 			<button>↑</button>
 			<button>↓</button>
-			<button>Убрать</button>
+			<button><?= D['button_remove']; ?></button>
 		</div>
 	</div>
 	<div>
@@ -40,26 +42,26 @@
 		</div>
 		<div>
 			<button>↑</button>
-			<button>Убрать</button>
+			<button><?= D['button_remove']; ?></button>
 		</div>
 	</div>
 	<div footer_ switch_="current" data-switch="menu">
 		<div>
-			<a data-switch-ref="menu"><u>Добавить</u></a>
+			<a data-switch-ref="menu"><u><?= D['link_add']; ?></u></a>
 		</div>
 		<div></div>
 		<div></div>
 	</div>
 	<div footer_ switch_ data-switch="menu">
 		<div>
-			<input size_="big" type="text" placeholder="Объект">
+			<input size_="big" type="text" placeholder="<?= D['string_title']; ?>">
 		</div>
 		<div>
-			<input size_="big" type="text" placeholder="123456">
+			<input size_="large" type="text" placeholder="123456">
 		</div>
 		<div>
-			<button>Сохранить</button>
-			<button data-switch-ref="menu">Отменить</button>
+			<button><?= D['button_save']; ?></button>
+			<button data-switch-ref="menu"><?= D['button_cancel']; ?></button>
 		</div>
 	</div>
 </div>

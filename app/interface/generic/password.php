@@ -1,4 +1,6 @@
-<title><?= dictionary_getPageTitle(D['title_password']); ?></title>
+<?
+	$page_title = D['title_password'];
+?>
 <form _table style="--columns: repeat(2, minmax(0, max-content));" method="post">
 	<div>
 		<div></div>

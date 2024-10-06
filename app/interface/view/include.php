@@ -2,9 +2,14 @@
 	try {
 		$object = new Object_($path[1] ?? null);
 	} catch(Exception $e) {
+		error_404:
 		$error = D['error_page_not_found'];
 		http_response_code(404);
 		return include 'plugin/error.php';
+	}
+
+	if($object->type_id != 3) {
+		goto error_404;
 	}
 
 	if(!Session::set()) {
@@ -17,10 +22,9 @@
 		return include 'plugin/error.php';
 	}
 
-	$user = new Object_(Session::getUserID());
-?>
-<title><?= dictionary_getPageTitle($object->title.' - '.D['title_include']); ?></title>
-<?
+	$user = Session::getUser();
+	$page_title = $object->title.' - '.D['title_include'];
+
 	$template = new Template('referrer');
 	$template->object = $object;
 	$template->render(true);
@@ -39,6 +43,6 @@
 <div _grid="h">
 	<a _button href="/<?= $object->id; ?>"><?= D['button_save']; ?></a>
 	<a _button href="/<?= $object->id; ?>"><?= D['button_cancel']; ?></a>
-	<button wide_>Выбрать все</button>
-	<button wide_>Очистить все</button>
+	<button wide_><?= D['button_select_all']; ?></button>
+	<button wide_><?= D['button_clear_all']; ?></button>
 </div>

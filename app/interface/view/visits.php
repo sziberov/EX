@@ -9,14 +9,14 @@
 
 	$allow_advanced_control = Session::getSetting('allow_advanced_control');
 
-	if(!$allow_advanced_control && $object->access_level_id < 4) {
+	if($object->access_level_id == 0 || $object->access_level_id < 4 && !$allow_advanced_control) {
 		$error = D['error_page_forbidden'];
 		http_response_code(403);
 		return include 'plugin/error.php';
 	}
-?>
-<title><?= dictionary_getPageTitle($object->title.' - '.D['title_visits']); ?></title>
-<?
+
+	$page_title = $object->title.' - '.D['title_visits'];
+
 	$template = new Template('referrer');
 	$template->object = $object;
 	$template->render(true);
