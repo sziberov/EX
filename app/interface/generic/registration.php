@@ -62,7 +62,7 @@
 		<div><?= D['string_login']; ?></div>
 		<div>
 			<input name="login" type="text" value="<?= $login ?? ''; ?>">
-			<button><?= D['button_check']; ?></button>
+			<button type="button"><?= D['button_check']; ?></button>
 		</div>
 	</div>
 	<div>

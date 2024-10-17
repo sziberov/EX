@@ -5,6 +5,6 @@
 	<meta http-equiv="content-language" content="<?= $language; ?>">
 	<link href="/app/image/favicon.png" rel="icon" type="image/png">
 	<link href="/app/main.css" rel="stylesheet">
-	<script src="/app/plugin/jquery-3.6.0.min.js"></script>
+	<script src="/app/plugin/jquery-3.7.1.min.js"></script>
 	<script src="/app/main.js"></script>
 </head>

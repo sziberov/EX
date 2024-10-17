@@ -12,7 +12,7 @@
 ?>
 <form _flex="h" type="get">
 	<? if($page != $first_page) { ?>
-		<a _button icon_="to_first" href="?<?= http_build_query(array_merge($_GET, ['page' => $first_page])); ?>"></a>
+		<a _button icon_="to_first" href="?<?= http_build_query(array_merge($_GET, ['page' => $first_page])); ?>" title="<?= D['button_to_first_tooltip']; ?>"></a>
 	<? } else { ?>
 		<a _button icon_="to_first" disabled_></a>
 	<? } ?>
@@ -33,16 +33,16 @@
 			if($page_ == $page) {
 				if($page != $first_page) { ?>
 					<div fallback_>← Ctrl</div>
-					<a _button icon_="to_back" href="?<?= http_build_query(array_merge($_GET, ['page' => $page_-1])); ?>"></a>
+					<a _button icon_="to_previous" data-navigate="previous" href="?<?= http_build_query(array_merge($_GET, ['page' => $page_-1])); ?>" title="<?= D['button_to_previous_tooltip']; ?>"></a>
 				<? } else { ?>
-					<a _button icon_="to_back" disabled_></a>
+					<a _button icon_="to_previous" disabled_></a>
 				<? } ?>
 				<b fallback_><?= $from_item.'..'.$to_item; ?></b>
 				<? if($page != $last_page) { ?>
-					<a _button icon_="to_forward" href="?<?= http_build_query(array_merge($_GET, ['page' => $page_+1])); ?>"></a>
+					<a _button icon_="to_next" data-navigate="next" href="?<?= http_build_query(array_merge($_GET, ['page' => $page_+1])); ?>" title="<?= D['button_to_next_tooltip']; ?>"></a>
 					<div fallback_>Ctrl →</div>
 				<? } else { ?>
-					<a _button icon_="to_forward" disabled_></a>
+					<a _button icon_="to_next" disabled_></a>
 				<? }
 			} else { ?>
 				<a href="?<?= http_build_query(array_merge($_GET, ['page' => $page_])); ?>"><?= $from_item.'..'.$to_item; ?></a>
@@ -50,7 +50,7 @@
 		}
 	?>
 	<? if($page != $last_page) { ?>
-		<a _button icon_="to_last" href="?<?= http_build_query(array_merge($_GET, ['page' => $last_page])); ?>"></a>
+		<a _button icon_="to_last" href="?<?= http_build_query(array_merge($_GET, ['page' => $last_page])); ?>" title="<?= D['button_to_last_tooltip']; ?>"></a>
 	<? } else { ?>
 		<a _button icon_="to_last" disabled_></a>
 	<? } ?>

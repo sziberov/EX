@@ -84,6 +84,7 @@ if(!empty($referrer)) {
 	$template->object = $referrer;
 	$template->render(true);
 } ?>
+<script src="/app/plugin/editor.js"></script>
 <form _table style="--columns: minmax(96px, max-content) minmax(96px, auto) minmax(96px, max-content);" method="post">
 	<div>
 		<div></div>
@@ -109,20 +110,20 @@ if(!empty($referrer)) {
 		<div _flex="v left">
 			<textarea size_="max" name="description"><?= e($object->description); ?></textarea>
 			<div _flex="h wrap">
-				<button onclick="Editor.addBB('b');"><b><?= D['button_bold']; ?></b></button>
-				<button onclick="Editor.addBB('i');"><i><?= D['button_italic']; ?></i></button>
-				<button onclick="Editor.addBB('u');"><u><?= D['button_underscored']; ?></u></button>
-				<button onclick="Editor.addBB('s');"><s><?= D['button_striked']; ?></s></button>
-				<button onclick="Editor.addBB('sup');"><sup><?= D['button_super']; ?></sup></button>
-				<button onclick="Editor.addBB('sub');"><sub><?= D['button_sub']; ?></sub></button>
-				<button onclick="Editor.addBB('url', 'Link', 'http://example.com');"><?= D['button_link']; ?></button>
-				<button onclick="Editor.addBB('color', 'Text', '#000000');"><?= D['button_color']; ?></button>
-				<button onclick="Editor.addBB('lang', 'Text', '<?= $language; ?>');"><?= D['button_language']; ?></button>
-				<button onclick="Editor.addBB('code');"><pre>&lt;/&gt;</pre></button>
-				<button onclick="Editor.addBB('left');">←</button>
-				<button onclick="Editor.addBB('center');">→←</button>
-				<button onclick="Editor.addBB('right');">→</button>
-				<button onclick="Editor.addBB('just');">←→</button>
+				<button type="button" onclick="Editor.addBB('b');"><b><?= D['button_bold']; ?></b></button>
+				<button type="button" onclick="Editor.addBB('i');"><i><?= D['button_italic']; ?></i></button>
+				<button type="button" onclick="Editor.addBB('u');"><u><?= D['button_underscored']; ?></u></button>
+				<button type="button" onclick="Editor.addBB('s');"><s><?= D['button_striked']; ?></s></button>
+				<button type="button" onclick="Editor.addBB('sup');"><sup><?= D['button_super']; ?></sup></button>
+				<button type="button" onclick="Editor.addBB('sub');"><sub><?= D['button_sub']; ?></sub></button>
+				<button type="button" onclick="Editor.addBB('url', 'Link', 'http://example.com');"><?= D['button_link']; ?></button>
+				<button type="button" onclick="Editor.addBB('color', 'Text', '#000000');"><?= D['button_color']; ?></button>
+				<button type="button" onclick="Editor.addBB('lang', 'Text', '<?= $language; ?>');"><?= D['button_language']; ?></button>
+				<button type="button" onclick="Editor.addBB('code');"><pre>&lt;/&gt;</pre></button>
+				<button type="button" onclick="Editor.addBB('left');">←</button>
+				<button type="button" onclick="Editor.addBB('center');">→←</button>
+				<button type="button" onclick="Editor.addBB('right');">→</button>
+				<button type="button" onclick="Editor.addBB('just');">←→</button>
 			</div>
 		</div>
 	</div>

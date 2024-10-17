@@ -15,9 +15,11 @@
 		if(!in_array(5, $object->links_type_ids)) {
 			if($display_mode_id == 1 && !empty($referrer)) {
 				$ancestors_ids = array_reverse(Link::getAncestorsIDs($object->id, $referrer->id, 4));
-				$previous_page = null;
-				$random_page = null;
-				$next_page = null;
+				$siblings_ids = Link::getSiblingsIDs($object->id, $referrer->id, 4);
+
+				foreach($siblings_ids as $k => $v) {
+					${str_replace('id', 'url', $k)} = !empty($v) ? "/$v?referrer_id=$referrer->id" : null;
+				}
 			?>
 				<div>
 					<? foreach($ancestors_ids as $k => $ancestor_id) {
@@ -34,11 +36,11 @@
 					<? } ?>
 				</div>
 				<div _flex="h" fallback_>
-					<a _button icon_="to_back" disabled_></a>
+					<a _button icon_="to_previous" <?= !empty($previous_url) ? 'data-navigate="previous" href="'.$previous_url.'" title="'.D['button_to_previous_tooltip'].'"' : 'disabled_'; ?>></a>
 					<div fallback_>← Ctrl</div>
-					<a _button icon_="to_random" disabled_></a>
+					<a _button icon_="to_random" <?= !empty($random_url) ? 'data-navigate="random" href="'.$random_url.'" title="'.D['button_to_random_tooltip'].'"' : 'disabled_'; ?>></a>
 					<div fallback_>Ctrl →</div>
-					<a _button icon_="to_forward" disabled_></a>
+					<a _button icon_="to_next" <?= !empty($next_url) ? 'data-navigate="next" href="'.$next_url.'" title="'.D['button_to_next_tooltip'].'"' : 'disabled_'; ?>></a>
 				</div>
 			<? }
 		} else {

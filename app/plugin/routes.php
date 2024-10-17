@@ -89,21 +89,22 @@
 	array_shift($path);
 	$page = $path[0];
 
-	function route_getPageTypeAndModule($page) {
+	function route_getPageInterface($page) {
 		global $requests,
 			   $generics,
 			   $views;
 
 		if(preg_match('/^([rgv])_/', $page, $matches)) {
 			$prefix = $matches[1];
-			$page = substr($page, 2);
+			$module = substr($page, 2);
 		} else {
 			$prefix = '';
+			$module = $page;
 		}
 
-		$request = in_array($page, $requests);
-		$generic = in_array($page, $generics);
-		$view    = in_array($page, $views);
+		$request = in_array($module, $requests);
+		$generic = in_array($module, $generics);
+		$view    = in_array($module, $views);
 
 		$main_type = $view ? 'view' : ($generic ? 'generic' : ($request ? 'request' : ''));
 
@@ -112,23 +113,26 @@
 		}
 
 		if(empty($prefix)) {
-			return [$main_type, $page];
+			return [$main_type, $module];
 		}
 		if($prefix === 'g' && $generic) {
-			return ['generic', $page];
+			return ['generic', $module];
 		}
 		if($prefix === 'r' && $request) {
-			return ['request', $page];
+			return ['request', $module];
 		}
 
 		return ['', ''];
 	}
 
-	function route_getViewObjectID() {
-		if(array_key_exists($page, $views)) {
-			return $path[1];
+	function route_getViewObjectID($path) {
+		$view = $path[0];
+		$id = $path[1];
+
+		if(in_array($view, $views)) {
+			return $id;
 		} else
-		if(!array_key_exists($page, $generics) && !array_key_exists($page, $requests)) {
+		if(!in_array($view, $generics) && !in_array($view, $requests) && $view == 'user') {
 
 		}
 	}

@@ -16,8 +16,8 @@
 			<div fallback_><?= $k+1; ?></div>
 			<div><?= $fs->domain; ?></div>
 			<div>
-				<div _progress="<?= $used_percents >= 87.5 ? 'danger' : ($used_percents >= 75 ? 'warning' : ''); ?>">
-					<div style="width: <?= $used_percents; ?>%;"></div>
+				<div _progress>
+					<div <?= $used_percents >= 87.5 ? 'danger_' : ($used_percents >= 75 ? 'warning_' : ''); ?> style="width: <?= $used_percents; ?>%;"></div>
 				</div>
 			</div>
 			<div>

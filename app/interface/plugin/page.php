@@ -1,5 +1,5 @@
 <?
-	[$page_type, $page_module] = route_getPageTypeAndModule($page);
+	[$page_type, $page_module] = route_getPageInterface($page);
 
 	ob_start();
 

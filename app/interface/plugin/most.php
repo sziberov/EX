@@ -7,7 +7,7 @@
 	];
 
 	foreach($most as $most_id => $title) {
-		$entities = Entity::search('objects', 'Object_', null, Object_::getMostSearchCondition($most_id), 12)['entities'];
+		$entities = Entity::search('public_objects o', 'Object_', null, Object_::getMostSearchCondition($most_id), 12)['entities'];
 
 		include 'most.objects.php';
 	}

@@ -19,10 +19,12 @@
 				</div>
 			</div>
 		</div>
-		<div></div>
-		<div>
-			<button onclick="Viewer.toggleClose();"><?= D['button_display_viewer']; ?></button>
-		</div>
+		<? if($object->files_length > 0) { ?>
+			<div></div>
+			<div>
+				<button onclick="Viewer.toggleFirstMediaClose();"><?= D['button_play']; ?></button>
+			</div>
+		<? } ?>
 	</div>
 	<? $i = 1; foreach($object->uploads as $upload) {
 		$file = $upload->file;

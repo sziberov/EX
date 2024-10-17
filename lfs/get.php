@@ -24,13 +24,35 @@
 	$meta = meta_get($file->id) ?? null;
 	$mime_type = $meta->mime_type ?? 'application/octet-stream';
 
+	header('Accept-Ranges: bytes');
 	header('Cache-Control: max-age=31536000, immutable, public');
 	header('Content-Description: File Transfer');
 	header('Content-Disposition: inline; filename="'.$file_title.'"');
-	header('Content-Length: '.$file->size);
 	header('Content-Type: '.$mime_type);
 	header('Expires: '.gmdate('D, d M Y H:i:s', time()+31536000).' GMT');
 	header('Pragma: public');
 
-	readfile($file_path);
+	$range = $_SERVER['HTTP_RANGE'] ?? null;
+
+	if(!empty($range)) {
+		[, $range] = explode('=', $range, 2);
+		[$start, $end] = explode('-', $range);
+		$start = intval($start);
+		$end = $end === '' ? $file->size-1 : intval($end);
+
+		http_response_code(206);
+		header("Content-Range: bytes $start-$end/$file->size");
+		header('Content-Length: '.$end-$start+1);
+
+		$file_handle = fopen($file_path, 'rb');
+		fseek($file_handle, $start);
+		$file_block = fread($file_handle, $end-$start+1);
+		fclose($file_handle);
+
+		echo $file_block;
+	} else {
+		header("Content-Length: $file->size");
+
+		readfile($file_path);
+	}
 ?>

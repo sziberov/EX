@@ -14,8 +14,8 @@
 		}
 
 		public static function search($entity, $class, $fields = null, $condition = null, $limit = null, $offset = null) {
-			if(!preg_match('/^[a-zA-Z0-9_]+$/', $entity) || !class_exists($class)) {
-				throw new InvalidArgumentException('Invalid entity/class title');
+			if(!preg_match('/^([a-zA-Z0-9_]+)(?:\s+([a-zA-Z0-9_]+))?$/', $entity, $matches) || !class_exists($class)) {
+			    throw new InvalidArgumentException('Invalid entity/class title');
 			}
 			if(filter_var($limit, FILTER_VALIDATE_INT) === false) {
 				$limit = null;
@@ -29,7 +29,8 @@
 
 			global $connection;
 
-			$alias = self::generateAlias($entity);
+		    $entity = $matches[1];
+		    $alias = isset($matches[2]) ? $matches[2] : self::generateAlias($entity);
 			$fields = !empty($fields) ? $fields : "$alias.*";
 			$condition ??= '';
 			$limit = isset($limit) ? " LIMIT $limit" : '';
@@ -1463,13 +1464,35 @@
 					)
 					SELECT to_id FROM link_chain";
 			$query = $connection->query($sql);
-			$ancestors_ids = [];
-
-			while($row = $query->fetch_assoc()) {
-				$ancestors_ids[] = $row['to_id'];
-			}
+			$ancestors_ids = array_column($query->fetch_all(MYSQLI_ASSOC), 'to_id');
 
 			return $ancestors_ids;
+		}
+
+		public static function getSiblingsIDs($from_id, $to_id, $type_id) {
+			global $connection;
+
+			$from_id ??= 'NULL';
+			$to_id ??= 'NULL';
+			$sql = "WITH ordered_links AS (
+						SELECT LAG(from_id) OVER (ORDER BY id ASC) AS previous_id,
+							   from_id,
+							   LEAD(from_id) OVER (ORDER BY id ASC) AS next_id
+						FROM links
+						WHERE to_id = $to_id AND type_id = $type_id
+					)
+					SELECT previous_id,
+						   (SELECT from_id FROM ordered_links WHERE from_id != $from_id ORDER BY RAND() LIMIT 1) AS random_id,
+						   next_id
+					FROM ordered_links
+					WHERE from_id = $from_id";
+			$query = $connection->query($sql);
+
+			if($query->num_rows > 0) {
+				return $query->fetch_assoc();
+			}
+
+			return [];
 		}
 
 		public static function getFilteredSetting($link, $key) {
