@@ -7,18 +7,18 @@
 	$rows = [
 		[
 			[
-				['/link1', 'Button 1', 1],
+				['/link1', 'Button 1', ['badge' => 1]],
 				['/link2', 'Button 2'],
-				['/link3', 'Button 3', 3]
+				['/link3', 'Button 3', ['badge' => 3]]
 			],
 			[
 				['/link4', 'Button 4'],
-				['/link5', 'Button 5', 5, 'alert();']
+				['/link5', 'Button 5', ['badge' => 5, 'action' => 'alert();']]
 			]
 		],
 		[
 			[
-				['/link6', 'Button 6']
+				['/link6', 'Button 6', ['toggled' => true]]
 			]
 		]
 	];
@@ -36,8 +36,14 @@
 	foreach($rows as $row) {
 		foreach($row as $columns) { ?>
 			<div _grid="h">
-				<? foreach($columns as $column) { ?>
-					<a _button href="<?= $column[0]; ?>" <?= isset($column[3]) ? 'onclick="'.$column[3].'"' : ''; ?>><?= $column[1].(isset($column[2]) ? '<div _badge>'.$column[2].'</div>' : ''); ?></a>
+				<? foreach($columns as $column) {
+					$url = $column[0];
+					$title = $column[1];
+					$action = isset($column[2]['action']) ? 'onclick="'.$column[2]['action'].'"' : '';
+					$toggled = !empty($column[2]['toggled']) ? 'toggled_' : '';
+					$badge = isset($column[2]['badge']) ? '<div _badge>'.$column[2]['badge'].'</div>' : '';
+				?>
+					<a _button href="<?= $url; ?>" <?= $action.' '.$toggled; ?>><?= $title.$badge; ?></a>
 				<? } ?>
 			</div>
 		<? } ?>

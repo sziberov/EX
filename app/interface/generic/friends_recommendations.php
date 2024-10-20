@@ -26,8 +26,6 @@
 <?
 	$template = new Template('entities');
 	$template->navigation_mode_id = 2;
-	$template->navigation_page = $navigation_page;
-	$template->navigation_items_per_page = $navigation_items_per_page;
 	$template->search_entity = 'links';
 	$template->search_class = 'Link';
 	$template->search_condition = "JOIN links AS l_1 ON l_1.from_id = l.user_id AND l_1.to_id = $user->id AND l_1.type_id = 2

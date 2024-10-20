@@ -12,7 +12,7 @@
 
 	// TODO: Session, session close garbage collect, shared objects
 
-	$user_id = session_getUserID();
+	$user_id = session_getUserID() ?? 2;
 	$fs = fs_get();
 
 	if(empty($fs)) {
@@ -33,14 +33,15 @@
 		if(empty($object_id) || empty($file_size) || empty($file_edit_time) || empty($upload_title)) {
 			exit(json_encode(['upload_id' => random_int(-16384, -1), 'status' => 'failed', 'message' => 'Missing required parameters']));
 		}
-
-		/*
-		try {
-			$object = new Object_($object_id);
-		} catch(Exception $e) {
-			exit(json_encode(['upload_id' => random_int(-16384, -1), 'status' => 'failed', 'message' => 'Object not found']));
+	//	if(empty(object_get($object_id))) {
+	//		exit(json_encode(['upload_id' => random_int(-16384, -1), 'status' => 'failed', 'message' => 'Object not found']));
+	//	}
+		if(!object_getAccessLevelID($object_id, $user_id) >= 4) {
+			exit(json_encode(['upload_id' => random_int(-16384, -1), 'status' => 'failed', 'message' => 'User have no upload access to the object']));
 		}
-		*/
+	//	if($file_size > user_getMaxUploadSize()) {
+	//		exit(json_encode(['upload_id' => random_int(-16384, -1), 'status' => 'failed', 'message' => 'User have no upload access for files bigger than ... bytes']));
+	//	}
 
 		$existing_file = $file_md5 ? file_getByMD5($file_md5) : null;													// Аналогичный файл [не] существует
 		$existing_upload = $existing_file ? upload_get($object_id, $existing_file->id, $upload_title)						// Аналогичная загрузка (аналогичного файла) [не] существует

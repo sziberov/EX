@@ -6,7 +6,7 @@
 			<li>
 				<? if($object->access_level_id > 0) {
 					include 'objects-list.post.php';
-					/*if(Session::set() && isset($object->user) && Session::getSettings()['login'] == $object->user->login) { ?>
+					/*if(Session::set() && isset($object->user) && Session::getSetting('login') == $object->user->login) { ?>
 						<div _grid="h">
 							<a _button href="/edit/<?= $object->object_id; ?>"><?= D['button_edit']; ?></a>
 							<button><?= D['button_delete']; ?></button>

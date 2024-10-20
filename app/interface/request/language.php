@@ -1,7 +1,9 @@
 <?
-	$value = $_GET['language'];
+	setcookie('language', $_GET['language'], 2147483647, '/');
 
-	setcookie('language', $value, 2147483647, '/');
+	$referrer = $_SERVER['HTTP_REFERER'] ?? '/';
+	$referrer_page = explode('/', parse_url($referrer, PHP_URL_PATH))[1];
+	$location = $referrer_page == 'language' ? '/' : $referrer;
 
-	exit(header("Location: {$_SERVER['HTTP_REFERER']}"));
+	exit(header('Location: '.$location));
 ?>

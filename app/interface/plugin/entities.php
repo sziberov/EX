@@ -4,15 +4,15 @@
 	$navigation_mode_id = $this->navigation_mode_id ?? 0;
 	$navigation_template_title = $this->navigation_template_title ?? 'navigation';
 	$search_settings = [
-		$this->search_entity ?? 'objects',
+		$this->search_entity ?? 'saved_objects o',
 		$this->search_class ?? 'Object_',
 		$this->search_fields ?? null,
 		$this->search_condition ?? null
 	];
 
 	if($navigation_mode_id > 0) {
-		$navigation_page = $this->navigation_page ?? 0;
-		$navigation_items_per_page = $this->navigation_items_per_page ?? 24;
+		$navigation_page = $this->navigation_page ?? $_GET['page'] ?? 0;
+		$navigation_items_per_page = $this->navigation_items_per_page ?? $_GET['items_per_page'] ?? 24;
 		$navigation_rss_id = $this->navigation_rss_id;
 
 		if(filter_var($navigation_page, FILTER_VALIDATE_INT) === false || $navigation_page < 0) {

@@ -1,3 +1,13 @@
+-- saved_objects
+
+SELECT o.*
+FROM objects AS o
+LEFT JOIN settings AS s ON s.object_id = o.id AND s.`key` = 'awaiting_save'
+WHERE o.type_id != 4  -- Объект не должен быть общим
+  AND (s.value != 'true' OR s.value IS NULL)  -- Объект должен быть явно или неявно сохранён
+
+-- public_objects
+
 SELECT o.*
 FROM objects AS o
 LEFT JOIN settings AS s_0 ON s_0.object_id = o.id AND s_0.`key` = 'awaiting_save'

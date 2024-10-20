@@ -15,7 +15,7 @@
 
 		public static function search($entity, $class, $fields = null, $condition = null, $limit = null, $offset = null) {
 			if(!preg_match('/^([a-zA-Z0-9_]+)(?:\s+([a-zA-Z0-9_]+))?$/', $entity, $matches) || !class_exists($class)) {
-			    throw new InvalidArgumentException('Invalid entity/class title');
+				throw new InvalidArgumentException('Invalid entity/class title');
 			}
 			if(filter_var($limit, FILTER_VALIDATE_INT) === false) {
 				$limit = null;
@@ -29,8 +29,8 @@
 
 			global $connection;
 
-		    $entity = $matches[1];
-		    $alias = isset($matches[2]) ? $matches[2] : self::generateAlias($entity);
+			$entity = $matches[1];
+			$alias = isset($matches[2]) ? $matches[2] : self::generateAlias($entity);
 			$fields = !empty($fields) ? $fields : "$alias.*";
 			$condition ??= '';
 			$limit = isset($limit) ? " LIMIT $limit" : '';
@@ -138,9 +138,10 @@
 				'editor_id'							=> 1,
 				'avatar_id'							=> 1,
 				'max_upload_size'					=> 1,
-				'notify_friendship'					=> 0,
-				'notify_recommendations'			=> 0,
+				'notify_friends'					=> 0,
+				'notify_inclusions'					=> 0,
 				'notify_comments'					=> 0,
+				'notify_recommendations'			=> 0,
 				'notify_private_messages'			=> 0,
 				'allow_any_upload_size'				=> 0,
 				'allow_advanced_control'			=> 0,
@@ -167,7 +168,7 @@
 
 		public static function createGroupID() {
 			$user_id = Session::getUserID();
-			$group_id = Session::getSettings()['group_id'];
+			$group_id = Session::getSetting('group_id');
 
 			if(empty($user_id) || empty($group_id)) {
 				return;
@@ -245,9 +246,10 @@
 										 (@user_id, 'password_hash', '$password_hash', @user_id),
 										 (@user_id, 'email', '$email', @user_id),
 										 (@user_id, 'hide_default_referrer', 'true', @user_id),
-										 (@user_id, 'notify_friendship', 'true', @user_id),
-										 (@user_id, 'notify_recommendations', 'true', @user_id),
+										 (@user_id, 'notify_friends', 'true', @user_id),
+										 (@user_id, 'notify_inclusions', 'true', @user_id),
 										 (@user_id, 'notify_comments', 'true', @user_id),
+										 (@user_id, 'notify_recommendations', 'true', @user_id),
 										 (@user_id, 'notify_private_messages', 'true', @user_id);
 
 					INSERT INTO links (from_id, to_id, user_id, type_id) VALUES -- Link from group of everyone to user
@@ -308,7 +310,7 @@
 
 		public static function createPlainID() {
 			$user_id = Session::getUserID();
-			$group_id = Session::getSettings()['group_id'];
+			$group_id = Session::getSetting('group_id');
 
 			if(empty($user_id) || empty($group_id)) {
 				return;
@@ -381,25 +383,6 @@
 			}
 		}
 
-		public static function getSettings($object_id) {
-			$settings = [];
-
-			if(filter_var($object_id, FILTER_VALIDATE_INT) === false) {
-				return $settings;
-			}
-
-			global $connection;
-
-			$sql = "SELECT `key`, value FROM settings WHERE object_id = $object_id";
-			$query = $connection->query($sql);
-
-			while($row = $query->fetch_assoc()) {
-				$settings[$row['key']] = $row['value'];
-			}
-
-			return $settings;
-		}
-
 		public static function getFilteredSetting($object, $key) {
 			if(empty($object)) {
 				foreach(self::$settings_filters as $sf) {
@@ -428,6 +411,16 @@
 			if($filter_id == 2) {
 				return $value ?? '';
 			}
+		}
+
+		public static function getFilteredSettings($object) {
+			$filtered_settings = [];
+
+			foreach(self::$settings_filters[$object->type_id] ?? [] as $key => $filter_id) {
+				$filtered_settings[$key] = self::getFilteredSetting($object, $key);
+			}
+
+			return $filtered_settings;
 		}
 
 		public static function getUserID($login) {
@@ -531,7 +524,6 @@
 		protected $links_;
 		protected $links_type_ids_;
 		protected $settings_;
-		protected $flat_settings_;
 		protected $filtered_settings_;
 		protected $friends_;
 		protected $notifications_;
@@ -660,15 +652,9 @@
 			return $this->links_type_ids_;
 		}
 
-		public function _getSettings($flat = false) {
-			if(!$flat) {
-				if(isset($this->settings_)) {
-					return $this->settings_;
-				}
-			} else {
-				if(isset($this->flat_settings_)) {
-					return $this->flat_settings_;
-				}
+		public function _getSettings() {
+			if(isset($this->settings_)) {
+				return $this->settings_;
 			}
 
 			global $connection;
@@ -677,29 +663,15 @@
 			$query = $connection->query($sql);
 			$this->settings_ = [];
 
-			if(!$flat) {
-				while($setting = $query->fetch_object('Setting')) {
-					$this->settings_[$setting->key] = $setting;
-				}
-			} else {
-				while($row = $query->fetch_assoc()) {
-					$this->flat_settings_[$row['key']] = $row['value'];
-				}
+			while($setting = $query->fetch_object('Setting')) {
+				$this->settings_[$setting->key] = $setting;
 			}
 
-			if(!$flat) {
-				return $this->settings_;
-			} else {
-				return $this->flat_settings_;
-			}
-		}
-
-		public function _getFlatSettings() {
-			return $this->getSettings(true);
+			return $this->settings_;
 		}
 
 		public function _getLogin() {
-			return $this->flat_settings_['login'] ?? $this->settings['login']->value ?? null;
+			return $this->getSetting('login');
 		}
 
 		public function _getFriends() {
@@ -835,7 +807,7 @@
 		}
 
 		public function _getInclusionsCount() {
-			return $this->getCount('inclusions', "SELECT COUNT(*) FROM links AS l WHERE l.to_id = $this->id AND l.type_id = 4");
+			return $this->getCount('inclusions', "SELECT COUNT(*) FROM links AS l JOIN saved_objects AS o ON o.id = l.from_id WHERE l.to_id = $this->id AND l.type_id = 4");
 		}
 
 		public function _getSelfInclusionsCount() {
@@ -873,7 +845,7 @@
 		}
 
 		public function _getArchiveCount() {
-			return $this->getCount('user_archive', "SELECT COUNT(*) FROM objects AS o WHERE o.user_id = $this->id");
+			return $this->getCount('user_archive', "SELECT COUNT(*) FROM saved_objects AS o WHERE o.user_id = $this->id");
 		}
 
 		public function _getUserCommentsCount() {
@@ -1131,48 +1103,43 @@
 			//	$redis->set($cache_key, $this->access_level_id_, 3600);
 				return $this->access_level_id_;
 			}
-
-			$user_group_access = [
-				1 => ['access_level_id' => 2]
-			];
-
-			if(!empty($user_id)) {
-				if(Session::getSetting('allow_max_access_ignoring_groups')) {
-					$this->access_level_id_ = 5;
-				//	$redis->set($cache_key, $this->access_level_id_, 3600);
-					return $this->access_level_id_;
-				}
-
-				$sql = "SELECT l.to_id AS group_id, s_0.value AS access_level_id, s_1.value AS allow_higher_access_preference
-						FROM links AS l
-						JOIN objects AS o_0 ON o_0.id = l.from_id AND o_0.type_id = 2
-						JOIN objects AS o_1 ON o_1.id = l.to_id AND o_1.type_id = 1
-						JOIN settings AS s_0 ON s_0.link_id = l.id AND s_0.key = 'access_level_id'
-				   LEFT JOIN settings AS s_1 ON s_1.link_id = l.id AND s_1.key = 'allow_higher_access_preference'
-						WHERE l.from_id = $user_id AND l.type_id = 1";
-				$query = $connection->query($sql);
-
-				foreach($query->fetch_all(MYSQLI_ASSOC) as $uga) {
-					$user_group_access[$uga['group_id']] = $uga;
-				}
+			if(!empty($user_id) && Session::getSetting('allow_max_access_ignoring_groups')) {
+				$this->access_level_id_ = 5;
+			//	$redis->set($cache_key, $this->access_level_id_, 3600);
+				return $this->access_level_id_;
 			}
 
-			$sql = "SELECT l.from_id AS group_id, s.value AS access_level_id
+			$user_id ??= -1;
+			$sql = "SELECT l.from_id, l.to_id, s_0.value AS access_level_id, s_1.value AS allow_higher_access_preference
 					FROM links AS l
-					JOIN objects AS o ON o.id = l.from_id AND o.type_id = 1
-					JOIN settings AS s ON s.link_id = l.id AND s.key = 'access_level_id'
-					WHERE l.to_id = $this->id AND l.type_id = 1";
+					JOIN objects AS o_0 ON o_0.id = l.from_id
+					JOIN objects AS o_1 ON o_1.id = l.to_id
+					JOIN settings AS s_0 ON s_0.link_id = l.id AND s_0.key = 'access_level_id'
+			   LEFT JOIN settings AS s_1 ON s_1.link_id = l.id AND s_1.key = 'allow_higher_access_preference'
+					WHERE (l.from_id = $user_id AND o_0.type_id = 2 AND o_1.type_id = 1
+					   OR  l.to_id = $this->id  AND o_0.type_id = 1)
+					  AND l.type_id = 1
+					ORDER BY l.from_id = $user_id DESC,
+							 l.to_id = $this->id  DESC";
 			$query = $connection->query($sql);
-			$group_object_access = $query->fetch_all(MYSQLI_ASSOC);
+			$uga_links = [
+				1 => ['access_level_id' => 2]
+			];
 			$access_level_ids = [0];
 
-			foreach($group_object_access as $goa) {
-				$uga = $user_group_access[$goa['group_id']] ?? null;
+			foreach($query->fetch_all(MYSQLI_ASSOC) as $row) {
+				if($row['from_id'] == $user_id) {
+					$uga_links[$row['to_id']] = $row;  // user_group_access
+				} else
+				if($row['to_id'] == $this->id) {
+					$goa = $row;  // group_object_access
+					$uga = $uga_links[$goa['from_id']] ?? null;
 
-				if(!empty($uga)) {
-					$access_level_ids[] = filter_var($uga['allow_higher_access_preference'] ?? null, FILTER_VALIDATE_BOOLEAN)
-										? max($uga['access_level_id'], $goa['access_level_id'])
-										: min($uga['access_level_id'], $goa['access_level_id']);
+					if(!empty($uga)) {
+						$access_level_ids[] = filter_var($uga['allow_higher_access_preference'] ?? null, FILTER_VALIDATE_BOOLEAN)
+											? max($uga['access_level_id'], $goa['access_level_id'])
+											: min($uga['access_level_id'], $goa['access_level_id']);
+					}
 				}
 			}
 
@@ -1428,19 +1395,44 @@
 		public static function createID($from_id, $to_id, $type_id) {
 			$user_id = Session::getUserID();
 
-			if(empty($from_id) || empty($type_id) || empty($user_id)) {
+			if(empty($from_id) || empty($user_id) || empty($type_id)) {
 				return;
 			}
 
 			global $connection;
 
 			$to_id ??= 'NULL';
-			$sql = "INSERT INTO links (from_id, to_id, user_id, type_id) VALUES
-									  ($from_id, $to_id, $user_id, $type_id)";
+			$sql = "INSERT INTO links (from_id, to_id, user_id, type_id)
+					SELECT $from_id, $to_id, $user_id, $type_id
+					WHERE NOT EXISTS (SELECT id
+									  FROM links
+									  WHERE from_id = $from_id
+										AND to_id ".($to_id == 'NULL' ? 'IS' : '=')." $to_id
+										AND user_id = $user_id
+										AND type_id = $type_id)";
 			$query = $connection->query($sql);
 
 			if($query) {
 				return $connection->insert_id;
+			}
+		}
+
+		public static function getID($from_id, $to_id, $user_id, $type_id) {
+			if(empty($from_id) || empty($user_id) || empty($type_id)) {
+				return;
+			}
+
+			global $connection;
+
+			$to_id ??= 'NULL';
+			$sql = "SELECT id FROM links WHERE from_id = $from_id
+										   AND to_id ".($to_id == 'NULL' ? 'IS' : '=')." $to_id
+										   AND user_id = $user_id
+										   AND type_id = $type_id";
+			$query = $connection->query($sql);
+
+			if($query) {
+				return $query->fetch_column();
 			}
 		}
 
@@ -1596,8 +1588,27 @@
 			return $this->privileges_;
 		}
 
+		public function _getAccessLevelId() {
+			$user_id = Session::getUserID();
+			$access_level_id = $user_id == $this->user_id || (
+			//	$this->type_id == 4 && ($user_id == $this->from->user_id || $user_id == $this->to->user_id) ||
+			//	$this->type_id == 5 && $user_id == $this->to->user_id
+				false
+			);
+
+			return $access_level_id;
+		}
+
 		public function getSetting($key) {
 			return $this->filtered_settings_[$key] ??= self::getFilteredSetting($this, $key);
+		}
+
+		public function destroy() {
+			global $connection;
+
+			$sql = "DELETE FROM links WHERE id = $this->id";
+
+			return $connection->query($sql);
 		}
 	}
 

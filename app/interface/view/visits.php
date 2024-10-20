@@ -25,8 +25,6 @@
 <?
 	$template = new Template('entities');
 	$template->navigation_mode_id = 2;
-	$template->navigation_page = $navigation_page;
-	$template->navigation_items_per_page = $navigation_items_per_page;
 	$template->search_entity = 'visits';
 	$template->search_class = 'Visit';
 	$template->search_fields = 'v.*, v_1.count';

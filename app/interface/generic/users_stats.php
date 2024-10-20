@@ -17,8 +17,6 @@
 <?
 	$template = new Template('entities');
 	$template->navigation_mode_id = 2;
-	$template->navigation_page = $navigation_page;
-	$template->navigation_items_per_page = $navigation_items_per_page;
 	$template->search_condition = 'WHERE o.type_id = 2';
 	$template->template_title = 'generic/users_stats.objects';
 	$template->render(true);

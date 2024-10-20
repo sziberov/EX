@@ -28,12 +28,12 @@
 
 	$type_id = $_GET['type_id'] ?? '';
 	$type_ids = preg_match('/^\d+(,\d+)?$/', $type_id) ? explode(',', $type_id) : ['-1'];
-	$type_id = intval($type_ids[0]);
-	$subtype_id = isset($type_ids[1]) ? intval($type_ids[1]) : null;
+	$from_type_id = intval($type_ids[0]);
+	$link_type_id = isset($type_ids[1]) ? intval($type_ids[1]) : null;
 
 	if(
-							   !isset($types[$type_id]) ||
-		!empty($subtype_id) && !isset($types[$type_id][$subtype_id])
+								 !isset($types[$from_type_id]) ||
+		!empty($link_type_id) && !isset($types[$from_type_id][$link_type_id])
 	) {
 		error_404:
 		$error = D['error_page_not_found'];
@@ -41,22 +41,24 @@
 		return include 'plugin/error.php';
 	}
 
-	if($type_id != 4 && !Session::set()) {
+	if($from_type_id != 4 && !Session::set()) {
 		return include 'generic/login.php';
 	}
 
+	$to_id = $_GET['to_id'] ?? null;
+
 	if(
-		!empty($subtype_id) && (
-			!in_array(null, $types[$type_id][$subtype_id]) || isset($_GET['to_id'])
+		!empty($link_type_id) && (
+			!in_array(null, $types[$from_type_id][$link_type_id]) || isset($to_id)
 		)
 	) {
 		try {
-			$to = new Object_($_GET['to_id'] ?? null);
+			$to = new Object_($to_id);
 		} catch(Exception $e) {
 			goto error_404;
 		}
 
-		if(!in_array($to->type_id, $types[$type_id][$subtype_id])) {
+		if(!in_array($to->type_id, $types[$from_type_id][$link_type_id])) {
 			goto error_404;
 		}
 
@@ -68,21 +70,21 @@
 		}
 	}
 
-	if($type_id == 3 && (
-		$subtype_id == 4 && ($to->access_level_id < 3 || $to->getSetting('deny_nonbookmark_inclusion')) ||  // TODO: Non session user page direct creation
-		$subtype_id == 5 && $to->access_level_id < 2 ||
-		$subtype_id == 8 && $to->getSetting('deny_claims')
+	if($from_type_id == 3 && (
+		$link_type_id == 4 && ($to->access_level_id < 3 || $to->getSetting('deny_nonbookmark_inclusion')) ||  // TODO: Non session user page direct creation
+		$link_type_id == 5 &&  $to->access_level_id < 2 ||
+		$link_type_id == 8 &&  $to->getSetting('deny_claims')
 	)) {
 		goto error_403;
 	}
 
-	$object_id = $type_id == 1 ? Object_::createGroupID() :
-				($type_id == 3 ? Object_::createPlainID() :
-				($type_id == 4 ? Object_::createSharedID() : null));
+	$from_id = $from_type_id == 1 ? Object_::createGroupID() :
+			  ($from_type_id == 3 ? Object_::createPlainID() :
+			  ($from_type_id == 4 ? Object_::createSharedID() : null));
 
-	if(!empty($object_id) && !empty($subtype_id)) {
-		Link::createID($object_id, $to->id ?? null, $subtype_id);
+	if(!empty($from_id) && !empty($link_type_id)) {
+		Link::createID($from_id, $to->id ?? null, $link_type_id);
 	}
 
-	exit(header("Location: /edit/$object_id"));
+	exit(header("Location: /edit/$from_id"));
 ?>

@@ -44,22 +44,22 @@
 		<div>
 			<div><?= D['string_email']; ?></div>
 			<div>
-				<input size_="big" name="email" type="text" value="<?= $email ?? ''; ?>">
+				<input size_="big" name="email" type="text" value="<?= $email; ?>">
 			</div>
 		</div>
 		<div>
 			<div><?= D['string_name']; ?></div>
 			<div>
-				<input size_="big" name="title" type="text" value="<?= $title ?? ''; ?>">
+				<input size_="big" name="title" type="text" value="<?= e(Session::getUser()->_title); ?>">
 			</div>
 		</div>
 		<div>
 			<div><?= D['string_about_self']; ?></div>
 			<div>
-				<textarea size_="big" name="description" type="text"><?= $description ?? ''; ?></textarea>
+				<textarea size_="big" name="description" type="text"><?= e(Session::getUser()->description); ?></textarea>
 			</div>
 		</div>
-		<? if($allow_advanced_control ?? false) { ?>
+		<? if($allow_advanced_control) { ?>
 			<div>
 				<div><?= D['string_search']; ?></div>
 				<div _flex="v stacked left">
@@ -69,7 +69,7 @@
 						<div><?= D['string_hide_from_search'].' '.D['string_hide_from_search_inherition']; ?></div>
 					</label>
 					<label _check>
-						<input name="hide_default_referrer" type="checkbox" <?= $hide_default_referrer ?? false ? 'checked' : ''; ?>>
+						<input name="hide_default_referrer" type="checkbox" <?= $hide_default_referrer ? 'checked' : ''; ?>>
 						<div></div>
 						<div><?= D['string_hide_default_referrer']; ?></div>
 					</label>
@@ -80,13 +80,13 @@
 			<div><?= D['string_menu']; ?></div>
 			<div>
 				<label _check>
-					<input name="hide_from_search" type="checkbox" <?= ($menu['use_personal_menu'] ?? '') ? 'checked' : ''; ?>>
+					<input name="use_personal_menu" type="checkbox" <?= $use_personal_menu ? 'checked' : ''; ?>>
 					<div></div>
 					<div><?= D['string_use']; ?> <a href="/menu_items"><?= D['link_personal_menu']; ?></a></div>
 				</label>
 			</div>
 		</div>
-		<? if($allow_advanced_control ?? false) { ?>
+		<? if($allow_advanced_control) { ?>
 			<div>
 				<div>Основная группа</div>
 				<div>
@@ -99,7 +99,7 @@
 		<div>
 			<div><?= D['string_editor']; ?></div>
 			<div>
-				<input name="editor" type="text" placeholder="<?= D['string_upload_id']; ?>" value="<?= $editor_id ?? ''; ?>">
+				<input name="editor" type="text" placeholder="<?= D['string_upload_id']; ?>" value="<?= $editor_id; ?>">
 			</div>
 		</div>
 		<div>
@@ -121,48 +121,48 @@
 			<div><?= D['string_notifications']; ?></div>
 			<div _flex="v stacked left">
 				<label _check>
-					<input name="notify_friendship" type="checkbox" <?= ($notifications['friendship'] ?? false) ? 'checked' : ''; ?>>
+					<input name="notify_friends" type="checkbox" <?= $notify_friends ? 'checked' : ''; ?>>
 					<div></div>
 					<div><?= D['string_friendship']; ?></div>
 				</label>
 				<label _check>
-					<input name="notify_private_messages" type="checkbox" <?= ($notifications['private_messages'] ?? false) ? 'checked' : ''; ?>>
-					<div></div>
-					<div><?= D['string_private_messages']; ?></div>
-				</label>
-				<label _check>
-					<input name="notify_inclusions" type="checkbox" <?= ($notifications['inclusions'] ?? false) ? 'checked' : ''; ?>>
+					<input name="notify_inclusions" type="checkbox" <?= $notify_inclusions ? 'checked' : ''; ?>>
 					<div></div>
 					<div><?= D['string_inclusions']; ?></div>
 				</label>
 				<label _check>
-					<input name="notify_comments" type="checkbox" <?= ($notifications['comments'] ?? false) ? 'checked' : ''; ?>>
+					<input name="notify_comments" type="checkbox" <?= $notify_comments ? 'checked' : ''; ?>>
 					<div></div>
 					<div><?= D['string_comments']; ?></div>
 				</label>
 				<label _check>
-					<input name="notify_recommendations" type="checkbox" <?= ($notifications['recommendations'] ?? false) ? 'checked' : ''; ?>>
+					<input name="notify_recommendations" type="checkbox" <?= $notify_recommendations ? 'checked' : ''; ?>>
 					<div></div>
 					<div><?= D['string_recommendations']; ?></div>
 				</label>
+				<label _check>
+					<input name="notify_private_messages" type="checkbox" <?= $notify_private_messages ? 'checked' : ''; ?>>
+					<div></div>
+					<div><?= D['string_private_messages']; ?></div>
+				</label>
 			</div>
 		</div>
-		<? if($allow_advanced_control ?? false) { ?>
+		<? if($allow_advanced_control) { ?>
 			<div>
 				<div><?= D['string_privileges']; ?></div>
 				<div _flex="v stacked left">
 					<label _check>
-						<input name="allow_any_upload_size" type="checkbox" <?= ($allow_any_upload_size ?? false) ? 'checked' : ''; ?>>
+						<input name="allow_any_upload_size" type="checkbox" <?= $allow_any_upload_size ? 'checked' : ''; ?>>
 						<div></div>
 						<div><?= D['string_allow_any_upload_size']; ?></div>
 					</label>
 					<label _check>
-						<input name="allow_advanced_control" type="checkbox" <?= ($allow_advanced_control ?? false) ? 'checked' : ''; ?>>
+						<input name="allow_advanced_control" type="checkbox" <?= $allow_advanced_control ? 'checked' : ''; ?>>
 						<div></div>
 						<div><?= D['string_allow_advanced_control']; ?></div>
 					</label>
 					<label _check>
-						<input name="allow_max_access_ignoring_groups" type="checkbox" <?= ($allow_max_access_ignoring_groups ?? false) ? 'checked' : ''; ?>>
+						<input name="allow_max_access_ignoring_groups" type="checkbox" <?= $allow_max_access_ignoring_groups ? 'checked' : ''; ?>>
 						<div></div>
 						<div><?= D['string_allow_max_access_ignoring_groups']; ?></div>
 					</label>

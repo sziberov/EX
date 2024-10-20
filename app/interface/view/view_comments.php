@@ -25,7 +25,6 @@
 <b><?= D['title_view_comments']; ?></b>
 <?
 	$template = new Template('comments');
-	$template->navigation_page = $navigation_page;
 	$template->root_object = $object;
 	$template->render(true);
 ?>

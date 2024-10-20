@@ -113,11 +113,7 @@
 		}
 
 		public static function getSettings() {
-			if(!self::set()) {
-				return [];
-			}
-
-			return self::$settings ??= Object_::getSettings(self::getUserID());
+			return Object_::getFilteredSettings(self::getUser());
 		}
 
 		public static function getSetting($key) {

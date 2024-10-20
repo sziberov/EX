@@ -121,8 +121,6 @@ if($object->inclusions_count > 0) { ?>
 
 	if($object->type_id != 2) {
 		$template->navigation_mode_id = 1;
-		$template->navigation_page = $navigation_page;
-		$template->navigation_items_per_page = $navigation_items_per_page;
 		$template->navigation_rss_id = $object->id;
 		$template->template_title = $display_mode_id == 0 ? 'objects-cells' : 'objects-list';
 		$template->template_namespace = [

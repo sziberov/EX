@@ -27,7 +27,7 @@
 				<div><?= D['string_files_count']; ?><div _badge><?= $object->files_count; ?></div></div>
 			<? } ?>
 			<? if($object->comments_count > 0) { ?>
-				<a href="/view_comments/<?= $object->id; ?>"><?= D['string_comments_count']; ?><div _badge><?= $object->comments_count; ?></div></a>
+				<a href="/view_comments/<?= $object->id; ?>"><u><?= D['string_comments_count']; ?><div _badge><?= $object->comments_count; ?></div></u></a>
 			<? } ?>
 		</div>
 	<? } ?>

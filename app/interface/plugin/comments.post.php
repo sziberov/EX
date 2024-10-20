@@ -19,6 +19,6 @@
 		<div _description="short"><?= template_parseBB(e($object->description)); ?></div>
 	<? }
 	if($object->files_count > 0) { ?>
-		<a href="/<?= $object->id; ?>"><?= D['string_files_count']; ?><div _badge><?= $object->files_count; ?></div></a>
+		<a href="/<?= $object->id; ?>"><u><?= D['string_files_count']; ?><div _badge><?= $object->files_count; ?></div></u></a>
 	<? } ?>
 </div>

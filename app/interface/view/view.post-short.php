@@ -8,7 +8,7 @@
 		</a>
 	<? } ?>
 	<div _title>
-		<a href="<?= $object_url; ?>"><?= $object->title; ?></a>
+		<a href="<?= $object_url; ?>"><?= e($object->title); ?></a>
 	</div>
 	<?
 		if(!$object->getSetting('hide_author_and_times')) {

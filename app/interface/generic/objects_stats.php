@@ -38,8 +38,6 @@
 
 	$template = new Template('entities');
 	$template->navigation_mode_id = 2;
-	$template->navigation_page = $navigation_page;
-	$template->navigation_items_per_page = $navigation_items_per_page;
 	$template->search_condition = "LEFT JOIN visits AS v ON v.object_id = o.id
 								   WHERE o.type_id IN (1, 3)".(!empty($user) ? " AND o.user_id = $user->id" : '')."
 								   GROUP BY o.id

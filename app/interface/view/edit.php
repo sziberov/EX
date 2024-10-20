@@ -135,7 +135,7 @@ if(!empty($referrer)) {
 					<select>
 						<option value="-1"><?= $object->type_id != 2 ? 'По умолчанию' : 'Нет' ; ?></option>
 						<? foreach($user->avatars as $avatar) { ?>
-							<option value="<?= $avatar->id; ?>" data-id="<?= $avatar->poster->id; ?>" <?= $avatar->id == $object->getSettings('avatar_id') ? 'selected' : ''; ?>><?= e($avatar->title); ?></option>
+							<option value="<?= $avatar->id; ?>" data-id="<?= $avatar->poster->id; ?>" <?= $avatar->id == $object->getSetting('avatar_id') ? 'selected' : ''; ?>><?= e($avatar->title); ?></option>
 						<? } ?>
 					</select>
 					<a _avatar href="/user/_USER_TITLE_" title="DIES">

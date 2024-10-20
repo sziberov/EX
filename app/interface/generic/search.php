@@ -51,8 +51,6 @@
 	if(!empty($query)) {
 		$template = new Template('entities');
 		$template->navigation_mode_id = 2;
-		$template->navigation_page = $navigation_page;
-		$template->navigation_items_per_page = $navigation_items_per_page;
 		$template->search_entity = 'public_objects o';
 		$template->search_condition = Object_::getGenericSearchCondition($query, $user->id ?? null, $section->id ?? null);
 		$template->render(true);

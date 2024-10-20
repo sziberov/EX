@@ -1,8 +1,13 @@
 <?
-	// Outer: navigation_page, navigation_items_per_page, root_object, level
+	// Outer: navigation_items_per_page, root_object, level
 
-	$navigation_page = $this->navigation_page ?? 0;
+	$navigation_page = $_GET['page'] ?? 0;
 	$navigation_items_per_page = $this->navigation_items_per_page ?? 24;
+
+	if(filter_var($navigation_page, FILTER_VALIDATE_INT) === false || $navigation_page < 0) {
+		$navigation_page = 0;
+	}
+
 	$root_object = $this->root_object;
 	$search_condition = "JOIN links AS l ON l.from_id = o.id AND l.to_id = $root_object->id AND l.type_id = 5";
 	$search = Entity::search('objects', 'Object_', null, $search_condition, $navigation_items_per_page, $navigation_items_per_page*$navigation_page);
@@ -25,7 +30,7 @@
 			if($object->access_level_id > 0) { ?>
 				<div _grid="v" style="padding-left: <?= $level*48; ?>px;">
 					<? include 'comments.post.php'; ?>
-					<? /*if(Session::set() && isset($object->user) && Session::getSettings()['login'] == $object->user->login) { ?>
+					<? /*if(Session::set() && isset($object->user) && Session::getSetting('login') == $object->user->login) { ?>
 						<div _grid="h">
 							<button>Ответить</button>
 							<a _button href="/edit/<?= $object->comment_id; ?>"><?= D['button_edit']; ?></a>

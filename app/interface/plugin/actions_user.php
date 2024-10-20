@@ -6,63 +6,83 @@
 	if($current_session_user) {
 		$columns = [
 			["/create?to_id=$object->id&type_id=3,4", D['button_create']],
-			['/archive', D['button_archive'], $object->archive_count ?: null]
+			['/archive', D['button_archive'], ['badge' => $object->archive_count ?: null]]
 		];
 
 		if($object->user_comments_count > 0) {
-			$columns[] = ['/comments', D['button_comments'], $object->user_comments_count];
+			$columns[] = ['/comments', D['button_comments'], ['badge' => $object->user_comments_count]];
 		}
 		if($object->recommendations_count > 0) {
-			$columns[] = ['/recommendations', D['button_recommendations'], $object->recommendations_count];
+			$columns[] = ['/recommendations', D['button_recommendations'], ['badge' => $object->recommendations_count]];
 		}
 
-		$columns[] = ['/avatars', D['button_avatars'], $object->avatars_count ?: null];
+		$columns[] = ['/avatars', D['button_avatars'], ['badge' => $object->avatars_count ?: null]];
 
 		if($object->user_claims_count > 0) {
-			$columns[] = ['/claims', 'Жалобы', $object->user_claims_count];
+			$columns[] = ['/claims', 'Жалобы', ['badge' => $object->user_claims_count]];
 		}
 
-		$columns[] = ['/templates', D['button_templates'], $object->templates_count ?: null];
+		$columns[] = ['/templates', D['button_templates'], ['badge' => $object->templates_count ?: null]];
 
 		if($object->drafts_count > 0) {
-			$columns[] = ['/drafts', D['button_drafts'], $object->drafts_count];
+			$columns[] = ['/drafts', D['button_drafts'], ['badge' => $object->drafts_count]];
 		}
 		if($object->bookmarks_count > 0) {
-			$columns[] = ['/bookmarks', D['button_bookmarks'], $object->bookmarks_count];
+			$columns[] = ['/bookmarks', D['button_bookmarks'], ['badge' => $object->bookmarks_count]];
 		}
 
-		$columns[] = ['/groups', D['button_groups'], $object->groups_count_alien.' / '.$object->groups_count_own];
+		$columns[] = ['/groups', D['button_groups'], ['badge' => $object->groups_count_alien.' / '.$object->groups_count_own]];
 		$row[] = $columns;
 	}
 
 	$columns = [];
 
 	if($current_session_user && $object->inbox_count+$object->outbox_count > 0) {
-		$columns[] = ['/private_messages', D['button_private_messages'], $object->inbox_count.' / '.$object->outbox_count];
+		$columns[] = ['/private_messages', D['button_private_messages'], ['badge' => $object->inbox_count.' / '.$object->outbox_count]];
 	} else {
 		$columns[] = ["/create?to_id=$object->id&type_id=3,11", D['button_private_message']];
 	}
 	if($object->access_level_id >= 4 && $object->self_inclusions_count > 0) {
-		$columns[] = ["/view_inclusions/$object->id", D['button_inclusions'], $object->self_inclusions_count];
+		$columns[] = ["/view_inclusions/$object->id", D['button_inclusions'], ['badge' => $object->self_inclusions_count]];
 	}
 	if($object->comments_count > 0) {
-		$columns[] = ["/view_comments/$object->id", D['button_comments'], $object->comments_count];
+		$columns[] = ["/view_comments/$object->id", D['button_comments'], ['badge' => $object->comments_count]];
 	} else
 	if($object->access_level_id >= 2) {
 		$columns[] = ["/create?to_id=$object->id&type_id=3,5", D['button_comment']];
 	}
 
-	$columns[] = ["/create_link?from_id=$object->id&type_id=6", D['button_recommend'], null, 'Button.toggle(this);'];
+	$link_id = Link::getID($object->id, null, Session::getUserID(), 6);
+
+	if(empty($link_id)) {
+		$columns[] = ["/create_link?from_id=$object->id&type_id=6", D['button_recommend']];
+	} else {
+		$columns[] = ["/destroy_link/$link_id", D['button_recommend'], ['toggled' => true]];
+	}
+
 	$row[] = $columns;
 
 	if(Session::set()) {
 		$columns = [];
 
 		if(!$current_session_user) {
-			$columns[] = ["/create_link?from_id=$object->id&to_id=".Session::getUserID()."&type_id=2", D['button_to_friends'], null, 'Button.toggle(this);'];
+			$link_id = Link::getID($object->id, Session::getUserID(), Session::getUserID(), 2);
+
+			if(empty($link_id)) {
+				$columns[] = ["/create_link?from_id=$object->id&to_id=".Session::getUserID()."&type_id=2", D['button_to_friends']];
+			} else {
+				$columns[] = ["/destroy_link/$link_id", D['button_to_friends'], ['toggled' => true]];
+			}
 		}
 
-		$columns[] = ["/create_link?from_id=$object->id&type_id=10", D['button_to_bookmarks'], null, 'Button.toggle(this);'];
+		$link_id = Link::getID($object->id, null, Session::getUserID(), 10);
+
+		if(empty($link_id)) {
+			$columns[] = ["/create_link?from_id=$object->id&type_id=10", D['button_to_bookmarks']];
+		} else {
+			$columns[] = ["/destroy_link/$link_id", D['button_to_bookmarks'], ['toggled' => true]];
+		}
+
 		$columns[] = ["/my/$object->id", D['button_to_my']];
 		$row[] = $columns;
 	}
@@ -99,7 +119,7 @@
 	$columns = [];
 
 	if($object->claims_count > 0 && ($allow_advanced_control || $object->user->id == Session::getUserID())) {
-		$columns[] = ["/claims?object_id=$object->id", D['button_claims'], $object->claims_count];
+		$columns[] = ["/claims?object_id=$object->id", D['button_claims'], ['badge' => $object->claims_count]];
 	} else {
 		$columns[] = ["/create?to_id=$object->id&type_id=3,8", D['button_claim']];
 	}

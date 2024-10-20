@@ -26,8 +26,6 @@
 <?
 	$template = new Template('entities');
 	$template->navigation_mode_id = 2;
-	$template->navigation_page = $navigation_page;
-	$template->navigation_items_per_page = $navigation_items_per_page;
 	$template->search_entity = 'links';
 	$template->search_class = 'Link';
 	$template->search_condition = "WHERE l.user_id = $user->id AND l.type_id = 6

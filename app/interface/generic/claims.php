@@ -58,8 +58,6 @@
 
 	$template = new Template('entities');
 	$template->navigation_mode_id = 2;
-	$template->navigation_page = $navigation_page;
-	$template->navigation_items_per_page = $navigation_items_per_page;
 	$template->search_entity = 'links';
 	$template->search_class = 'Link';
 	$template->search_condition = 'JOIN objects AS o ON o.id = l.from_id

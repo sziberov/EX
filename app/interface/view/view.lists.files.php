@@ -29,7 +29,7 @@
 	<? $i = 1; foreach($object->uploads as $upload) {
 		$file = $upload->file;
 
-		if(!in_array($file->size, $file->upload_offsets)) {
+		if(empty($file->md5)) {
 			continue;
 		}
 
@@ -74,28 +74,32 @@
 						<div><?= strtoupper(explode('/', $mime_type)[1]).(!empty($width) ? ': '.$width.'x'.$height : '').(!empty($length) ? ', '.template_formatLength($length) : ''); ?></div>
 					<? } ?>
 				</div>
-				<div _grid="h">
-					<a><img src="/app/image/file_button.svg"></img></a>
-					<a _button href="/load/<?= $upload->id; ?>"><?= D['button_download'].($upload->downloads_count > 0 ? '<div _badge>'.$upload->downloads_count.'</div>' : ''); ?></a>
-					<? if($file->size >= 1000000000) { ?>
-						<a _button href="/torrent/<?= $upload->id; ?>"><?= D['button_torrent']; ?></a>
-					<? } ?>
-					<a _button href="/copy/<?= $upload->id; ?>"><?= D['button_copy']; ?></a>
-				</div>
-				<? if(!empty($latitude) && !empty($longitude)) { ?>
+				<? if(in_array($file->size, $file->upload_offsets)) { ?>
 					<div _grid="h">
-						<a _button href="http://maps.google.com/maps?q=<?= $latitude; ?>,<?= $longitude; ?>"><?= D['button_view_on_map']; ?></a>
+						<a><img src="/app/image/file_button.svg"></img></a>
+						<a _button href="/load/<?= $upload->id; ?>"><?= D['button_download'].($upload->downloads_count > 0 ? '<div _badge>'.$upload->downloads_count.'</div>' : ''); ?></a>
+						<? if($file->size >= 1000000000) { ?>
+							<a _button href="/torrent/<?= $upload->id; ?>"><?= D['button_torrent']; ?></a>
+						<? } ?>
+						<a _button href="/copy/<?= $upload->id; ?>"><?= D['button_copy']; ?></a>
 					</div>
+					<? if(!empty($latitude) && !empty($longitude)) { ?>
+						<div _grid="h">
+							<a _button href="http://maps.google.com/maps?q=<?= $latitude; ?>,<?= $longitude; ?>"><?= D['button_view_on_map']; ?></a>
+						</div>
+					<? } ?>
+					<div _flex="h wrap">
+						<? foreach($file->upload_offsets as $fs_id => $upload_offset) {
+							if($upload_offset >= $file->size) { ?>
+								<a href="/load/<?= $upload->id; ?>?fs_id=<?= $fs_id; ?>">FS<?= $fs_id; ?></a>
+							<? } else { ?>
+								<a disabled_>FS<?= $fs_id; ?></a>
+							<? }
+						} ?>
+					</div>
+				<? } else { ?>
+					<div>Файл недоступен</div>
 				<? } ?>
-				<div _flex="h wrap">
-					<? foreach($file->upload_offsets as $fs_id => $upload_offset) {
-						if($upload_offset >= $file->size) { ?>
-							<a href="/load/<?= $upload->id; ?>?fs_id=<?= $fs_id; ?>">FS<?= $fs_id; ?></a>
-						<? } else { ?>
-							<a disabled_>FS<?= $fs_id; ?></a>
-						<? }
-					} ?>
-				</div>
 			</div>
 		</div>
 	<? $i++; } ?>
