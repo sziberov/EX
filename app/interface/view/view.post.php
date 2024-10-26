@@ -28,7 +28,7 @@
 				<? } ?>
 				<div _title><?= D['title_user']; ?> <b><?= e($object->title); ?></b></div>
 				<form _grid="h" action="/search">
-					<input size_="medium" name="query" type="text">
+					<input size_="medium" name="q" type="text">
 					<input name="user_id" type="hidden" value="<?= $object->id; ?>">
 					<button type="submit"><?= D['button_search']; ?></button>
 				</form>

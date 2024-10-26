@@ -62,20 +62,16 @@
 			goto error_404;
 		}
 
-		if($to->access_level_id == 0 || $to->getSetting('awaiting_save')) {
-			error_403:
+		if(
+								   $to->access_level_id < 1 || $to->getSetting('awaiting_save') ||
+			$link_type_id == 4 && ($to->access_level_id < 3 || $to->getSetting('deny_nonbookmark_inclusion')) ||  // TODO: Non session user page direct creation
+			$link_type_id == 5 &&  $to->access_level_id < 2 ||
+			$link_type_id == 8 &&  							   $to->getSetting('deny_claims')
+		) {
 			$error = D['error_page_forbidden'];
 			http_response_code(403);
 			return include 'plugin/error.php';
 		}
-	}
-
-	if($from_type_id == 3 && (
-		$link_type_id == 4 && ($to->access_level_id < 3 || $to->getSetting('deny_nonbookmark_inclusion')) ||  // TODO: Non session user page direct creation
-		$link_type_id == 5 &&  $to->access_level_id < 2 ||
-		$link_type_id == 8 &&  $to->getSetting('deny_claims')
-	)) {
-		goto error_403;
 	}
 
 	$from_id = $from_type_id == 1 ? Object_::createGroupID() :

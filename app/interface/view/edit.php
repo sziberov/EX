@@ -37,7 +37,7 @@
 		$hide_default_referrer = $object->type_id != 3 || $object->getSetting('hide_default_referrer');  // TODO: Create physical settings
 
 		try {
-			$referrer = new Object_($object->getValidReferrerID($_GET['referrer_id'] ?? null, !$hide_default_referrer));
+			$referrer = new Object_($object->getValidReferrerID(http_getArgument('referrer_id'), !$hide_default_referrer));
 		} catch(Exception $e) {}
 	}
 

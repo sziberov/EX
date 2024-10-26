@@ -704,7 +704,7 @@ header [__get="wrong"] {
 	animation: HeaderGetWrong 0.5s ease;
 }
 
-header [__get] > *:last-child {
+header [__get] > :last-child {
 	flex: 1;
 }
 
@@ -1019,7 +1019,7 @@ button [_badge] {
 	text-decoration: none;
 }
 
-[_post] > *:not(:last-child) {
+[_post] > :not(:last-child) {
 	margin-bottom: 12px;
 }
 
@@ -1102,13 +1102,13 @@ ul[_cells] li [_properties] {
 	gap: 12px;
 }
 
-[_table] > div {
+[_table] > * {
 	display: grid;
 	grid-column: 1 / -1;
 	grid-template-columns: subgrid;
 }
 
-[_table] > div > div {
+[_table] > * > * {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
@@ -1119,15 +1119,15 @@ ul[_cells] li [_properties] {
 	word-break: break-word;
 }
 
-[_table] > div > div:first-child {
+[_table] > * > :first-child {
 	justify-content: end;
 }
 
-[_table] > div > div:not([_flex~="stacked"]) {
+[_table] > * > :not([_flex~="stacked"]) {
 	gap: 12px;
 }
 
-[_table] > div[header_] > div {
+[_table] > [header_] > * {
 	align-items: end;
 
 	padding-top: 0;
@@ -1135,7 +1135,7 @@ ul[_cells] li [_properties] {
 	font-weight: bold;
 }
 
-[_table] > div[footer_] > div {
+[_table] > [footer_] > * {
 	padding-bottom: 0;
 }
 
@@ -1158,12 +1158,12 @@ ul[_cells] li [_properties] {
 	gap: 0;
 }
 
-[_table~="list"] > div {
+[_table~="list"] > * {
 	position: relative;
 }
 
-[_table~="list"] > div:first-child:not([header_]):before,
-[_table~="list"] > div:not([footer_]):after {
+[_table~="list"] > :first-child:not([header_]):before,
+[_table~="list"] > :not([footer_]):after {
 	content: '';
 
 	position: absolute;
@@ -1181,31 +1181,31 @@ ul[_cells] li [_properties] {
 	) left top / 6px auto;
 }
 
-[_table~="list"] > div:first-child:not([header_]):before {
+[_table~="list"] > :first-child:not([header_]):before {
 	top: 0;
 	bottom: unset;
 }
 
-[_table~="list"] > div > div {
+[_table~="list"] > * > * {
 	justify-content: end;
 
 	padding: 12px 6px;
 }
 
-[_table~="list"] > div > div:first-child {
+[_table~="list"] > * > :first-child {
 	padding-left: 0;
 }
 
-[_table~="list"] > div > div:first-child:not([fallback_]),
-[_table~="list"] > div > div:first-child[fallback_] + div {
+[_table~="list"] > * > :first-child:not([fallback_]),
+[_table~="list"] > * > :first-child[fallback_] + div {
 	justify-content: start;
 }
 
-[_table~="list"] > div > div:last-child {
+[_table~="list"] > * > :last-child {
 	padding-right: 0;
 }
 
-[_table~="list"] > div[header_] select {
+[_table~="list"] > [header_] select {
 	margin: -4px;
 	padding: 0;
 
@@ -1215,19 +1215,19 @@ ul[_cells] li [_properties] {
 }
 
 @supports (-moz-appearance: none) {
-	[_table~="list"] > div[header_] select {
+	[_table~="list"] > [header_] select {
 		margin: -4px 0;
 	}
 }
 
-[_table~="list"] > div[header_] select:hover,
-[_table~="list"] > div[header_] select:focus {
+[_table~="list"] > [header_] select:hover,
+[_table~="list"] > [header_] select:focus {
 	background: none;
 
 	opacity: 0.5;
 }
 
-[_table~="list"] > div[header_] select:has(option:only-child) {
+[_table~="list"] > [header_] select:has(option:only-child) {
 	margin: -4px 0 !important;
 
 	appearance: none;

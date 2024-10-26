@@ -2,7 +2,7 @@
 	<ul _list>
 		<? foreach($entities as $link) {
 			$object = $link->from;
-			$object_url = (!empty($object->alias) ? '/'.$object->alias : '/'.$object->id).(!empty($link->to->id) && $link->to->type_id != 2 ? '?referrer_id='.$link->to->id : '');
+			$object_url = (!empty($object->alias) ? '/'.$object->alias : '/'.$object->id).(!empty($link->to->id) && $link->to->type_id != 2 ? '?r='.$link->to->id : '');
 		?>
 			<li>
 				<div _grid="v">
@@ -22,7 +22,7 @@
 									continue;
 								}
 
-								$section_url ??= !empty($section->alias) ? '/'.$section->alias : ($section->type_id == 2 ? '/user/'.$section->login : '/'.$section->id).(!empty($ancestors_ids[$k-1]) ? '?referrer_id='.$ancestors_ids[$k-1] : '');
+								$section_url ??= !empty($section->alias) ? '/'.$section->alias : ($section->type_id == 2 ? '/user/'.$section->login : '/'.$section->id).(!empty($ancestors_ids[$k-1]) ? '?r='.$ancestors_ids[$k-1] : '');
 							?>
 								<b><a href="<?= $section_url; ?>"><?= e($section->title); ?></a></b><?= !$last ? ' > ' : ''; ?>
 							<? }

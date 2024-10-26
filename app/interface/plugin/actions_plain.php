@@ -57,7 +57,7 @@
 	}
 	if($object->access_level_id >= 4) {
 		$columns = [
-			["/edit/$object->id".(!empty($referrer) ? "?referrer_id=$referrer->id" : ''), D['button_edit']]
+			["/edit/$object->id".(!empty($referrer) ? "?r=$referrer->id" : ''), D['button_edit']]
 		];
 
 		if($object->access_level_id == 5) {

@@ -1,8 +1,8 @@
 <?
 	// Outer: page, items_per_page, items, buttons
 
-	$page = $this->page;
-	$items_per_page = $this->items_per_page;
+	$page = $this->page ?? http_getArgument('page') ?? 0;
+	$items_per_page = $this->items_per_page ?? http_getArgument('items_per_page') ?? 24;
 	$items = $this->items;
 	$buttons = $this->buttons ?? 11;
 	$pages = max(1, ceil($items/$items_per_page));
@@ -19,7 +19,7 @@
 		}
 
 		if($start_page > 0) { ?>
-			<a _button href="?<?= http_build_query(array_merge($_GET, ['page' => 0])); ?>">1</a>
+			<a _button href="?<?= http_getShortParameterQuery('page', 0); ?>">1</a>
 			<? if($start_page > 1) { ?>
 				<div>..</div>
 			<? }
@@ -28,13 +28,13 @@
 			if($page_ == $page) { ?>
 				<a _button disabled_><?= $page_+1; ?></a>
 			<? } else { ?>
-				<a _button href="?<?= http_build_query(array_merge($_GET, ['page' => $page_])); ?>"><?= $page_+1; ?></a>
+				<a _button href="?<?= http_getShortParameterQuery('page', $page_); ?>"><?= $page_+1; ?></a>
 			<? }
 		}
 		if($pages-$end_page > 1) { ?>
 			<div>..</div>
 			<? if($end_page < $pages-1) { ?>
-				<a _button href="?<?= http_build_query(array_merge($_GET, ['page' => $pages-1])); ?>"><?= $pages; ?></a>
+				<a _button href="?<?= http_getShortParameterQuery('page', $pages-1); ?>"><?= $pages; ?></a>
 			<? }
 		}
 	?>

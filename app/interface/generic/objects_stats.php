@@ -38,10 +38,13 @@
 
 	$template = new Template('entities');
 	$template->navigation_mode_id = 2;
-	$template->search_condition = "LEFT JOIN visits AS v ON v.object_id = o.id
-								   WHERE o.type_id IN (1, 3)".(!empty($user) ? " AND o.user_id = $user->id" : '')."
-								   GROUP BY o.id
-								   ORDER BY COUNT(v.id) DESC, o.creation_time DESC, o.id DESC";
+	$template->search_fields = 'o.*,
+							    COALESCE(hits_count, 0) AS hits_count,
+								COALESCE(hosts_count, 0) AS hosts_count,
+								COALESCE(guests_count, 0) AS guests_count';
+	$template->search_condition = 'LEFT JOIN visits_stats AS vs ON vs.object_id = o.id
+								   WHERE o.type_id IN (1, 3)'.(!empty($user) ? " AND o.user_id = $user->id" : '').'
+								   ORDER BY hits_count DESC, o.creation_time DESC, o.id DESC';
 	$template->template_title = 'generic/objects_stats.objects';
 	$template->render(true);
 

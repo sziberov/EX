@@ -18,7 +18,7 @@
 				$siblings_ids = Link::getSiblingsIDs($object->id, $referrer->id, 4);
 
 				foreach($siblings_ids as $k => $v) {
-					${str_replace('id', 'url', $k)} = !empty($v) ? "/$v?referrer_id=$referrer->id" : null;
+					${str_replace('id', 'url', $k)} = !empty($v) ? "/$v?r=$referrer->id" : null;
 				}
 			?>
 				<div>
@@ -30,7 +30,7 @@
 							continue;
 						}
 
-						$section_url = (!empty($section->alias) ? '/'.$section->alias : '/'.$section->id).(!empty($ancestors_ids[$k-1]) ? '?referrer_id='.$ancestors_ids[$k-1] : '');
+						$section_url = (!empty($section->alias) ? '/'.$section->alias : '/'.$section->id).(!empty($ancestors_ids[$k-1]) ? '?r='.$ancestors_ids[$k-1] : '');
 					?>
 						<a _title="small" href="<?= $section_url; ?>"><?= e($section->title); ?></a><?= !$last ? ' > ' : ''; ?>
 					<? } ?>

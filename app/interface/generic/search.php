@@ -1,5 +1,5 @@
 <?
-	$query = trim($_GET['query'] ?? '');
+	$query = trim(http_getArgument('query') ?? '');
 
 	try {
 		$user = new Object_($_GET['user_id'] ?? null);
@@ -19,7 +19,7 @@
 	$page_title = D['title_search'].(!empty($query) ? ' "'.$query.'"' : '');
 ?>
 <form _grid="h">
-	<input size_="large" name="query" type="text" value="<?= $query; ?>">
+	<input size_="large" name="<?= http_getShortParameter('query'); ?>" type="text" value="<?= e($query); ?>">
 	<? if(!empty($user)) { ?>
 		<input name="user_id" type="hidden" value="<?= $user->id; ?>">
 	<? }
@@ -57,7 +57,7 @@
 
 		if(!empty($user) || !empty($section)) { ?>
 			<div _grid="h">
-				<a _button href="/search?query=<?= $query; ?>"><?= D['button_search_everywhere']; ?></a>
+				<a _button href="?<?= http_getShortParameter('query').'='.e($query); ?>"><?= D['button_search_everywhere']; ?></a>
 			</div>
 		<? }
 	}

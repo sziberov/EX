@@ -1,5 +1,5 @@
 <?
-	setcookie('language', $_GET['language'], 2147483647, '/');
+	setcookie('language', http_getArgument('language'), 2147483647, '/');
 
 	$referrer = $_SERVER['HTTP_REFERER'] ?? '/';
 	$referrer_page = explode('/', parse_url($referrer, PHP_URL_PATH))[1];

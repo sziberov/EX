@@ -31,7 +31,7 @@
 				<? } ?>
 			</div>
 			<div>
-				<button><?= D['button_remove']; ?></button>
+				<a _button href="/destroy_link/<?= $uga_link->id; ?>"><?= D['button_remove']; ?></a>
 			</div>
 		</div>
 	<? } ?>
@@ -40,14 +40,16 @@
 			<a data-switch-ref="edit"><u><?= D['link_add']; ?></u></a>
 		</div>
 	</div>
-	<div footer_ switch_ data-switch="edit">
+	<form footer_ switch_ data-switch="edit" action="/create_link" method="get">
 		<div>
-			<input size_="big" type="text" value="UserOut">
+			<input size_="big" type="text" name="login" placeholder="<?= D['string_login']; ?>" required>
+			<input type="hidden" name="to_id" value="<?= $object->id; ?>">
+			<input type="hidden" name="type_id" value="1">
 		</div>
 		<div>
 			<select>
 				<? for($i = 0; $i < 6; $i++) { ?>
-					<option <?= $i == 2 ? 'selected' : ''; ?>><?= D['string_access_level_'.$i]; ?></option>
+					<option value="<?= $i; ?>" <?= $i == 2 ? 'selected' : ''; ?>><?= D['string_access_level_'.$i]; ?></option>
 				<? } ?>
 			</select>
 		</div>
@@ -63,8 +65,8 @@
 			</div>
 		</div>
 		<div>
-			<button><?= D['button_save']; ?></button>
-			<button data-switch-ref="edit"><?= D['button_cancel']; ?></button>
+			<button type="submit"><?= D['button_save']; ?></button>
+			<button type="button" data-switch-ref="edit"><?= D['button_cancel']; ?></button>
 		</div>
-	</div>
+	</form>
 </div>

@@ -22,7 +22,7 @@
 		<a href="/contacts"><?= D['link_contacts']; ?></a>
 		<a href="/copyright"><?= D['link_copyright']; ?></a>
 		<form action="/language" method="get">
-			<select name="language" onchange="this.form.submit();">
+			<select name="l" onchange="this.form.submit();">
 				<? foreach($languages as $language_) { ?>
 					<option value="<?= $language_; ?>" <?= $language_ == $language ? 'selected' : ''; ?>><?= D['string_language_'.$language_]; ?></option>
 				<? } ?>

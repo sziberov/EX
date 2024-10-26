@@ -1,7 +1,7 @@
 <? if(count($entities) > 0) { ?>
 	<ul _list>
 		<? foreach($entities as $object) {
-			$object_url = (!empty($object->alias) ? '/'.$object->alias : ($object->type_id == 2 ? '/user/'.$object->login : '/'.$object->id)).(!empty($referrer_id) ? '?referrer_id='.$referrer_id : '');
+			$object_url = (!empty($object->alias) ? '/'.$object->alias : ($object->type_id == 2 ? '/user/'.$object->login : '/'.$object->id)).(!empty($referrer_id) ? '?r='.$referrer_id : '');
 		?>
 			<li>
 				<? if($object->access_level_id > 0) {

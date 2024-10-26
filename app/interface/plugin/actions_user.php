@@ -19,7 +19,7 @@
 		$columns[] = ['/avatars', D['button_avatars'], ['badge' => $object->avatars_count ?: null]];
 
 		if($object->user_claims_count > 0) {
-			$columns[] = ['/claims', 'Жалобы', ['badge' => $object->user_claims_count]];
+			$columns[] = ['/claims', D['button_claims'], ['badge' => $object->user_claims_count]];
 		}
 
 		$columns[] = ['/templates', D['button_templates'], ['badge' => $object->templates_count ?: null]];
@@ -104,9 +104,9 @@
 
 	$rows[] = $row;
 
-	if($allow_advanced_control && $object->access_level_id >= 4) {
+	if($object->access_level_id >= 4) {
 		$columns = [
-			["/edit/$object->id".(!empty($referrer) ? "?referrer_id={$referrer->id}" : ''), D['button_edit']]
+			["/edit/$object->id".(!empty($referrer) ? "?r=$referrer->id" : ''), D['button_edit']]
 		];
 
 		if($object->access_level_id == 5) {

@@ -1,6 +1,14 @@
 <?
 	$types = [
 		1 => [		// group
+			1 => [		// access
+				1,			// group
+				2,			// user
+				3			// plain
+			],
+			4 => [		// inclusion
+				2			// user
+			],
 			6 => [		// recommendation
 				null		// nothing
 			],
@@ -12,6 +20,9 @@
 			2 => [		// friend
 				2			// user
 			],
+			4 => [		// inclusion
+				2			// user
+			],
 			6 => [		// recommendation
 				null		// nothing
 			],
@@ -20,7 +31,16 @@
 			]
 		],
 		3 => [		// plain
+			4 => [		// inclusion
+				2			// user
+			],
 			6 => [		// recommendation
+				null		// nothing
+			],
+			7 => [		// avatar
+				null		// nothing
+			],
+			9 => [		// template
 				null		// nothing
 			],
 			10 => [		// bookmark
@@ -42,8 +62,18 @@
 
 	$link_type_id = $_GET['type_id'] ?? null;
 
-	if(!isset($types[$from->type_id]) || !isset($types[$from->type_id][$link_type_id])) {
+	if(
+		!isset($types[$from->type_id]) ||
+		!isset($types[$from->type_id][$link_type_id])
+	) {
 		goto error_404;
+	}
+
+	if($from->getSetting('awaiting_save')) {
+		error_403:
+		$error = D['error_page_forbidden'];
+		http_response_code(403);
+		return include 'plugin/error.php';
 	}
 
 	if(!Session::set()) {
@@ -51,13 +81,6 @@
 	}
 
 	$to_id = $_GET['to_id'] ?? null;
-
-	if($link_type_id == 2 && $to_id != Session::getUserID()) {
-		error_403:
-		$error = D['error_page_forbidden'];
-		http_response_code(403);
-		return include 'plugin/error.php';
-	}
 
 	if(!in_array(null, $types[$from->type_id][$link_type_id]) || isset($to_id)) {
 		try {
@@ -70,7 +93,13 @@
 			goto error_404;
 		}
 
-		if($to->access_level_id == 0 || $to->getSetting('awaiting_save')) {
+		if(
+								  $to->access_level_id < 1 ||
+			$link_type_id != 1 && 							  $to->getSetting('awaiting_save') ||
+			$link_type_id == 1 && $to->access_level_id < 5 ||
+			$link_type_id == 2 &&							  $to->id != Session::getUserID() ||
+			$link_type_id == 4 && $to->access_level_id < 3
+		) {
 			goto error_403;
 		}
 	}

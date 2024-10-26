@@ -11,7 +11,7 @@
 		return include 'generic/login.php';
 	}
 
-	if($object->access_level_id < 5 || $object->type_id == 2 && !Session::getSetting('allow_advanced_control')) {
+	if($object->access_level_id < 5) {
 		$error = D['error_page_forbidden'];
 		http_response_code(403);
 		return include 'plugin/error.php';

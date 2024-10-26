@@ -16,29 +16,13 @@
 		return include 'generic/login.php';
 	}
 
-	if($object->access_level_id == 0) {
+	if($object->access_level_id == 0 || $object->getSetting('awaiting_save')) {
 		$error = D['error_page_forbidden'];
 		http_response_code(403);
 		return include 'plugin/error.php';
 	}
 
-	$presets = [
-		2	=> 'Друзья',
-		4	=> 'Страница',
-		6	=> 'Рекомендации',
-		7	=> 'Аватары',
-		9	=> 'Шаблоны',
-		10	=> 'Закладки'
-	];
-
-	if($object->type_id != 2) {
-		unset($presets[2]);
-	}
-	if($object->type_id != 3) {
-		unset($presets[7]);
-		unset($presets[9]);
-	}
-
+	$user = Session::getUser();
 	$page_title = $object->title.' - '.D['title_my'];
 
 	$template = new Template('referrer');
@@ -46,49 +30,21 @@
 	$template->render(true);
 ?>
 <div _title><?= D['title_my']; ?></div>
-<div _table="list" wide_ style="--columns: repeat(4, minmax(96px, auto));">
-	<div header_>
-		<div><?= D['string_section']; ?></div>
-		<div><?= D['string_objects_count']; ?></div>
-		<div><?= D['string_redaction']; ?></div>
-	</div>
-	<? foreach($object->settings as $setting) { ?>
-		<div>
-			<div><?= $setting->key; ?></div>
-			<div>
-				<div _description="short straight"><?= $setting->value; ?></div>
-			</div>
-			<div>
-				<?
-					$template = new Template('user');
-					$template->object = $setting->user;
-					$template->primary_time = $setting->edit_time;
-					$template->render(true);
-				?>
-			</div>
-			<div>
-				<button><?= D['button_remove']; ?></button>
-			</div>
-		</div>
-	<? } ?>
-	<div footer_ switch_="current" data-switch="edit">
-		<div>
-			<a data-switch-ref="edit"><u><?= D['link_add']; ?></u></a>
-		</div>
-	</div>
-	<div footer_ switch_ data-switch="edit">
-		<div>
-			<select name="section">
-				<? foreach($presets as $k => $v) { ?>
-					<option value="<?= $k; ?>"><?= $v; ?></option>
-				<? } ?>
-			</select>
-		</div>
-		<div></div>
-		<div></div>
-		<div>
-			<button><?= D['button_save']; ?></button>
-			<button data-switch-ref="edit"><?= D['button_cancel']; ?></button>
-		</div>
-	</div>
-</div>
+<?
+	$template = new Template('entities');
+	$template->search_entity = 'links';
+	$template->search_class = 'Link';
+	$template->search_fields = 'l.*, COUNT(l_1.id) AS inclusions_count';
+	$template->search_condition = "JOIN links AS l_1 ON l_1.type_id = l.type_id AND (l_1.user_id = l.user_id AND l_1.type_id != 4 OR
+																					 l_1.to_id = l.to_id)
+								   WHERE l.from_id = $object->id AND (l.user_id = $user->id AND l.type_id IN (2, 6, 7, 9, 10) OR
+																	  l.to_id = $user->id AND l.type_id = 4)
+								   GROUP BY l.id
+								   ORDER BY l.creation_time ASC, l.id ASC";
+	$template->template_title = 'view/my.objects';
+	$template->template_namespace = [
+		'object' => $object,
+		'user' => $user
+	];
+	$template->render(true);
+?>

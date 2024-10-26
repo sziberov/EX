@@ -11,8 +11,8 @@
 	];
 
 	if($navigation_mode_id > 0) {
-		$navigation_page = $this->navigation_page ?? $_GET['page'] ?? 0;
-		$navigation_items_per_page = $this->navigation_items_per_page ?? $_GET['items_per_page'] ?? 24;
+		$navigation_page = $this->navigation_page ?? http_getArgument('page') ?? 0;
+		$navigation_items_per_page = $this->navigation_items_per_page ?? http_getArgument('items_per_page') ?? 24;
 		$navigation_rss_id = $this->navigation_rss_id;
 
 		if(filter_var($navigation_page, FILTER_VALIDATE_INT) === false || $navigation_page < 0) {

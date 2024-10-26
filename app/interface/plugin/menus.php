@@ -3,20 +3,20 @@
 	<?
 		$menu_items = Session::set() && Session::getSetting('use_personal_menu') ? Session::getMenuItems() : null;
 		$menu_items ??= [
-			['url' => '/video', 'title' => D['link_video']],
-			['url' => '/audio', 'title' => D['link_audio']],
-			['url' => '/images', 'title' => D['link_images']],
-			['url' => '/texts', 'title' => D['link_texts']],
-			['url' => '/apps', 'title' => D['link_apps']],
-			['url' => '/games', 'title' => D['link_games']],
-			['url' => '/about', 'title' => D['link_about']],
-			['url' => '/search', 'title' => D['link_search']]
+			['title' => D['link_video'],	'url' => '/video'],
+			['title' => D['link_audio'],	'url' => '/audio'],
+			['title' => D['link_images'],	'url' => '/images'],
+			['title' => D['link_texts'],	'url' => '/texts'],
+			['title' => D['link_apps'],		'url' => '/apps'],
+			['title' => D['link_games'],	'url' => '/games'],
+			['title' => D['link_about'],	'url' => '/about'],
+			['title' => D['link_search'],	'url' => '/search']
 		];
 
-		array_unshift($menu_items, ['url' => '/', 'title' => D['link_files']]);
+		array_unshift($menu_items, ['title' => D['link_files'], 'url' => '/']);
 
 		foreach($menu_items as $menu_item) { ?>
-		    <a href="<?= $menu_item['url']; ?>"><?= $menu_item['title']; ?></a>
+		    <a href="<?= e($menu_item['url']); ?>"><?= e($menu_item['title']); ?></a>
 		<? }
 	?>
 </div>

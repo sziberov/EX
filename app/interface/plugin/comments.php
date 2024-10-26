@@ -1,7 +1,7 @@
 <?
 	// Outer: navigation_items_per_page, root_object, level
 
-	$navigation_page = $_GET['page'] ?? 0;
+	$navigation_page = http_getArgument('page') ?? 0;
 	$navigation_items_per_page = $this->navigation_items_per_page ?? 24;
 
 	if(filter_var($navigation_page, FILTER_VALIDATE_INT) === false || $navigation_page < 0) {

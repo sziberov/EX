@@ -99,7 +99,7 @@
 		<div>
 			<div><?= D['string_editor']; ?></div>
 			<div>
-				<input name="editor" type="text" placeholder="<?= D['string_upload_id']; ?>" value="<?= $editor_id; ?>">
+				<input name="editor" type="text" placeholder="<?= D['string_upload_id']; ?>" value="<?= $editor_id ?: ''; ?>">
 			</div>
 		</div>
 		<div>
@@ -123,7 +123,7 @@
 				<label _check>
 					<input name="notify_friends" type="checkbox" <?= $notify_friends ? 'checked' : ''; ?>>
 					<div></div>
-					<div><?= D['string_friendship']; ?></div>
+					<div><?= D['string_friends']; ?></div>
 				</label>
 				<label _check>
 					<input name="notify_inclusions" type="checkbox" <?= $notify_inclusions ? 'checked' : ''; ?>>

@@ -17,14 +17,19 @@
 
 	$object->createVisitID();
 
-	$display_mode_id = $_GET['display_mode_id'] ?? $object->getSetting('display_mode_id');
-	$sort_mode_id = $_GET['sort_mode_id'] ?? 0;
+	if($object->type_id == 3) {
+		$display_mode_id = http_getArgument('display_mode_id') ?? $object->getSetting('display_mode_id') ?? 0;
+		$sort_mode_id = http_getArgument('sort_mode_id') ?? 0;
+	} else {
+		$display_mode_id = 0;
+		$sort_mode_id = 0;
+	}
 
 	if($object->type_id != 4) {
 		$hide_default_referrer = $object->type_id != 3 || $object->getSetting('hide_default_referrer');  // TODO: Create physical settings
 
 		try {
-			$referrer = new Object_($object->getValidReferrerID($_GET['referrer_id'] ?? null, !$hide_default_referrer));
+			$referrer = new Object_($object->getValidReferrerID(http_getArgument('referrer_id'), !$hide_default_referrer));
 		} catch(Exception $e) {}
 
 		$referred_title = $object->title.(!empty($referrer) ? ' - '.$referrer->title : '');
@@ -58,7 +63,7 @@
 				<? foreach($friends as $friend) {
 					$template = new Template('user');
 					$template->object = $friend;
-					$template->mutual = $object->areMutualFriends($friend->id);
+					$template->mutual = $object->areFriendOf($friend->id);
 					$template->time_display_mode_id = 0;
 					$template->render(true);
 				} ?>
@@ -81,7 +86,15 @@
 if($object->inclusions_count > 0) { ?>
 	<div _grid="h">
 		<form _grid="h">
-			<select name="display_mode_id" onchange="this.form.submit();">
+			<? foreach($_GET as $key => $value) {
+				if(
+					str_starts_with('sort_mode_id', $key) ||
+					str_starts_with('display_mode_id', $key)
+				)
+					continue; ?>
+				<input type="hidden" name="<?= $key; ?>" value="<?= $value; ?>">
+			<? } ?>
+			<select name="<?= http_getShortParameter('display_mode_id'); ?>" onchange="this.form.submit();">
 				<?
 					$dmid_options = ['cells', 'list'];
 
@@ -90,7 +103,7 @@ if($object->inclusions_count > 0) { ?>
 					<? }
 				?>
 			</select>
-			<select name="sort_mode_id" onchange="this.form.submit();">
+			<select name="<?= http_getShortParameter('sort_mode_id'); ?>" onchange="this.form.submit();">
 				<?
 					$smid_options = [
 						'inclusion_time',
@@ -109,11 +122,13 @@ if($object->inclusions_count > 0) { ?>
 				?>
 			</select>
 		</form>
-		<form _grid="h" action="/search">
-			<input size_="medium" name="query" type="text">
-			<input name="section_id" type="hidden" value="<?= $object->id; ?>">
-			<button type="submit"><?= D['button_search']; ?></button>
-		</form>
+		<? if($object->getSetting('display_search_bar')) { ?>
+			<form _grid="h" action="/search">
+				<input size_="medium" name="q" type="text">
+				<input name="section_id" type="hidden" value="<?= $object->id; ?>">
+				<button type="submit"><?= D['button_search']; ?></button>
+			</form>
+		<? } ?>
 	</div>
 <? }
 
@@ -128,7 +143,21 @@ if($object->inclusions_count > 0) { ?>
 		];
 	}
 
-	$template->search_condition = "JOIN links AS l ON l.from_id = o.id AND l.to_id = $object->id AND l.type_id = 4";
+	$template->search_condition = "JOIN links AS l ON l.from_id = o.id AND l.to_id = $object->id AND l.type_id = 4 ";
+
+	if($sort_mode_id == 0) {
+		$template->search_condition .= "ORDER BY l.creation_time DESC, l.id DESC";
+	}
+	if($sort_mode_id == 1) {
+		$template->search_condition .= "ORDER BY o.edit_time DESC, o.id DESC";
+	}
+	if($sort_mode_id == 2) {
+		$template->search_condition .= "ORDER BY o.creation_time DESC, o.id DESC";
+	}
+	if($sort_mode_id == 7) {
+		$template->search_condition .= "ORDER BY o.title DESC, o.id DESC";
+	}
+
 	$template->render(true);
 
 	include 'view.lists.php';

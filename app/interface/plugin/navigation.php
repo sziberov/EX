@@ -1,8 +1,8 @@
 <?
 	// Outer: page, items_per_page, items, buttons, rss_id
 
-	$page = $this->page;
-	$items_per_page = $this->items_per_page;
+	$page = $this->page ?? http_getArgument('page') ?? 0;
+	$items_per_page = $this->items_per_page ?? http_getArgument('items_per_page') ?? 24;
 	$items = $this->items;
 	$buttons = $this->buttons ?? 7;
 	$rss_id = $this->rss_id;
@@ -12,7 +12,7 @@
 ?>
 <form _flex="h" type="get">
 	<? if($page != $first_page) { ?>
-		<a _button icon_="to_first" href="?<?= http_build_query(array_merge($_GET, ['page' => $first_page])); ?>" title="<?= D['button_to_first_tooltip']; ?>"></a>
+		<a _button icon_="to_first" href="?<?= http_getShortParameterQuery('page', $first_page); ?>" title="<?= D['button_to_first_tooltip']; ?>"></a>
 	<? } else { ?>
 		<a _button icon_="to_first" disabled_></a>
 	<? } ?>
@@ -33,33 +33,33 @@
 			if($page_ == $page) {
 				if($page != $first_page) { ?>
 					<div fallback_>← Ctrl</div>
-					<a _button icon_="to_previous" data-navigate="previous" href="?<?= http_build_query(array_merge($_GET, ['page' => $page_-1])); ?>" title="<?= D['button_to_previous_tooltip']; ?>"></a>
+					<a _button icon_="to_previous" data-navigate="previous" href="?<?= http_getShortParameterQuery('page', $page_-1); ?>" title="<?= D['button_to_previous_tooltip']; ?>"></a>
 				<? } else { ?>
 					<a _button icon_="to_previous" disabled_></a>
 				<? } ?>
 				<b fallback_><?= $from_item.'..'.$to_item; ?></b>
 				<? if($page != $last_page) { ?>
-					<a _button icon_="to_next" data-navigate="next" href="?<?= http_build_query(array_merge($_GET, ['page' => $page_+1])); ?>" title="<?= D['button_to_next_tooltip']; ?>"></a>
+					<a _button icon_="to_next" data-navigate="next" href="?<?= http_getShortParameterQuery('page', $page_+1); ?>" title="<?= D['button_to_next_tooltip']; ?>"></a>
 					<div fallback_>Ctrl →</div>
 				<? } else { ?>
 					<a _button icon_="to_next" disabled_></a>
 				<? }
 			} else { ?>
-				<a href="?<?= http_build_query(array_merge($_GET, ['page' => $page_])); ?>"><?= $from_item.'..'.$to_item; ?></a>
+				<a href="?<?= http_getShortParameterQuery('page', $page_); ?>"><?= $from_item.'..'.$to_item; ?></a>
 			<? }
 		}
 	?>
 	<? if($page != $last_page) { ?>
-		<a _button icon_="to_last" href="?<?= http_build_query(array_merge($_GET, ['page' => $last_page])); ?>" title="<?= D['button_to_last_tooltip']; ?>"></a>
+		<a _button icon_="to_last" href="?<?= http_getShortParameterQuery('page', $last_page); ?>" title="<?= D['button_to_last_tooltip']; ?>"></a>
 	<? } else { ?>
 		<a _button icon_="to_last" disabled_></a>
 	<? } ?>
 	<? foreach($_GET as $key => $value) {
-		if($key == 'items_per_page')
+		if(str_starts_with('items_per_page', $key))
 			continue; ?>
 		<input type="hidden" name="<?= $key; ?>" value="<?= $value; ?>">
 	<? } ?>
-	<select fallback_ name="items_per_page" onchange="this.form.submit();" title="<?= D['select_items_per_page_tooltip']; ?>">
+	<select fallback_ name="<?= http_getShortParameter('items_per_page'); ?>" onchange="this.form.submit();" title="<?= D['select_items_per_page_tooltip']; ?>">
 		<?
 			$ipp_options = [4];
 

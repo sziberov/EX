@@ -52,32 +52,34 @@
 				?>
 			</div>
 			<div>
-				<button><?= D['button_remove']; ?></button>
+				<a _button href="/destroy_link/<?= $goa_link->id; ?>"><?= D['button_remove']; ?></a>
 			</div>
 		</div>
 	<? } ?>
-	<div switch_ data-switch="edit">
+	<form switch_ data-switch="edit" action="/create_link" method="get">
 		<div>
-			<input type="text" list="groups" placeholder="<?= D['string_object_id']; ?>">
+			<input type="text" name="from_id" list="groups" placeholder="<?= D['string_object_id']; ?>" required>
 			<datalist id="groups">
 				<? foreach(Session::getUser()->user_group_access_links as $uga_link) { ?>
 					<option value="<?= $uga_link->to->id; ?>"><?= $uga_link->to->title; ?></option>
 				<? } ?>
 			</datalist>
+			<input type="hidden" name="to_id" value="<?= $object->id; ?>">
+			<input type="hidden" name="type_id" value="1">
 		</div>
 		<div>
 			<select name="access_level_id">
 				<? for($i = 0; $i < 6; $i++) { ?>
-					<option <?= $i == 2 ? 'selected' : ''; ?>><?= D['string_access_level_'.$i]; ?></option>
+					<option value="<?= $i; ?>" <?= $i == 2 ? 'selected' : ''; ?>><?= D['string_access_level_'.$i]; ?></option>
 				<? } ?>
 			</select>
 		</div>
 		<div></div>
 		<div>
-			<button><?= D['button_save']; ?></button>
-			<button data-switch-ref="edit"><?= D['button_cancel']; ?></button>
+			<button type="submit"><?= D['button_save']; ?></button>
+			<button type="button" data-switch-ref="edit"><?= D['button_cancel']; ?></button>
 		</div>
-	</div>
+	</form>
 </div>
 <div _grid="h spaced">
 	<div>
