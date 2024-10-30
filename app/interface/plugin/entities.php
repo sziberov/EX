@@ -24,9 +24,12 @@
 
 		$search_settings[] = $navigation_items_per_page;
 		$search_settings[] = $navigation_items_per_page*$navigation_page;
+
+		$search = Entity::search(...$search_settings);
+	} else {
+		$search = Entity::get(...$search_settings);
 	}
 
-	$search = Entity::search(...$search_settings);
 	$entities = $search['entities'];
 	$count = $search['count'];
 	$template_title = $this->template_title ?? 'objects-list';

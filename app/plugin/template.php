@@ -51,125 +51,51 @@
 		}
 	}
 
-	function template_parseBB($string) {
+	function template_parseBB($string, $clear = false) {
 		$codes = [
-			[
-				'pattern' => '/\n/',
-				'replacement' => '<br>'
-			],
-			[
-				'pattern' => '/\t/',
-				'replacement' => '&emsp;'
-			],
-			[
-				'pattern' => '/\[b\](.*?)\[\/b\]/s',
-				'replacement' => '<b>$1</b>'
-			],
-			[
-				'pattern' => '/\[i\](.*?)\[\/i\]/s',
-				'replacement' => '<i>$1</i>'
-			],
-			[
-				'pattern' => '/\[u\](.*?)\[\/u\]/s',
-				'replacement' => '<u>$1</u>'
-			],
-			[
-				'pattern' => '/\[s\](.*?)\[\/s\]/s',
-				'replacement' => '<s>$1</s>'
-			],
-			[
-				'pattern' => '/\[sup\](.*?)\[\/sup\]/s',
-				'replacement' => '<sup>$1</sup>'
-			],
-			[
-				'pattern' => '/\[sub\](.*?)\[\/sub\]/s',
-				'replacement' => '<sub>$1</sub>'
-			],
-			[
-				'pattern' => '/\[url=(.*?)\](.*?)\[\/url\]/s',
-				'replacement' => '<a href="$1">$2</a>'
-			],
-			[
-				'pattern' => '/\[color=(.*?)\](.*?)\[\/color\]/s',
-				'replacement' => '<span style="color: $1;">$2</span>'
-			],
-			/*
-			[
-				'pattern' => '/\[lang=(.*?)\](.*?)\[\/lang\]/s',
-				'replacement' => '$2'
-			],
-			*/
-			[
-				'pattern' => '/\[code\](.*?)\[\/code\]/s',
-				'replacement' => '<pre>$1</pre>'
-			],
-			[
-				'pattern' => '/\[left\](.*?)\[\/left\]/s',
-				'replacement' => '<div align="left">$1</div>'
-			],
-			[
-				'pattern' => '/\[center\](.*?)\[\/center\]/s',
-				'replacement' => '<div align="center">$1</div>'
-			],
-			[
-				'pattern' => '/\[right\](.*?)\[\/right\]/s',
-				'replacement' => '<div align="right">$1</div>'
-			],
-			[
-				'pattern' => '/\[just\](.*?)\[\/just\]/s',
-				'replacement' => '<div align="justify">$1</div>'
-			]
+			'/\n/' => '<br>',
+			'/\t/' => '&emsp;',
+			'/\[b\](.*?)\[\/b\]/s' => '<b>$1</b>',
+			'/\[i\](.*?)\[\/i\]/s' => '<i>$1</i>',
+			'/\[u\](.*?)\[\/u\]/s' => '<u>$1</u>',
+			'/\[s\](.*?)\[\/s\]/s' => '<s>$1</s>',
+			'/\[sup\](.*?)\[\/sup\]/s' => '<sup>$1</sup>',
+			'/\[sub\](.*?)\[\/sub\]/s' => '<sub>$1</sub>',
+			'/\[url=(.*?)\](.*?)\[\/url\]/s' => '<a href="$1">$2</a>',
+			'/\[color=(.*?)\](.*?)\[\/color\]/s' => '<span style="color: $1;">$2</span>',
+			'/\[left\](.*?)\[\/left\]/s' => '<div align="left">$1</div>',
+			'/\[center\](.*?)\[\/center\]/s' => '<div align="center">$1</div>',
+			'/\[right\](.*?)\[\/right\]/s' => '<div align="right">$1</div>',
+			'/\[just\](.*?)\[\/just\]/s' => '<div align="justify">$1</div>'
 		];
 
-		global $language;
+		$string = preg_replace(['/^(\[\w+(?:=[^\]]+)?\])[\r\n]+/m', '/[\r\n]+(\[\/\w+\][\r\n]*?)$/m'], '$1', $string);  // Trim line breaks after opening and before closing tags at start of lines
 
-		$string = preg_replace_callback('/\[lang=(.*?)\](.*?)\[\/lang\]/s', function($matches) use ($language) {
-			$languages = explode('|', $matches[1]);
-			$text = $matches[2];
+		$code_blocks = [];
+		$string = preg_replace_callback('/\[code\](.*?)\[\/code\]/s', function($matches) use ($clear, &$code_blocks) {  // Hide code blocks from main replacer
+			$code_marker = '<!--code_block_'.uniqid().'-->';
+			$code_block = !$clear ? '<pre>'.$matches[1].'</pre>' : $matches[1];
+			$code_blocks[$code_marker] = $code_block;
 
-			return in_array($language, $languages) ? $text : '';
+			return $code_marker;
 		}, $string);
 
-		foreach($codes as $code) {
-			$string = preg_replace($code['pattern'], $code['replacement'], $string);
-		}
+		global $language;
+		$string = preg_replace_callback('/\[lang=(.*?)\](.*?)\[\/lang\]/s', function($matches) use ($language) {  // Use current language
+			$languages = explode('|', $matches[1]);
+			$text = in_array($language, $languages) ? $matches[2] : '';
+
+			return $text;
+		}, $string);
+
+		$string = preg_replace(array_keys($codes), !$clear ? array_values($codes) : '$1', $string);  // Main replacer
+		$string = strtr($string, $code_blocks);  // Show code blocks
 
 		return $string;
 	}
 
 	function template_clearBB($string) {
-		$codes = [
-			'/\n/',
-			'/\t/',
-			'/\[b\](.*?)\[\/b\]/s',
-			'/\[i\](.*?)\[\/i\]/s',
-			'/\[u\](.*?)\[\/u\]/s',
-			'/\[s\](.*?)\[\/s\]/s',
-			'/\[sup\](.*?)\[\/sup\]/s',
-			'/\[sub\](.*?)\[\/sub\]/s',
-			'/\[url=(?:.*?)\](.*?)\[\/url\]/s',
-			'/\[color=(?:.*?)\](.*?)\[\/color\]/s',
-			'/\[code\](.*?)\[\/code\]/s',
-			'/\[left\](.*?)\[\/left\]/s',
-			'/\[center\](.*?)\[\/center\]/s',
-			'/\[right\](.*?)\[\/right\]/s',
-			'/\[just\](.*?)\[\/just\]/s'
-		];
-
-		global $language;
-
-		$string = preg_replace_callback('/\[lang=(.*?)\](.*?)\[\/lang\]/s', function($matches) use ($language) {
-			$languages = explode('|', $matches[1]);
-			$text = $matches[2];
-
-			return in_array($language, $languages) ? $text : '';
-		}, $string);
-
-		foreach($codes as $pattern) {
-			$string = preg_replace($pattern, '$1', $string);
-		}
-
-		return $string;
+		return template_parseBB($string, true);
 	}
 
 	function template_formatTime($time, $date_only = false) {

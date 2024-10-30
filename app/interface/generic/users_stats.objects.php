@@ -29,17 +29,23 @@
 					?>
 				</div>
 			</div>
-			<div><?= $object->friends_count; ?></div>
-			<div><?= $object->archive_count; ?></div>
+			<div><?= template_formatSize($object->friends_count); ?></div>
+			<div><?= template_formatSize($object->archive_count); ?></div>
 			<div><?= template_formatSize($object->originals_count); ?></div>
 			<div><?= template_formatSize($object->originals_size); ?></div>
 			<div><?= template_formatSize($object->duplicates_count); ?></div>
 			<div><?= template_formatSize($object->duplicates_size); ?></div>
 			<div><?= template_formatTime($object->creation_time); ?></div>
 			<div><?= template_formatTime($object->edit_time); ?></div>
-			<div><?= $object->hits_count; ?></div>
-			<div><?= $object->hosts_count; ?></div>
-			<div><?= $object->guests_count; ?></div>
+			<div>
+				<? if($object->hits_count > 0) { ?>
+					<a href="/visits/<?= $object->id; ?>"><?= template_formatSize($object->hits_count); ?></a>
+				<? } else {
+					echo 0;
+				} ?>
+			</div>
+			<div><?= template_formatSize($object->hosts_count); ?></div>
+			<div><?= template_formatSize($object->guests_count); ?></div>
 		</div>
 	<? } ?>
 </div>

@@ -69,6 +69,10 @@ ul {
 	list-style: none;
 }
 
+pre {
+	display: inline;
+}
+
 a {
 	color: var(--color-blue);
 	text-decoration: none;
@@ -1190,15 +1194,23 @@ ul[_cells] li [_properties] {
 	justify-content: end;
 
 	padding: 12px 6px;
+
+	text-align: right;
+}
+
+[_table~="list"] > * > [header_] {
+	-font-weight: bold;
 }
 
 [_table~="list"] > * > :first-child {
 	padding-left: 0;
 }
 
-[_table~="list"] > * > :first-child:not([fallback_]),
+[_table~="list"] > * > :first-child:not([header_]):not([fallback_]),
 [_table~="list"] > * > :first-child[fallback_] + div {
 	justify-content: start;
+
+	text-align: left;
 }
 
 [_table~="list"] > * > :last-child {

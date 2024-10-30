@@ -20,20 +20,20 @@
 				<!--<div><?= $object->recommendations_count; ?></div>-->
 				<div>
 					<? if($object->self_inclusions_count > 0) { ?>
-						<a href="/view_inclusions/<?= $object->id; ?>"><?= $object->self_inclusions_count; ?></a>
+						<a href="/view_inclusions/<?= $object->id; ?>"><?= template_formatSize($object->self_inclusions_count); ?></a>
 					<? } else {
 						echo 0;
 					} ?>
 				</div>
 				<div>
 					<? if($object->hits_count > 0) { ?>
-						<a href="/visits/<?= $object->id; ?>"><?= $object->hits_count; ?></a>
+						<a href="/visits/<?= $object->id; ?>"><?= template_formatSize($object->hits_count); ?></a>
 					<? } else {
 						echo 0;
 					} ?>
 				</div>
-				<div><?= $object->hosts_count; ?></div>
-				<div><?= $object->guests_count; ?></div>
+				<div><?= template_formatSize($object->hosts_count); ?></div>
+				<div><?= template_formatSize($object->guests_count); ?></div>
 			<? } else { ?>
 				<div><?= D['string_no_access_to_object'].' '.$object->id; ?></div>
 			<? } ?>

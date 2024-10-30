@@ -41,7 +41,7 @@
 				$entities[$offset++] = $row;
 			}
 
-			$condition = preg_replace('/(ORDER BY .*)$/i', '', $condition);
+			$condition = preg_replace('/ORDER\sBY[\s\w,.()-+]*?$/is', '', $condition);
 			$sql = "SELECT DISTINCT COUNT(*) OVER () FROM $entity AS $alias $condition";
 			$query = $connection->query($sql);
 			$count = 0;
@@ -53,23 +53,29 @@
 			return ['entities' => $entities, 'count' => $count];
 		}
 
-		public static function get($entity, $class, $condition = null) {
-			if(!preg_match('/^[a-zA-Z0-9_]+$/', $entity) || !class_exists($class)) {
+		public static function get($entity, $class, $fields = null, $condition = null) {
+			if(!preg_match('/^([a-zA-Z0-9_]+)(?:\s+([a-zA-Z0-9_]+))?$/', $entity, $matches) || !class_exists($class)) {
 				throw new InvalidArgumentException('Invalid entity/class title');
 			}
 
 			global $connection;
 
-			$alias = self::generateAlias($entity);
+			$entity = $matches[1];
+			$alias = isset($matches[2]) ? $matches[2] : self::generateAlias($entity);
+			$fields = !empty($fields) ? $fields : "$alias.*";
 			$condition ??= '';
-			$sql = "SELECT $alias.id FROM $entity AS $alias $condition";
+			$sql = "SELECT $fields FROM $entity AS $alias $condition";
 			$query = $connection->query($sql);
-			$entities = array_map(
-				fn($row) => new $class($row['id']),
-				$query->fetch_all(MYSQLI_ASSOC)
-			);
+			$entities = [];
+			$offset = 0;
 
-			return $entities;
+			while($row = $query->fetch_object($class)) {
+				$entities[$offset++] = $row;
+			}
+
+			$count = $query->num_rows;
+
+			return ['entities' => $entities, 'count' => $count];
 		}
 
 		protected $fields_ = [];
