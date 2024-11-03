@@ -4,7 +4,7 @@ $(() => {
 		static viewURL = '/view';
 
 		static menu(URL) {
-			$(this.selector+` [__menu] a`).removeAttr('current_').filter(`[href="${URL}"]`).attr('current_', '');
+			$(this.selector+` nav a`).removeAttr('current_').filter(`[href="${URL}"]`).attr('current_', '');
 		}
 
 		static get(element) {

@@ -19,7 +19,7 @@
 				<div _flex="v left">
 					<div _flex="h">
 						<input name="login" type="text" value="<?= $login; ?>">
-						<button><?= D['button_check']; ?></button>
+						<button type="button"><?= D['button_check']; ?></button>
 					</div>
 					<!--
 					<div fallback_><?= D['error_login_is_already_in_use']; ?></div>
@@ -178,7 +178,7 @@
 	</form>
 	<form _flex="v center" action="/destroy/<?= Session::getUserID(); ?>" method="post" onsubmit="return confirm('<?= D['string_account_deletion_confirmation']; ?>');">
 		<div _title>&nbsp;</div>
-		<div><?= template_parseBB(D['string_account_deletion']); ?></div>
-		<button type="submit"><?= D['button_delete']; ?></button>
+		<small><?= template_parseBB(D['string_account_deletion']); ?></small>
+		<button small_ type="submit"><?= D['button_delete']; ?></button>
 	</form>
 </div>

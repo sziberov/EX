@@ -1,11 +1,11 @@
-<div _table="list" wide_ switch_ style="--columns: minmax(192px, auto) repeat(2, minmax(96px, max-content));" data-sync="files_list">
+<div _table="list" small_ switch_ style="--columns: minmax(192px, auto) repeat(2, minmax(96px, max-content));" data-sync="files_list">
 	<div header_>
 		<div>
 			<div _grid="v stacked">
 				<select data-sync-ref="list">
 					<option value="files_list"><?= D['string_files']; ?></option>
 				</select>
-				<div _grid="h" style="font-weight: normal;">
+				<small _grid="h" style="font-weight: normal;">
 					<div><?= D['string_count']; ?><div _badge><?= $object->files_count; ?></div></div>
 					<div><?= D['string_size']; ?><div _badge><?= template_formatSize($object->files_size); ?></div></div>
 					<? if($object->files_length > 0) { ?>
@@ -16,7 +16,7 @@
 						<a href="/playlist/<?= $object->id; ?>.m3u"><b><?= D['link_play_list']; ?></b></a>
 						<a href="/playlist/<?= $object->id; ?>.xspf">XSPF</a>
 					<? } ?>
-				</div>
+				</small>
 			</div>
 		</div>
 		<? if($object->files_length > 0) { ?>
@@ -53,7 +53,7 @@
 			<div>
 				<div _icon="floppy"></div>
 				<div _grid="v stacked">
-					<div fallback_><?= $i; ?></div>
+					<small fallback_><?= $i; ?></small>
 					<a href="/get/<?= $upload->id; ?>" title="<?= e($file_title); ?>"><?= $file_title_truncated.(strlen($extension) > 0 ? '<div _badge>.'.$extension.'</div>' : ''); ?></a>
 				</div>
 			</div>
@@ -65,7 +65,7 @@
 					<button onclick="Viewer.toggleClose(this);"><?= D['button_play']/*.'<div _badge>currentPlaybackTime</div>'*/; ?></button>
 				<? } ?>
 			</div>
-			<div _flex="v right" fallback_>
+			<small _flex="v right" fallback_>
 				<b><?= template_formatSize($file->size); ?></b>
 				<div _flex="v right stacked">
 					<div><?= template_formatTime($file->edit_time); ?></div>
@@ -100,7 +100,7 @@
 				<? } else { ?>
 					<div>Файл недоступен</div>
 				<? } ?>
-			</div>
+			</small>
 		</div>
 	<? $i++; } ?>
 </div>

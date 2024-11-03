@@ -16,7 +16,7 @@
 		unset($types[9]);
 	}
 ?>
-<div _table="list" wide_ style="--columns: repeat(4, minmax(96px, auto));">
+<div _table="list" small_ style="--columns: repeat(4, minmax(96px, auto));">
 	<div header_>
 		<div><?= D['string_section']; ?></div>
 		<div><?= D['string_inclusions_count']; ?></div>

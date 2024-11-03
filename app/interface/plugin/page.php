@@ -19,7 +19,7 @@
 
 	if(!empty($page_content)) { ?>
 		<!DOCTYPE html>
-		<html>
+		<html lang="<?= $language; ?>">
 			<?
 				include 'head.php';
 				include 'body.php';

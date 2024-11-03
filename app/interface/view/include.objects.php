@@ -6,8 +6,8 @@
 		?>
 			<li>
 				<div _grid="h">
-					<label _check <?= $object->access_level_id == 0 ? 'disabled_' : ''; ?>>
-						<input name="object_<?= $object->id; ?>" type="checkbox" <?= false ? 'checked' : ''; ?>>
+					<label _check>
+						<input type="checkbox" name="objects_ids[]" value="<?= $object->id; ?>" <?= $link->included ? 'checked' : ''; ?>>
 						<div></div>
 					</label>
 					<? if($object->access_level_id > 0) {

@@ -19,7 +19,7 @@
 
 	if($object->type_id == 3) {
 		$display_mode_id = http_getArgument('display_mode_id') ?? $object->getSetting('display_mode_id') ?? 0;
-		$sort_mode_id = http_getArgument('sort_mode_id') ?? 0;
+		$sort_mode_id = http_getArgument('sort_mode_id') ?? $object->getSetting('sort_mode_id') ?? 0;
 	} else {
 		$display_mode_id = 0;
 		$sort_mode_id = 0;
@@ -136,8 +136,9 @@ if($object->inclusions_count > 0) { ?>
 
 	if($object->type_id != 2) {
 		$template->navigation_mode_id = 1;
+		$template->navigation_items_per_page = $object->getSetting('display_amount') ?: 24;
 		$template->navigation_rss_id = $object->id;
-		$template->template_title = $display_mode_id == 0 ? 'objects-cells' : 'objects-list';
+		$template->template_title = 'objects-'.($display_mode_id == 0 ? 'cells' : 'list');
 		$template->template_namespace = [
 			'referrer_id' => $object->id
 		];

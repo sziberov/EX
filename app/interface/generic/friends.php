@@ -6,7 +6,7 @@
 	$page_title = 'Друзья';
 ?>
 <div _title>Друзья</div>
-<div _table="list" wide_ style="--columns: repeat(5, minmax(96px, auto));">
+<div _table="list" small_ style="--columns: repeat(5, minmax(96px, auto));">
 	<div header_>
 		<div>Пользователь</div>
 		<div>Добавлен</div>

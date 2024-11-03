@@ -1,9 +1,9 @@
 <header>
-	<div __section>
+	<section>
 		<? include 'menus.php'; ?>
-	</div>
+	</section>
 	<? if($page == '') { ?>
-		<div __section>
+		<section>
 			<div _grid="padded">
 				<div _grid="v">
 					<div _title="small"><?= template_parseBB(D['string_shared_objects_title']); ?></div>
@@ -17,13 +17,13 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</section>
 		<? if(rand(0, 1)) { ?>
-			<div __section role="ad" aria-label="advertisement">
+			<section role="ad" aria-label="advertisement">
 				<a __image href="/ad/1">
-					<img src="/app/image/header_image.png">
+					<img src="/app/image/header_image.webp">
 				</a>
-			</div>
+			</section>
 		<? } ?>
 	<? } ?>
 </header>

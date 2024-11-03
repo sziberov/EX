@@ -7,7 +7,7 @@
 	$page_title = D['title_notifications'];
 ?>
 <div _title><?= D['title_notifications']; ?></div>
-<div _table="list" wide_ style="--columns: repeat(4, minmax(96px, auto));">
+<div _table="list" small_ style="--columns: repeat(4, minmax(96px, auto));">
 	<div header_>
 		<div><?= D['string_event']; ?></div>
 		<div><?= D['string_object']; ?></div>

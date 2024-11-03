@@ -1,4 +1,4 @@
-<div _table="list" wide_ style="--columns: minmax(48px, max-content) repeat(8, minmax(96px, auto));">
+<div _table="list" small_ style="--columns: minmax(48px, max-content) repeat(8, minmax(96px, auto));">
 	<div header_>
 		<div fallback_></div>
 		<div><?= D['string_referrer_url']; ?></div>
@@ -28,7 +28,7 @@
 		$url = e($visit->referrer_url ?? '');
 	?>
 		<div>
-			<div fallback_><?= $k+1; ?></div>
+			<small fallback_><?= $k+1; ?></small>
 			<div>
 				<a _description="straight" href="<?= $url; ?>"><?= $url; ?></a>
 			</div>
@@ -62,7 +62,7 @@
 				<?= $visit->hosts_count; ?> /
 				<?= $visit->guests_count; ?>
 			</div>
-			<div fallback_>
+			<small fallback_>
 				<?
 					$hits_ip_address = $allow_advanced_control && !empty($visit->hits_ip_address) ? $visit->hits_ip_address.', ' : '';
 					$hosts_ip_address = $allow_advanced_control && !empty($visit->hosts_ip_address) ? $visit->hosts_ip_address.', ' : '';
@@ -86,7 +86,7 @@
 
 					echo implode('<br><br>', $redaction);
 				?>
-			</div>
+			</small>
 		</div>
 	<? } ?>
 </div>

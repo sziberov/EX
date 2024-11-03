@@ -1,4 +1,4 @@
-<div __menu>
+<nav>
 	<div __logo></div>
 	<?
 		$menu_items = Session::set() && Session::getSetting('use_personal_menu') ? Session::getMenuItems() : null;
@@ -19,8 +19,8 @@
 		    <a href="<?= e($menu_item['url']); ?>"><?= e($menu_item['title']); ?></a>
 		<? }
 	?>
-</div>
-<div __menu>
+</nav>
+<nav>
 	<?
 		if(Session::set()) {
 			$template = new Template('user');
@@ -36,4 +36,4 @@
 			<a href="/login"><?= D['link_login']; ?></a>
 		<? }
 	?>
-</div>
+</nav>

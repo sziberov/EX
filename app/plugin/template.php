@@ -83,7 +83,7 @@
 		global $language;
 		$string = preg_replace_callback('/\[lang=(.*?)\](.*?)\[\/lang\]/s', function($matches) use ($language) {  // Use current language
 			$languages = explode('|', $matches[1]);
-			$text = in_array($language, $languages) ? $matches[2] : '';
+			$text = in_array($language, $languages) ? '<span lang="'.$language.'">'.$matches[2].'</span>' : '';
 
 			return $text;
 		}, $string);

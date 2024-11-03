@@ -55,3 +55,51 @@ SELECT
 FROM objects AS o
 LEFT JOIN visits AS v ON v.object_id = o.id
 GROUP BY o.id
+
+-- most_visited
+
+SELECT
+	o.id AS object_id,
+	SUM(DATE(v.creation_time) = CURDATE()) AS today_count,
+	SUM(DATE(v.creation_time) = CURDATE()-INTERVAL 1 DAY) AS yesterday_count,
+	SUM(1) AS count
+FROM objects AS o
+JOIN visits AS v ON v.object_id = o.id
+GROUP BY o.id
+
+-- most_commented
+
+SELECT
+	o.id AS object_id,
+	SUM(DATE(l.creation_time) = CURDATE()) AS today_count,
+	SUM(DATE(l.creation_time) = CURDATE()-INTERVAL 1 DAY) AS yesterday_count,
+	SUM(1) AS count
+FROM objects AS o
+JOIN links AS l ON l.to_id = o.id AND l.type_id = 5
+GROUP BY o.id
+
+-- most_recommended
+
+SELECT
+	o.id AS object_id,
+	SUM(DATE(l.creation_time) = CURDATE()) AS today_count,
+	SUM(DATE(l.creation_time) = CURDATE()-INTERVAL 1 DAY) AS yesterday_count,
+	SUM(1) AS count
+FROM objects AS o
+JOIN links AS l ON l.from_id = o.id AND l.type_id = 6
+GROUP BY o.id
+
+-- most
+
+SELECT
+	o.id AS object_id,
+	COALESCE(v.today_count, 0)+COALESCE(c.today_count, 0)+COALESCE(r.today_count, 0) AS today_count,
+	COALESCE(v.yesterday_count, 0)+COALESCE(c.yesterday_count, 0)+COALESCE(r.yesterday_count, 0) AS yesterday_count,
+	COALESCE(v.count, 0)+COALESCE(c.count, 0)+COALESCE(r.count, 0) AS count
+FROM objects AS o
+LEFT JOIN most_visited AS v ON v.object_id = o.id
+LEFT JOIN most_commented AS c ON c.object_id = o.id
+LEFT JOIN most_recommended AS r ON r.object_id = o.id
+WHERE v.object_id IS NOT NULL
+   OR c.object_id IS NOT NULL
+   OR r.object_id IS NOT NULL

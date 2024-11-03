@@ -62,7 +62,7 @@
 		</div>
 	</div>
 </div>
-<div _table="list" wide_ style="--columns: repeat(4, minmax(96px, auto));">
+<div _table="list" small_ style="--columns: repeat(4, minmax(96px, auto));">
 	<div header_>
 		<div>Файлы</div>
 		<div></div>

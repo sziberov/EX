@@ -87,7 +87,7 @@
 	</div>
 </div>
 <!--
-<div _table="list" wide_ style="--columns: repeat(6, minmax(96px, auto));">
+<div _table="list" small_ style="--columns: repeat(6, minmax(96px, auto));">
 	<div header_>
 		<div>Шаблон</div>
 		<div></div>

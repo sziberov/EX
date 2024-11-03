@@ -23,9 +23,9 @@
 		<a <?= $non_mutual ? 'fallback_' : ''; ?> href="<?= $user_url; ?>"><?= ($online ? '<u>'.e($user->title).'</u>' : e($user->title)).($notifications_count > 0 ? "<div _badge>$notifications_count</div>" : ''); ?></a>
 	<? } ?>
 	<? if($time_display_mode_id >= 1 && !empty($primary_time)) { ?>
-		<div><?= template_formatTime($primary_time); ?></div>
+		<small><?= template_formatTime($primary_time); ?></small>
 	<? } ?>
 	<? if($time_display_mode_id >= 2 && !empty($secondary_time) && $secondary_time != $primary_time) { ?>
-		<div fallback_><?= template_formatTime($secondary_time); ?></div>
+		<small fallback_><?= template_formatTime($secondary_time); ?></small>
 	<? } ?>
 </div>

@@ -2,7 +2,7 @@
 	$page_title = D['title_menu_items'];
 ?>
 <div _title><?= D['title_menu_items']; ?></div>
-<div _table="list" wide_ style="--columns: repeat(3, minmax(96px, auto));">
+<div _table="list" small_ style="--columns: repeat(3, minmax(96px, auto));">
 	<div header_>
 		<div>Пункт</div>
 		<div>URL</div>

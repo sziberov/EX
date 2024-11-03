@@ -1,5 +1,5 @@
 <footer>
-	<div __section>
+	<section>
 		<?
 			$allow_advanced_control = Session::getSetting('allow_advanced_control');
 
@@ -16,8 +16,8 @@
 				<a href="/claims"><?= D['link_claims']; ?></a>
 			<? }
 		?>
-	</div>
-	<div __section>
+	</section>
+	<section>
 		<div>© <?= D['string_app_title']; ?></div>
 		<a href="/contacts"><?= D['link_contacts']; ?></a>
 		<a href="/copyright"><?= D['link_copyright']; ?></a>
@@ -28,5 +28,5 @@
 				<? } ?>
 			</select>
 		</form>
-	</div>
+	</section>
 </footer>

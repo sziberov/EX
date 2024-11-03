@@ -1,5 +1,5 @@
 <? if(count($entities) > 0) { ?>
-	<div _grid="list">
+	<aside _grid="list">
 		<div _title="small" header_><?= $title; ?></div>
 		<? foreach($entities as $object) {
 			if($object->access_level_id > 0) {
@@ -11,5 +11,5 @@
 			}
 		} ?>
 		<a href="/most<?= $most_id == 0 ? '' : '/'.$most_id; ?>" footer_><b><?= D['link_complete_list']; ?></b></a>
-	</div>
+	</aside>
 <? } ?>

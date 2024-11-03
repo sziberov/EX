@@ -22,7 +22,7 @@
 		return include 'plugin/error.php';
 	}
 
-	$user = Session::getUser();
+	$user_id = Session::getUserID();
 	$page_title = $object->title.' - '.D['title_include'];
 
 	$template = new Template('referrer');
@@ -30,19 +30,23 @@
 	$template->render(true);
 ?>
 <div _title><?= D['title_include']; ?></div>
-<?
-	$template = new Template('entities');
-	$template->search_entity = 'links';
-	$template->search_class = 'Link';
-	$template->search_condition = "JOIN objects AS o ON o.id = l.from_id WHERE l.type_id = 10 AND l.user_id = $user->id
-								   GROUP BY o.id, l.id
-								   ORDER BY l.creation_time DESC, l.id DESC";
-	$template->template_title = 'view/include.objects';
-	$template->render(true);
-?>
-<div _grid="h">
-	<a _button href="/<?= $object->id; ?>"><?= D['button_save']; ?></a>
-	<a _button href="/<?= $object->id; ?>"><?= D['button_cancel']; ?></a>
-	<button wide_><?= D['button_select_all']; ?></button>
-	<button wide_><?= D['button_clear_all']; ?></button>
-</div>
+<form _grid="v" method="post">
+	<?
+		$template = new Template('entities');
+		$template->search_entity = 'links';
+		$template->search_class = 'Link';
+		$template->search_fields = 'l.*, COUNT(l_1.id) > 0 AS included';
+		$template->search_condition = "LEFT JOIN links AS l_1 ON l_1.from_id = l.from_id AND l_1.to_id = $object->id AND l_1.user_id = l.user_id AND l_1.type_id = 4
+									   WHERE l.user_id = $user_id AND l.type_id = 10
+									   GROUP BY l.id
+									   ORDER BY l.creation_time DESC, l.id DESC";
+		$template->template_title = 'view/include.objects';
+		$template->render(true);
+	?>
+	<div _grid="h">
+		<button type="submit"><?= D['button_save']; ?></button>
+		<a _button href="/<?= $object->id; ?>"><?= D['button_cancel']; ?></a>
+		<button type="button" small_ onclick="$('form').find('input[type=&quot;checkbox&quot;]').prop('checked', true);"><?= D['button_select_all']; ?></button>
+		<button type="button" small_ onclick="$('form').find('input[type=&quot;checkbox&quot;]').prop('checked', false);"><?= D['button_clear_all']; ?></button>
+	</div>
+</form>

@@ -22,7 +22,7 @@
 		$navigation_template->items = $count;
 		$navigation_template->render(true);
 	?>
-		<div _grid="list">
+		<div _grid="list" small_>
 	<? }
 		foreach($objects as $object) {
 			$object_url = '/view_comments/'.$object->id;
@@ -30,14 +30,15 @@
 			if($object->access_level_id > 0) { ?>
 				<div _grid="v" style="padding-left: <?= $level*48; ?>px;">
 					<? include 'comments.post.php'; ?>
-					<? /*if(Session::set() && isset($object->user) && Session::getSetting('login') == $object->user->login) { ?>
-						<div _grid="h">
-							<button>Ответить</button>
-							<a _button href="/edit/<?= $object->comment_id; ?>"><?= D['button_edit']; ?></a>
-							<button><?= D['button_delete']; ?></button>
-							<button><?= D['button_remove']; ?></button>
-						</div>
-					<? }*/ ?>
+					<div _grid="h">
+						<? if($object->access_level_id >= 2) { ?>
+							<a _button href="/create?to_id=<?= $object->id; ?>&type_id=3,5"><?= D['button_reply']; ?></a>
+						<? } ?>
+						<? if($object->access_level_id >= 4) { ?>
+							<a _button href="/edit/<?= $object->id; ?>"><?= D['button_edit']; ?></a>
+						<? } ?>
+						<a _button href="/destroy_link/<?= $object->id; ?>"><?= D['button_remove']; ?></a>
+					</div>
 				</div>
 				<? if($object->comments_count > 0) {
 					$template = new Template('comments');

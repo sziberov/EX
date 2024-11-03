@@ -1,4 +1,4 @@
-<div _table="list" wide_ style="--columns: minmax(0, max-content) repeat(7, minmax(96px, auto));">
+<div _table="list" small_ style="--columns: minmax(0, max-content) repeat(7, minmax(96px, auto));">
 	<div header_>
 		<div header_></div>
 		<div><?= D['string_today']; ?></div>
@@ -28,7 +28,7 @@
 			<div><?= template_formatSize($metric->week_count); ?></div>
 			<div><?= template_formatSize($metric->month_count); ?></div>
 			<div><?= template_formatSize($metric->count); ?></div>
-			<div fallback_><?= !empty($metric->creation_time) ? template_formatTime($metric->creation_time) : ''; ?></div>
+			<small fallback_><?= !empty($metric->creation_time) ? template_formatTime($metric->creation_time) : ''; ?></small>
 		</div>
 	<? } ?>
 </div>

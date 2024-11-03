@@ -2,7 +2,7 @@
 	let objectID = <?= $object->id; ?>;
 </script>
 <script src="/app/plugin/uploads.js"></script>
-<div _table="list" wide_ switch_ id="uploads" style="--columns: repeat(4, minmax(96px, auto));" data-sync="files_list">
+<div _table="list" small_ switch_ id="uploads" style="--columns: repeat(4, minmax(96px, auto));" data-sync="files_list">
 	<div header_>
 		<div>
 			<select data-sync-ref="list">
@@ -52,7 +52,7 @@
 		<input type="file" id="upload" name="files[]" multiple="multiple">
 		<a><u><?= D['link_upload']; ?></u></a>
 	</label>
-	<div fallback_>
+	<small fallback_>
 		<?
 			$file_servers = [];
 
@@ -62,12 +62,12 @@
 
 			echo implode(', ', $file_servers);
 		?>
-	</div>
-	<div fallback_>
+	</small>
+	<small fallback_>
 		<? if($object->type_id == 3) { ?>
 			Для создания фотоальбома используйте <a href="/upload/<?= $object->id; ?>"><u>загрузку файлов в раздел</u></a>
 		<? } else { ?>
 			Для загрузки нескольких файлов используйте Ctrl и Shift при выделении
 		<? } ?>
-	</div>
+	</small>
 </div>

@@ -2,7 +2,7 @@
 	$page_title = D['title_banners'];
 ?>
 <div _title><?= D['title_banners']; ?></div>
-<div _table="list" wide_ style="--columns: repeat(8, minmax(96px, auto));">
+<div _table="list" small_ style="--columns: repeat(8, minmax(96px, auto));">
 	<div header_>
 		<div><?= D['string_banner']; ?></div>
 		<div>URL</div>
@@ -41,8 +41,8 @@
 		<div>
 			<select name="language">
 				<option value="-1">-</option>
-				<? foreach($languages as $language) { ?>
-					<option value="<?= $language; ?>" <?= ($_COOKIE['language'] ?? '') == $language ? 'selected' : ''; ?>><?= D['string_language_'.$language]; ?></option>
+				<? foreach($languages as $language_) { ?>
+					<option value="<?= $language_; ?>" <?= $language_ == $language ? 'selected' : ''; ?>><?= D['string_language_'.$language_]; ?></option>
 				<? } ?>
 			</select>
 		</div>

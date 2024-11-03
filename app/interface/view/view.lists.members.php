@@ -1,4 +1,4 @@
-<div _table="list" wide_ switch_ style="--columns: repeat(4, minmax(96px, auto));" data-sync="members_list">
+<div _table="list" small_ switch_ style="--columns: repeat(4, minmax(96px, auto));" data-sync="members_list">
 	<div header_>
 		<div>
 			<select data-sync-ref="list">

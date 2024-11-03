@@ -325,7 +325,7 @@
 			$sql = "LEFT JOIN uploads AS u ON o.id = u.object_id
 					LEFT JOIN files AS f ON u.file_id = f.id
 					LEFT JOIN links AS l ON o.id = l.from_id
-					WHERE o.type_id != 4 AND (";
+					WHERE (";
 			$conditions = [];
 
 			foreach($words as $word) {
@@ -369,35 +369,16 @@
 		}
 
 		public static function getMostSearchCondition($most_id) {
-			$shared_where_group = 'WHERE o.type_id != 4
-								   GROUP BY o.id';
-			$shared_order = 'o.creation_time DESC, o.id DESC';
+			$shared = 'ORDER BY m.today_count DESC,
+								m.yesterday_count DESC,
+								m.count DESC,
+								o.creation_time DESC,
+								o.id DESC';
 
-			if($most_id == 0)
-				return "LEFT JOIN visits AS v ON v.object_id = o.id
-						LEFT JOIN links AS c ON c.to_id = o.id AND c.type_id = 5
-						LEFT JOIN links AS r ON r.from_id = o.id AND r.type_id = 6
-						$shared_where_group
-						HAVING COALESCE(COUNT(v.id), 0)+COALESCE(COUNT(c.id), 0)+COALESCE(COUNT(r.id), 0) > 0
-						ORDER BY COALESCE(COUNT(v.id), 0)+COALESCE(COUNT(c.id), 0)+COALESCE(COUNT(r.id), 0) DESC, $shared_order";
-
-			if($most_id == 1)
-				return "LEFT JOIN visits AS v ON v.object_id = o.id
-						$shared_where_group
-						HAVING COUNT(v.id) > 0
-						ORDER BY COUNT(v.id) DESC, $shared_order";
-
-			if($most_id == 2)
-				return "LEFT JOIN links AS l ON l.to_id = o.id AND l.type_id = 5
-						$shared_where_group
-						HAVING COUNT(l.id) > 0
-						ORDER BY COUNT(l.id) DESC, $shared_order";
-
-			if($most_id == 3)
-				return "LEFT JOIN links AS l ON l.from_id = o.id AND l.type_id = 6
-						$shared_where_group
-						HAVING COUNT(l.id) > 0
-						ORDER BY COUNT(l.id) DESC, $shared_order";
+			if($most_id == 0) return "JOIN most AS m ON m.object_id = o.id $shared";
+			if($most_id == 1) return "JOIN most_visited AS m ON m.object_id = o.id $shared";
+			if($most_id == 2) return "JOIN most_commented AS m ON m.object_id = o.id $shared";
+			if($most_id == 3) return "JOIN most_recommended AS m ON m.object_id = o.id $shared";
 		}
 
 		protected $user_;
@@ -1003,7 +984,7 @@
 					  AND l.type_id = 1
 					ORDER BY l.from_id = $user_id DESC,
 							 l.to_id = $this->id  DESC";
-			$query = $connection->query($sql);
+			$query = $connection->query($sql);  // TODO: awaiting_accept check
 			$uga_links = [
 				1 => ['access_level_id' => 2]
 			];

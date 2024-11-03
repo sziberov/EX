@@ -29,11 +29,12 @@
 	$template->render(true);
 ?>
 <div _title><?= D['title_edit_access']; ?></div>
-<div _table="list" wide_ style="--columns: repeat(4, minmax(96px, auto));">
+<div _table="list" small_ style="--columns: repeat(4, minmax(96px, auto));">
 	<div header_>
 		<div><?= D['string_group']; ?></div>
 		<div><?= D['string_access']; ?></div>
 		<div><?= D['string_redaction']; ?></div>
+		<div></div>
 	</div>
 	<? foreach($object->group_object_access_links as $goa_link) { ?>
 		<div>
@@ -85,5 +86,5 @@
 	<div>
 		<a switch_="current" data-switch="edit" data-switch-ref="edit"><u><?= D['link_add']; ?></u></a>
 	</div>
-	<div fallback_>Редактирование связи со своей основной группой может привести к <a><u>потере доступа</u></a></div>
+	<small fallback_>Редактирование связи со своей основной группой может привести к <a><u>потере доступа</u></a></small>
 </div>

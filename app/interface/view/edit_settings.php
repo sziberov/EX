@@ -29,7 +29,7 @@
 	$template->render(true);
 ?>
 <div _title><?= D['title_edit_settings']; ?></div>
-<div _table="list" wide_ style="--columns: repeat(4, minmax(96px, auto));">
+<div _table="list" small_ style="--columns: repeat(4, minmax(96px, auto));">
 	<div header_>
 		<div><?= D['string_setting']; ?></div>
 		<div><?= D['string_value']; ?></div>

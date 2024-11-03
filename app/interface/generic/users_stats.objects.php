@@ -1,4 +1,4 @@
-<div _table="list" wide_ style="--columns: minmax(48px, max-content) repeat(12, minmax(max-content, auto));">
+<div _table="list" small_ style="--columns: minmax(48px, max-content) repeat(12, minmax(max-content, auto));">
 	<div header_>
 		<div fallback_></div>
 		<div><?= D['string_user']; ?></div>
@@ -18,7 +18,7 @@
 		$object_url = !empty($object->alias) ? '/'.$object->alias : '/'.$object->id;
 	?>
 		<div>
-			<div fallback_><?= $k+1; ?></div>
+			<small fallback_><?= $k+1; ?></small>
 			<div>
 				<div _description="short straight">
 					<?

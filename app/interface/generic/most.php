@@ -25,6 +25,9 @@
 	$template = new Template('entities');
 	$template->navigation_mode_id = 2;
 	$template->search_entity = 'public_objects o';
+	$template->search_fields = 'o.*,
+								ROW_NUMBER() OVER (ORDER BY m.today_count DESC, o.id DESC) AS today_position,
+								ROW_NUMBER() OVER (ORDER BY m.yesterday_count DESC, o.id DESC) AS yesterday_position';
 	$template->search_condition = Object_::getMostSearchCondition($most_id);
 	$template->template_title = 'generic/most.objects';
 	$template->render(true);
