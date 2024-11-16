@@ -13,6 +13,7 @@
 	$template->search_entity = 'objects';
 	$template->search_condition = "JOIN settings AS s ON s.object_id = o.id WHERE o.user_id = $user_id AND s.key = 'awaiting_save' AND s.value = 'true'
 								   ORDER BY o.creation_time DESC, o.id DESC";
+	$template->template_title = 'generic/archive.objects';
 	$template->render(true);
 ?>
 <div _grid="h">

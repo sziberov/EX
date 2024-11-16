@@ -30,7 +30,7 @@
 					</div>
 					<div _grid="v" style="padding-left: 24px;">
 						<? if($object->access_level_id > 0) { ?>
-								<? include 'plugin/objects-list.post.php'; ?>
+								<? include 'plugin/objects.post.php'; ?>
 								<div _grid="h">
 									<button><?= D['button_add']; ?></button>
 									<button><?= D['button_remove']; ?></button>

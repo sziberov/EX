@@ -65,7 +65,7 @@
 		<div></div>
 		<div>
 			<button onclick="Hash.set('view/_ID_')">Выполнить</button>
-			<a _button href="/<?= $object->id; ?>"><?= D['button_cancel']; ?></a>
+			<button onclick="history.back();"><?= D['button_cancel']; ?></button>
 		</div>
 	</div>
 </div>

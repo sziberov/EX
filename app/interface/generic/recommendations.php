@@ -18,5 +18,5 @@
 	$template->render(true);
 ?>
 <div _grid="h">
-	<button><?= D['button_remove_all']; ?></button>
+	<a _button href="/destroy_link?type_id=6"><?= D['button_remove_all']; ?></a>
 </div>

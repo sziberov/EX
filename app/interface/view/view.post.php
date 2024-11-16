@@ -43,7 +43,10 @@
 			</div>
 		</div>
 	<? } else { ?>
-		<div _title><?= e($object->title); ?></div>
+		<div _title>
+			<?= e($object->title); ?>
+			<sup fallback_><?= D['string_'.$object->display_type]; ?></sup>
+		</div>
 	<? }
 
 	$hide_author_and_times = $object->type_id == 2 ? true : $object->getSetting('hide_author_and_times');

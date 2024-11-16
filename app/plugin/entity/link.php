@@ -235,9 +235,15 @@
 		//	}
 
 			$user_id = Session::getUserID();
-			$access_level_id = $user_id == $this->user_id || (
-			//	$this->type_id == 4 && ($user_id == $this->from->user_id || $user_id == $this->to->user_id) ||
-			//	$this->type_id == 5 && $user_id == $this->to->user_id
+
+			if(empty($user_id)) {
+				return 0;
+			}
+
+			$access_level_id = $this->user_id == $user_id || (
+			   ($this->type_id == 4  ||
+				$this->type_id == 5) && ($this->from->user_id == $user_id  || $this->to->user_id == $user_id   ||
+										 $this->from->access_level_id >= 4 || $this->to->access_level_id >= 4) ||
 				false
 			);
 

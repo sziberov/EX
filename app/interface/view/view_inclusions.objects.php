@@ -6,7 +6,7 @@
 		?>
 			<div _grid="v">
 				<? if($object->access_level_id > 0) {
-					include 'plugin/objects-list.post.php'; ?>
+					include 'plugin/objects.post.php'; ?>
 					<div _flex="h wrap">
 						<div fallback_><?= D['string_redaction']; ?></div>
 						<?

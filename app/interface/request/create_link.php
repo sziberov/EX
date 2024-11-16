@@ -69,15 +69,15 @@
 		goto error_404;
 	}
 
-	if($from->getSetting('awaiting_save')) {
+	if(!Session::set()) {
+		return include 'generic/login.php';
+	}
+
+	if($from->access_level_id == 0 || $from->getSetting('awaiting_save')) {
 		error_403:
 		$error = D['error_page_forbidden'];
 		http_response_code(403);
 		return include 'plugin/error.php';
-	}
-
-	if(!Session::set()) {
-		return include 'generic/login.php';
 	}
 
 	$to_id = $_GET['to_id'] ?? null;

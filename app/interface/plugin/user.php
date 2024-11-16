@@ -20,7 +20,7 @@
 		</a>
 	<? } ?>
 	<? if(!empty($user)) { ?>
-		<a <?= $non_mutual ? 'fallback_' : ''; ?> href="<?= $user_url; ?>"><?= ($online ? '<u>'.e($user->title).'</u>' : e($user->title)).($notifications_count > 0 ? "<div _badge>$notifications_count</div>" : ''); ?></a>
+		<a <?= $non_mutual ? 'fallback_' : ''; ?> href="<?= $user_url; ?>"><?= ($online ? '<u>'.e($user->title).'</u>' : e($user->title)).($notifications_count > 0 ? " <sup>$notifications_count</sup>" : ''); ?></a>
 	<? } ?>
 	<? if($time_display_mode_id >= 1 && !empty($primary_time)) { ?>
 		<small><?= template_formatTime($primary_time); ?></small>

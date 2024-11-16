@@ -15,7 +15,7 @@
 			<small fallback_><?= $k+1; ?></small>
 			<? if($object->access_level_id > 0) { ?>
 				<div>
-					<? include 'plugin/objects-list.post.php'; ?>
+					<? include 'plugin/objects.post.php'; ?>
 				</div>
 				<!--<div><?= $object->recommendations_count; ?></div>-->
 				<div>

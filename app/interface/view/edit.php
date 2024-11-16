@@ -17,7 +17,7 @@
 
 	$allow_advanced_control = Session::getSetting('allow_advanced_control');
 
-	if($object->access_level_id < 4 || $object->type_id == 2 && !$allow_advanced_control) {
+	if($object->access_level_id < 4) {
 		$error = D['error_page_forbidden'];
 		http_response_code(403);
 		return include 'plugin/error.php';
@@ -43,40 +43,29 @@
 
 	$page_title = $object->title.' - '.D['title_edit'];
 ?>
-<? if($awaiting_save && count($object->links) <= 1) { ?>
-	<div _flex="h wrap" _title="small">
-		<? if(count($object->links) == 0) { ?>
-			<div fallback_>Создание статьи</div>
-		<? } else
-		if(count($object->links) == 1) {
-			$first_link = $object->links[0];
+<? if(!empty($awaiting_save)) { ?>
+	<div _title="small">
+		<?
+			$primary_link = $object->primary_link;
+			$display_type = $object->display_type;
+			$to_id = $primary_link->to_id ?? null;
+			$draft_type = D["string_of_$display_type"];
 
-			if($first_link->type_id == 4) {
-				if($first_link->to_id == $object->user_id) { ?>
-					<div fallback_>Создание статьи на странице пользователя</div>
-				<? } else { ?>
-					<div fallback_>Создание статьи в разделе </div>
-					<? if(!empty($referrer)) { ?>
-						<a href="/<?= $referrer->id; ?>"><?= $referrer->title; ?></a>
-					<? }
-				}
-			} else
-			if($first_link->type_id == 5) { ?>
-				<div fallback_>Создание комментария к </div>
-				<? if(!empty($referrer)) { ?>
-					<a href="/<?= $referrer->id; ?>"><?= $referrer->title; ?></a>
-				<? }
-			} else
-			if($first_link->type_id == 7) { ?>
-				<div fallback_>Создание аватара</div>
-			<? } else
-			if($first_link->type_id == 8) { ?>
-				<div fallback_>Создание жалобы к </div>
-			<? } else
-			if($first_link->type_id == 11) { ?>
-				<div fallback_>Создание личного сообщения для </div>
-			<? }
-		} ?>
+			if(!empty($to_id)) {
+				$draft_type .= ' '.match($display_type) {
+					'comment',
+					'claim' => D['string_to'],
+					'template',
+					'private_message' => D['string_for'],
+					'article',
+					'section' => $to_id == $object->user_id ? D['string_on_page'] : D['string_in']
+				};
+			}
+		?>
+		<span fallback_><?= D['string_draft'].' '.$draft_type; ?></span>
+		<? if(!empty($primary_link->to_id)) { ?>
+			<a href="/<?= $primary_link->to->id; ?>"><?= $primary_link->to->title; ?></a>
+		<? } ?>
 	</div>
 <? } else
 if(!empty($referrer)) {
@@ -178,17 +167,16 @@ if(!empty($referrer)) {
 				$object_url = (!empty($object->alias) ? '/'.$object->alias : ($object->type_id == 2 ? '/user/'.$object->login : '/'.$object->id)).(!empty($referrer) ? '?referrer_id='.$referrer->id : '');
 			?>
 			<a _button href="<?= $object_url; ?>"><?= D['button_view']; ?></a>
-			<button type="submit"><?= D['button_save']; ?></button>
-			<!--<button onclick="Editor.save(<?= $object->id; ?>);"><?= D['button_save']; ?></button>-->
-			<? if($object->access_level_id == 5) { ?>
-				<a _button href="/destroy/<?= $object->id; ?>"><?= D['button_delete']; ?></a>
-			<? }
-			if($object->type_id != 4) { ?>
+			<button type="submit" onclick="/*Editor.save(<?= $object->id; ?>);*/"><?= D['button_save']; ?></button>
+			<? if($object->type_id != 4) { ?>
+				<button type="button" onclick="history.back();"><?= D['button_cancel']; ?></button>
 				<a _button href="/edit_settings/<?= $object->id; ?>"><?= D['button_settings']; ?></a>
 				<? if($object->access_level_id == 5) { ?>
 					<a _button href="/edit_access/<?= $object->id; ?>"><?= D['button_access']; ?></a>
 				<? }
-			} ?>
+			} else { ?>
+				<a _button href="/destroy/<?= $object->id; ?>"><?= D['button_delete']; ?></a>
+			<? } ?>
 		</div>
 	</div>
 </form>

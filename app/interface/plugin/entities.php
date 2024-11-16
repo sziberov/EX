@@ -32,7 +32,7 @@
 
 	$entities = $search['entities'];
 	$count = $search['count'];
-	$template_title = $this->template_title ?? 'objects-list';
+	$template_title = $this->template_title ?? 'objects';
 
 	if($navigation_mode_id > 0) {
 		$navigation_template = new Template($navigation_template_title);

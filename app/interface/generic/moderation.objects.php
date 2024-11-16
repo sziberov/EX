@@ -1,5 +1,5 @@
 <? if(count($entities) > 0) { ?>
-	<ul _list>
+	<ul _list small_>
 		<? foreach($entities as $link) {
 			$object = $link->from;
 			$object_url = (!empty($object->alias) ? '/'.$object->alias : '/'.$object->id).(!empty($link->to->id) && $link->to->type_id != 2 ? '?r='.$link->to->id : '');
@@ -30,14 +30,14 @@
 					</div>
 					<div _grid="v" style="padding-left: 24px;">
 						<? if($object->access_level_id > 0) { ?>
-								<? include 'plugin/objects-list.post.php'; ?>
-								<div _grid="h">
-									<button><?= D['button_add']; ?></button>
-									<button><?= D['button_remove']; ?></button>
-								</div>
+							<? include 'plugin/objects.post.php'; ?>
 						<? } else {
 							echo D['string_no_access_to_object'].' '.$object->id;
 						} ?>
+						<div _grid="h">
+							<a _button href="/create_link?from_id=<?= $link->from_id.(!empty($link->to_id) ? '&to_id='.$link->to_id : ''); ?>&type_id=4"><?= D['button_add']; ?></a>
+							<a _button href="/destroy_link/<?= $link->id; ?>"><?= D['button_remove']; ?></a>
+						</div>
 					</div>
 				</div>
 			</li>

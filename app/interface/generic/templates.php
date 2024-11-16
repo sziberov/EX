@@ -14,6 +14,6 @@
 	$template->render(true);
 ?>
 <div _grid="h">
-	<button><?= D['button_create']; ?></button>
-	<button><?= D['button_remove_all']; ?></button>
+	<a _button href="/create?type_id=3,9"><?= D['button_create']; ?></a>
+	<a _button href="/destroy_link?type_id=9"><?= D['button_remove_all']; ?></a>
 </div>

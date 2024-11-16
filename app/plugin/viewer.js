@@ -102,6 +102,7 @@ $(() => {
 					this.removeState('closed');
 				}
 				if(!this.atState('showing')) {
+					this.enableShowing();
 					this.loadTime();
 				}
 

@@ -106,6 +106,7 @@ $(() => {
 	});
 
 	$('select[data-sync-ref]').each(function() {
+		this.autocomplete = 'off';
 		this.selectedIndex = this.options.length-1;
 
 		$(this).change();

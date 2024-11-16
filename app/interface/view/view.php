@@ -24,6 +24,12 @@
 		$display_mode_id = 0;
 		$sort_mode_id = 0;
 	}
+	if(filter_var($display_mode_id, FILTER_VALIDATE_INT) === false || $display_mode_id < 0 || $display_mode_id > 1) {
+		$display_mode_id = 0;
+	}
+	if(filter_var($sort_mode_id, FILTER_VALIDATE_INT) === false || $sort_mode_id < 0 || $sort_mode_id > 7) {
+		$sort_mode_id = 0;
+	}
 
 	if($object->type_id != 4) {
 		$hide_default_referrer = $object->type_id != 3 || $object->getSetting('hide_default_referrer');  // TODO: Create physical settings
@@ -50,7 +56,7 @@
 	$template->render(true);
 
 	if($object->getSetting('awaiting_save')) { ?>
-		<div _title="small" fallback_>Черновик</div>
+		<div _title="small" fallback_><?= D['string_draft']; ?></div>
 	<? }
 
 	include 'view.post.php';
@@ -63,7 +69,7 @@
 				<? foreach($friends as $friend) {
 					$template = new Template('user');
 					$template->object = $friend;
-					$template->mutual = $object->areFriendOf($friend->id);
+					$template->mutual = $object->isFriendOf($friend->id);
 					$template->time_display_mode_id = 0;
 					$template->render(true);
 				} ?>
@@ -85,7 +91,7 @@
 } else
 if($object->inclusions_count > 0) { ?>
 	<div _grid="h">
-		<form _grid="h">
+		<form _grid="h" autocomplete="off">
 			<? foreach($_GET as $key => $value) {
 				if(
 					str_starts_with('sort_mode_id', $key) ||
@@ -138,12 +144,17 @@ if($object->inclusions_count > 0) { ?>
 		$template->navigation_mode_id = 1;
 		$template->navigation_items_per_page = $object->getSetting('display_amount') ?: 24;
 		$template->navigation_rss_id = $object->id;
-		$template->template_title = 'objects-'.($display_mode_id == 0 ? 'cells' : 'list');
+		$template->template_title = 'view/view.objects-'.($display_mode_id == 0 ? 'cells' : 'list');
 		$template->template_namespace = [
 			'referrer_id' => $object->id
 		];
+	} else {
+		$template->template_title = 'view/view.objects-list';
 	}
 
+	$template->search_entity = 'objects';
+	$template->search_class = 'Link';
+	$template->search_fields = 'l.*';
 	$template->search_condition = "JOIN links AS l ON l.from_id = o.id AND l.to_id = $object->id AND l.type_id = 4 ";
 
 	if($sort_mode_id == 0) {
@@ -154,6 +165,19 @@ if($object->inclusions_count > 0) { ?>
 	}
 	if($sort_mode_id == 2) {
 		$template->search_condition .= "ORDER BY o.creation_time DESC, o.id DESC";
+	}
+	if($sort_mode_id >= 3 && $sort_mode_id <= 6) {
+		if($sort_mode_id == 3) $most_type = '';
+		if($sort_mode_id == 4) $most_type = '_visited';
+		if($sort_mode_id == 5) $most_type = '_commented';
+		if($sort_mode_id == 6) $most_type = '_recommended';
+
+		$template->search_condition .= "LEFT JOIN most$most_type AS m ON m.object_id = o.id
+										ORDER BY m.today_count DESC,
+												 m.yesterday_count DESC,
+												 m.count DESC,
+												 o.creation_time DESC,
+												 o.id DESC";
 	}
 	if($sort_mode_id == 7) {
 		$template->search_condition .= "ORDER BY o.title DESC, o.id DESC";

@@ -43,9 +43,9 @@
 		$template->template_title = 'view/include.objects';
 		$template->render(true);
 	?>
-	<div _grid="h">
+	<div _flex="h">
 		<button type="submit"><?= D['button_save']; ?></button>
-		<a _button href="/<?= $object->id; ?>"><?= D['button_cancel']; ?></a>
+		<button type="button" onclick="history.back();"><?= D['button_cancel']; ?></button>
 		<button type="button" small_ onclick="$('form').find('input[type=&quot;checkbox&quot;]').prop('checked', true);"><?= D['button_select_all']; ?></button>
 		<button type="button" small_ onclick="$('form').find('input[type=&quot;checkbox&quot;]').prop('checked', false);"><?= D['button_clear_all']; ?></button>
 	</div>

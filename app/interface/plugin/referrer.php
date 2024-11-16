@@ -12,7 +12,7 @@
 			<a href="<?= $object_url; ?>"><?= e($object->title); ?></a>
 		</div>
 	<? } else {
-		if(!in_array(5, $object->links_type_ids)) {
+		if($object->display_type != 'comment') {
 			if($display_mode_id == 1 && !empty($referrer)) {
 				$ancestors_ids = array_reverse(Link::getAncestorsIDs($object->id, $referrer->id, 4));
 				$siblings_ids = Link::getSiblingsIDs($object->id, $referrer->id, 4);

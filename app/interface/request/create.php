@@ -19,6 +19,9 @@
 				2,			// user
 				3			// plain
 			],
+			9 => [		// template
+				null		// nothing
+			],
 			11 => [		// private message
 				2 			// user
 			]

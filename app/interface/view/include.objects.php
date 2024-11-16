@@ -11,7 +11,7 @@
 						<div></div>
 					</label>
 					<? if($object->access_level_id > 0) {
-						include 'plugin/objects-list.post.php';
+						include 'plugin/objects.post.php';
 					} else { ?>
 						<div><?= D['string_no_access_to_object'].' '.$object->id; ?></div>
 					<? } ?>

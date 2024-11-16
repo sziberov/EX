@@ -3,80 +3,21 @@
 		return include 'generic/login.php';
 	}
 
-	$page_title = 'Друзья';
+	$user_id = Session::getUserID();
+	$page_title = D['title_friends'];
 ?>
-<div _title>Друзья</div>
-<div _table="list" small_ style="--columns: repeat(5, minmax(96px, auto));">
-	<div header_>
-		<div>Пользователь</div>
-		<div>Добавлен</div>
-		<div>Добавил</div>
-		<div>В сети</div>
-		<div></div>
-	</div>
-	<div data-user-id="_USER_ID_">
-		<div>
-			<a _description="short straight" href="#user/_USER_TITLE_">Offline</a>
-		</div>
-		<div>00:00, 01 января 2019</div>
-		<div></div>
-		<div>00:00, 01 января 2019</div>
-		<div>
-			<button>Убрать</button>
-		</div>
-	</div>
-	<div data-user-id="_USER_ID_">
-		<div>
-			<a _description="short straight" href="#user/_USER_TITLE_">Online</a>
-		</div>
-		<div>00:00, 01 января 2019</div>
-		<div></div>
-		<div>00:00, 01 января 2019</div>
-		<div>
-			<button>Убрать</button>
-		</div>
-	</div>
-	<div data-user-id="_USER_ID_">
-		<div>
-			<a _description="short straight" href="#user/_USER_TITLE_">Offline_Mutual</a>
-		</div>
-		<div>00:00, 01 января 2019</div>
-		<div>00:00, 01 января 2019</div>
-		<div>00:00, 01 января 2019</div>
-		<div>
-			<button>Убрать</button>
-		</div>
-	</div>
-	<div data-user-id="_USER_ID_">
-		<div>
-			<a _description="short straight" href="#user/_USER_TITLE_">Online_Mutual</a>
-		</div>
-		<div>00:00, 01 января 2019</div>
-		<div>00:00, 01 января 2019</div>
-		<div>00:00, 01 января 2019</div>
-		<div>
-			<button>Убрать</button>
-		</div>
-	</div>
-	<div footer_ id="addRow">
-		<div>
-			<a onclick="document.getElementById('addRow').style.display = 'none'; document.getElementById('editRow').removeAttribute('style');"><u>Добавить</u></a>
-		</div>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div></div>
-	</div>
-	<div footer_ id="editRow" style="display: none;">
-		<div>
-			<input size_="big" type="text" placeholder="Логин">
-		</div>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div>
-			<button>Сохранить</button>
-			<button onclick="document.getElementById('editRow').style.display = 'none'; document.getElementById('addRow').removeAttribute('style');">Отменить</button>
-		</div>
-	</div>
-</div>
+<div _title><?= D['title_friends']; ?></div>
+<?
+	$template = new Template('entities');
+	$template->search_entity = 'links';
+	$template->search_class = 'Link';
+	$template->search_fields = 'l.*, l_1.creation_time AS mutual_creation_time';
+	$template->search_condition = "LEFT JOIN links AS l_1 ON l_1.from_id = l.to_id AND l_1.to_id = l.from_id AND l_1.type_id = l.type_id
+								   WHERE l.to_id = $user_id AND l.type_id = 2
+								   ORDER BY l.creation_time ASC, l.id ASC";
+	$template->template_title = 'generic/friends.objects';
+	$template->template_namespace = [
+		'user_id' => $user_id
+	];
+	$template->render(true);
+?>

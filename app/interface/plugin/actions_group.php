@@ -25,7 +25,14 @@
 		$columns[] = ["/create?to_id=$object->id&type_id=3,5", D['button_comment']];
 	}
 
-	$columns[] = ["/create_link?from_id=$object->id&type_id=6", D['button_recommend'], ['action' => 'Button.toggle(this);']];
+	$link_id = Link::getID($object->id, null, Session::getUserID(), 6);
+
+	if(empty($link_id)) {
+		$columns[] = ["/create_link?from_id=$object->id&type_id=6", D['button_recommend']];
+	} else {
+		$columns[] = ["/destroy_link/$link_id", D['button_recommend'], ['toggled' => true]];
+	}
+
 	$row[] = $columns;
 
 	if(Session::set()) {

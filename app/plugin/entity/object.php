@@ -386,6 +386,10 @@
 		protected $uploads_;
 		protected $links_;
 		protected $links_type_ids_;
+		protected $primary_link_;
+		protected $base_type_;
+		protected $linked_type_;
+		protected $display_type_;
 		protected $settings_;
 		protected $filtered_settings_;
 		protected $friends_;
@@ -513,6 +517,65 @@
 			$this->links_type_ids_ = array_column($query->fetch_all(MYSQLI_ASSOC), 'type_id');
 
 			return $this->links_type_ids_;
+		}
+
+		public function _getPrimaryLink() {
+			if(isset($this->primary_link_)) {
+				return $this->primary_link_;
+			}
+
+			global $connection;
+
+			$sql = "SELECT *
+					FROM links
+					WHERE from_id = $this->id
+					  AND type_id IN (5, 7, 8, 9, 11)
+					GROUP BY id, type_id
+					ORDER BY
+						CASE
+							WHEN type_id = 5  THEN 1  -- Comment
+							WHEN type_id = 7  THEN 0  -- Avatar
+							WHEN type_id = 8  THEN 1  -- Claim
+							WHEN type_id = 9  THEN 0  -- Template
+							WHEN type_id = 11 THEN 2  -- Private message
+						END DESC,
+						COUNT(*) DESC,
+						MIN(id) ASC
+					LIMIT 1";
+			$query = $connection->query($sql);
+
+			if($query->num_rows > 0) {
+				$this->primary_link_ = $query->fetch_object('Link');
+			}
+
+			return $this->primary_link_;
+		}
+
+		public function _getBaseType() {
+			return $this->base_type_ ??=
+				$this->type_id == 3 ? $this->inclusions_count == 0 ? 'article'
+																   : 'section' :
+				match($this->type_id) {
+					'1' => 'group',
+					'2' => 'user',
+					'4' => 'shared'
+				};
+		}
+
+		public function _getLinkedType() {
+			return $this->linked_type_ ??=
+				match($this->primary_link->type_id ?? null) {
+					'5' => 'comment',
+					'7' => 'avatar',
+					'8' => 'claim',
+					'9' => 'template',
+					'11' => 'private_message',
+					default => ''
+				};
+		}
+
+		public function _getDisplayType() {
+			return $this->display_type_ ??= $this->linked_type ?: $this->base_type;
 		}
 
 		public function _getSettings() {
@@ -712,7 +775,7 @@
 		}
 
 		public function _getUserCommentsCount() {
-			return $this->getCount('user_comments', "SELECT COUNT(*) FROM links AS l WHERE l.user_id = $this->id AND l.type_id = 5");
+			return $this->getCount('user_comments', "SELECT COUNT(*) FROM links AS l JOIN objects AS o_0 ON o_0.id = l.from_id JOIN objects AS o_1 ON o_1.id = l.to_id WHERE l.type_id = 5 AND (o_0.user_id = $this->id OR o_1.user_id = $this->id)");
 		}
 
 		public function _getRecommendationsCount() {
@@ -961,7 +1024,7 @@
 			}
 			*/
 
-			if((empty($user_id) || $user_id != $this->user_id) && $this->getSetting('awaiting_save')) {
+			if((empty($user_id) || $user_id != $this->user_id) && $this->getSetting('awaiting_save') && !Session::getSetting('allow_advanced_control')) {
 				$this->access_level_id_ = 0;
 			//	$redis->set($cache_key, $this->access_level_id_, 3600);
 				return $this->access_level_id_;
@@ -1011,7 +1074,7 @@
 			return $this->access_level_id_;
 		}
 
-		public function areFriendOf($user_id) {
+		public function isFriendOf($user_id) {
 			if(!isset($user_id)) {
 				return false;
 			}

@@ -98,10 +98,30 @@
 		return template_parseBB($string, true);
 	}
 
-	function template_formatTime($time, $date_only = false) {
-		$date = date_create($time ?? '0');
+	$today_date = date_create();
+	$yesterday_date = date_create('-1 day');
+	$day_before_yesterday_date = date_create('-2 days');
 
-		return (!$date_only ? $date->format('G:i').' ' : '').$date->format('j').' '.D['string_month_'.$date->format('n')-1].' '.$date->format('Y');
+	$formatted_today_date = $today_date->format('Y-m-d');
+	$formatted_yesterday_date = $yesterday_date->format('Y-m-d');
+	$formatted_day_before_yesterday_date = $day_before_yesterday_date->format('Y-m-d');
+
+	function template_formatTime($time, $date_only = false) {
+		global $today_date,
+			   $formatted_today_date,
+			   $formatted_yesterday_date,
+			   $formatted_day_before_yesterday_date;
+
+		$date = date_create($time ?? '0');
+		$formatted_time = !$date_only ? $date->format('G:i').' ' : '';
+		$formatted_date = match($date->format('Y-m-d')) {
+			$formatted_today_date => mb_strtolower(D['string_today']),
+			$formatted_yesterday_date => mb_strtolower(D['string_yesterday']),
+			$formatted_day_before_yesterday_date => mb_strtolower(D['string_day_before_yesterday']),
+			default => $date->format('j').' '.D['string_month_'.($date->format('n')-1)].($date->format('Y') != $today_date->format('Y') ? ' '.$date->format('Y') : '')
+		};
+
+		return $formatted_time.$formatted_date;
 	}
 
 	function template_formatLength($seconds) {

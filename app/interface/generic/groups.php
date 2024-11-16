@@ -12,6 +12,7 @@
 		<div><?= D['string_access']; ?></div>
 		<div><?= D['string_privileges']; ?></div>
 		<div><?= D['string_redaction']; ?></div>
+		<div></div>
 	</div>
 	<? foreach(Session::getUser()->user_group_access_links as $uga_link) { ?>
 		<div>
@@ -52,7 +53,7 @@
 		</div>
 	<? } ?>
 </div>
-<div fallback_><?= D['string_groups_description']; ?></div>
+<small fallback_><?= D['string_groups_description']; ?></small>
 <div _grid="h">
 	<a _button href="/create?type_id=1"><?= D['button_create']; ?></a>
 </div>

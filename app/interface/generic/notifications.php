@@ -15,7 +15,7 @@
 		<div></div>
 	</div>
 	<? foreach($user->notifications as $notification) {
-		$notification_url = $notification->from->type_id == 2 ? '/user/'.$notification->from->login : '/'.$notification->from->id;
+		$notification_url = !empty($notification->from->alias) ? '/'.$notification->from->alias : ($notification->from->type_id == 2 ? '/user/'.$notification->from->login : '/'.$notification->from->id);
 	?>
 		<div>
 			<div><?= D['string_event_'.$notification->getSetting('event_id')]; ?></div>
@@ -37,7 +37,7 @@
 				<? if(in_array($notification->getSetting('event_id'), [0, 2, 3, 4])) { ?>
 					<a _button href="<?= $notification_url; ?>"><?= D['button_view']; ?></a>
 				<? } ?>
-				<button><?= D['button_remove']; ?></button>
+				<a _button href="/destroy_link/<?= $notification->id; ?>"><?= D['button_remove']; ?></a>
 			</div>
 		</div>
 	<? } ?>

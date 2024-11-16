@@ -12,6 +12,7 @@
 	$template->navigation_mode_id = 2;
 	$template->search_condition = "WHERE o.user_id = $user_id
 								   ORDER BY o.creation_time DESC, o.id DESC";
+	$template->template_title = 'generic/archive.objects';
 	$template->render(true);
 ?>
 <div _grid="h">
